@@ -1,0 +1,30 @@
+{
+  "name": "endpoint-manager",
+  "version": "1.0.0",
+  "description": "UI for managing endpoints in CMDB",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:Financial-Times/endpoint-manager.git"
+  },
+  "keywords": [
+    "endpoints",
+    "healthcheck",
+    "about"
+  ],
+  "dependencies": {
+    "body-parser": "^1.15.0",
+    "cmdb.js": "^0.0.1",
+    "express": "^4.13.4",
+    "express-ftwebservice": "^2.2.2",
+    "mustache-express": "^1.2.2",
+    "s3o-middleware": "^1.6.0"
+  },
+  "engines": {
+    "node": "5.3.0"
+  }
+}
