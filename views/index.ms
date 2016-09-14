@@ -39,7 +39,7 @@
 			<div class="o-grid-row" data-o-grid-colspan="9">
 				Existing Endpoints:
 				<ul>
-					{{#endpoints}}<li><a href="{{path}}">{{dataItemID}}</a></li>{{/endpoints}}
+					{{#endpoints}}<li><a href="{{localpath}}">{{id}}</a></li>{{/endpoints}}
 				</ul>
 			</div>
 		</div>

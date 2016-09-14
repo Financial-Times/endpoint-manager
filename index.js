@@ -76,9 +76,7 @@ app.get('/', function (req, res) {
 			if (!b.dataItemID) return 1;
 			return a.dataItemID.toLowerCase() > b.dataItemID.toLowerCase() ? 1 : -1;
 		});
-		endpoints.forEach(function (endpoint) {
-			endpoint.path = "/manage/"+encodeURIComponent(endpoint.dataItemID);
-		});
+		endpoints.forEach(tidyData);
 		res.render('index', {endpoints: endpoints});
 	}).catch(function (error) {
 		res.status(502);
@@ -92,25 +90,7 @@ app.get('/', function (req, res) {
  */
 app.get('/manage/:endpointid', function (req, res) {
 	cmdb.getItem(res.locals, 'endpoint', req.params.endpointid).then(function (endpoint) {
-		endpoint.urls = [];
-		var protocols = [];
-		if (['http', 'https'].indexOf(endpoint.protocol) != -1) {
-			protocols.push(endpoint.protocol);
-		} else if (endpoint.protocol == "both") {
-			protocols = ['http', 'https'];
-		}
-		protocols.forEach(function (protocol) {
-			if (endpoint.healthSuffix) endpoint.urls.push({
-				type: 'health',
-				url: protocol+"://"+endpoint.dataItemID+"/"+endpoint.healthSuffix,
-				validateurl: "http://healthcheck.ft.com/validate?host="+encodeURIComponent(endpoint.dataItemID)+"&protocol="+protocol,
-			});
-			if (endpoint.aboutSuffix) endpoint.urls.push({
-				type: 'about',
-				url: protocol+"://"+endpoint.dataItemID+"/"+endpoint.aboutSuffix,
-			});
-		});
-		res.render('endpoint', endpoint);
+		res.render('endpoint', tidyData(endpoint));
 	}).catch(function (error) {
 		res.status(502);
 		res.render("error", {message: "Problem connecting to CMDB ("+error+")"});
@@ -135,4 +115,36 @@ app.use(function(err, req, res, next) {
 app.listen(port, function () {
 	console.log('App listening on port '+port);
 });
+
+/** 
+ * Tidies up the data coming from CMDB to something expected by the templates
+ */
+function tidyData(endpoint) {
+	endpoint.id = endpoint.dataItemID;
+	delete endpoint.dataItemID;
+	delete endpoint.dataTypeID;
+	endpoint.localpath = "/manage/"+encodeURIComponent(endpoint.id);
+	endpoint.urls = [];
+	var protocols = [];
+	if (['http', 'https'].indexOf(endpoint.protocol) != -1) {
+		protocols.push(endpoint.protocol);
+	} else if (endpoint.protocol == "both") {
+		protocols = ['http', 'https'];
+	}
+	protocols.forEach(function (protocol) {
+		if (endpoint.healthSuffix) endpoint.urls.push({
+			type: 'health',
+			url: protocol+"://"+endpoint.id+"/"+endpoint.healthSuffix,
+			validateurl: "http://healthcheck.ft.com/validate?host="+encodeURIComponent(endpoint.dataItemID)+"&protocol="+protocol,
+		});
+		if (endpoint.aboutSuffix) endpoint.urls.push({
+			type: 'about',
+			url: protocol+"://"+endpoint.id+"/"+endpoint.aboutSuffix,
+		});
+	});
+	if (endpoint.system && endpoint.system.healthcheck) {
+		endpoint.systemCode = endpoint.system.healthcheck.pop();
+	}
+	return endpoint;
+}
 
