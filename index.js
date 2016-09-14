@@ -92,6 +92,24 @@ app.get('/', function (req, res) {
  */
 app.get('/manage/:endpointid', function (req, res) {
 	cmdb.getItem(res.locals, 'endpoint', req.params.endpointid).then(function (endpoint) {
+		endpoint.urls = [];
+		var protocols = [];
+		if (['http', 'https'].indexOf(endpoint.protocol) != -1) {
+			protocols.push(endpoint.protocol);
+		} else if (endpoint.protocol == "both") {
+			protocols = ['http', 'https'];
+		}
+		protocols.forEach(function (protocol) {
+			if (endpoint.healthSuffix) endpoint.urls.push({
+				type: 'health',
+				url: protocol+"://"+endpoint.dataItemID+"/"+endpoint.healthSuffix,
+				validateurl: "http://healthcheck.ft.com/validate?host="+encodeURIComponent(endpoint.dataItemID)+"&protocol="+protocol,
+			});
+			if (endpoint.aboutSuffix) endpoint.urls.push({
+				type: 'about',
+				url: protocol+"://"+endpoint.dataItemID+"/"+endpoint.aboutSuffix,
+			});
+		});
 		res.render('endpoint', endpoint);
 	}).catch(function (error) {
 		res.status(502);

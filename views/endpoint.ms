@@ -23,6 +23,9 @@
 			.o-forms-group {
 				padding-left: 0;
 			}
+			.urltype {
+				text-transform: capitalize;
+			}
   		</style>
   	</head>
 	<body>
@@ -38,6 +41,10 @@
 		<div id='content' class="o-grid-container">
 			<div class="o-grid-row" data-o-grid-colspan="9">
 				Endpoint: {{dataItemID}}
+				<h3>URLs</h3>
+				{{#urls}}
+					<div class='{{type}} url'><span class='urltype'>{{type}} URL:</span> <a href="{{url}}">{{url}}</a>{{#validateurl}} <a href="{{validateurl}}" class="o-buttons o-buttons--standout save-button" />Validate</a>{{/validateurl}}</div>
+				{{/urls}}
 			</div>
 		</div>
 		<script src="https://build.origami.ft.com/v2/bundles/js?modules=o-header-services@^1.0.0,o-buttons@^4.0.0,o-forms@^2.0.3,o-grid@^4.2.1"></script>
