@@ -2,7 +2,7 @@
 <html>
   	<head>
 		<meta charset="UTF-8">
-		<title>Endpoint Manager</title>
+		<title>Endpoint Manager - {{dataItemID}}</title>
 		<meta name=viewport content="width=device-width, initial-scale=1">
 		<link rel="stylesheet" href="https://build.origami.ft.com/v2/bundles/css?modules=o-header-services@^1.0.0,o-buttons@^4.0.0,o-forms@^2.0.3,o-grid@^4.2.1">
 		<style type="text/css">
@@ -37,10 +37,7 @@
 		</header>
 		<div id='content' class="o-grid-container">
 			<div class="o-grid-row" data-o-grid-colspan="9">
-				Existing Endpoints:
-				<ul>
-					{{#endpoints}}<li><a href="{{path}}">{{dataItemID}}</a></li>{{/endpoints}}
-				</ul>
+				Endpoint: {{dataItemID}}
 			</div>
 		</div>
 		<script src="https://build.origami.ft.com/v2/bundles/js?modules=o-header-services@^1.0.0,o-buttons@^4.0.0,o-forms@^2.0.3,o-grid@^4.2.1"></script>

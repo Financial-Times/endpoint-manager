@@ -76,7 +76,23 @@ app.get('/', function (req, res) {
 			if (!b.dataItemID) return 1;
 			return a.dataItemID.toLowerCase() > b.dataItemID.toLowerCase() ? 1 : -1;
 		});
+		endpoints.forEach(function (endpoint) {
+			endpoint.path = "/manage/"+encodeURIComponent(endpoint.dataItemID);
+		});
 		res.render('index', {endpoints: endpoints});
+	}).catch(function (error) {
+		res.status(502);
+		res.render("error", {message: "Problem connecting to CMDB ("+error+")"});
+	});
+});
+
+
+/**
+ * Gets info about a given Contact from the CMDB and provides a form for editing it
+ */
+app.get('/manage/:endpointid', function (req, res) {
+	cmdb.getItem(res.locals, 'endpoint', req.params.endpointid).then(function (endpoint) {
+		res.render('endpoint', endpoint);
 	}).catch(function (error) {
 		res.status(502);
 		res.render("error", {message: "Problem connecting to CMDB ("+error+")"});
