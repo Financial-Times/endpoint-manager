@@ -97,6 +97,30 @@ app.get('/manage/:endpointid', function (req, res) {
 	});
 });
 
+/**
+ * Gets info about a given Contact from the CMDB and provides a form for editing it
+ */
+app.post('/manage/:endpointid', function (req, res) {
+	if (req.body.systemCode) {
+		req.body.system = {healthcheck: [req.body.systemCode]};
+		delete req.body.systemCode;
+	}
+	var endpoint = {
+		protocol: req.body.protocol,
+		healthSuffix: req.body.healthSuffix,
+		aboutSuffix: req.body.aboutSuffix,
+		isLive: !!req.body.isLive,
+	}
+	if (req.body.systemCode) endpoint.system = {healthcheck: [req.body.systemCode]};
+	cmdb.putItem(res.locals, 'endpoint', req.params.endpointid, endpoint).then(function (endpoint) {
+		endpoint.saved = true;
+		res.render('endpoint', tidyData(endpoint));
+	}).catch(function (error) {
+		res.status(502);
+		res.render("error", {message: "Problem connecting to CMDB ("+error+")"});
+	});
+});
+
 
 app.use(function(req, res, next) {
 	res.status(404).render('error', {message:"Page not found."});
@@ -124,6 +148,14 @@ function tidyData(endpoint) {
 	delete endpoint.dataItemID;
 	delete endpoint.dataTypeID;
 	endpoint.localpath = "/manage/"+encodeURIComponent(endpoint.id);
+	endpoint.protocollist = [
+		{name: "HTTP", value: "http"},
+		{name: "HTTPS", value: "https"},
+		{name: "HTTP & HTTPS", value: "both"},
+	];
+	endpoint.protocollist.forEach(function (protocol) {
+		if (protocol.value == endpoint.protocol) protocol.selected = true;
+	});
 	endpoint.urls = [];
 	var protocols = [];
 	if (['http', 'https'].indexOf(endpoint.protocol) != -1) {
@@ -145,6 +177,7 @@ function tidyData(endpoint) {
 	if (endpoint.system && endpoint.system.healthcheck) {
 		endpoint.systemCode = endpoint.system.healthcheck.pop();
 	}
+	endpoint.isLive = (endpoint.isLive == "True");
 	return endpoint;
 }
 

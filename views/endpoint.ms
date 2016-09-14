@@ -69,6 +69,13 @@
   			<!--
 
   				document.addEventListener("DOMContentLoaded", function() {
+					window.setTimeout(function () {
+						var savedmessage = document.querySelector('#saved');
+						if (savedmessage) {
+							savedmessage.setAttribute("class", savedmessage.getAttribute("class")+" hide");
+						}
+					}, 5000);
+
 					/**
 					 * Check the validity of a field on page load and each time the field changes 
 					 **/
@@ -107,9 +114,9 @@
 				<form action="{{localpath}}" method="post">
 					<div class='link-all'><a href="/">&lt;- Back to All Endpoints</a></div>
 					<h1>{{#_new}}Add New{{/_new}}{{^_new}}Edit{{/_new}} Endpoint</h1>
-					{{#_saved}}<div class="o-forms-message o-forms-message--highlight" id='saved'>
-						<p>Contact data saved</p>
-					</div>{{/_saved}}
+					{{#saved}}<div class="o-forms-message o-forms-message--highlight" id='saved'>
+						<p>Endpoint data saved</p>
+					</div>{{/saved}}
 					<div class="o-forms-wrapper o-forms-wrapper--highlight">
 						<div class="o-forms-group">
 							<label class="o-forms-label" for="id">Base URL</label>
@@ -119,11 +126,9 @@
 					</div>
 					<div class="o-forms-group">
 						<label class="o-forms-label" for="protocol">Protocol</label>
-							<small class="o-forms-additional-info">Which protocol(s) the endpoint is served over</small>
+						<small class="o-forms-additional-info">Which protocol(s) the endpoint is served over</small>
 						<select class="o-forms-select" id="position" name="protocol" data-bind="protocol">
-							<option value="http">HTTP</option>
-							<option value="https">HTTPS</option>
-							<option value="both">HTTP &amp; HTTPS</option>
+							{{#protocollist}}<option value="{{value}}" {{#selected}}selected{{/selected}}>{{name}}</option>{{/protocollist}}
 						</select>
 					</div>
 
@@ -144,7 +149,7 @@
 					</div>
 
 					<div class="o-forms-group">
-						<input type="checkbox" class="o-forms-checkbox o-forms-checkbox--highlight" id="isLive" data-bind="acceptMarketingOptIn" value="true"></input>
+						<input type="checkbox" class="o-forms-checkbox o-forms-checkbox--highlight" id="isLive" data-bind="acceptMarketingOptIn" {{#isLive}}checked{{/isLive}} name="isLive"></input>
 						<label for="isLive" class="o-forms-label">Handles live traffic</label>
 						<small class="o-forms-additional-info">Used for deciding whether Operations Team need to know about this endpoint.  <br />Non-production environments and production environments which aren't yet live should leave this box unchecked.</small>
 					</div>
@@ -159,9 +164,9 @@
 
 					<div id="save"><input type='submit' class="o-buttons o-buttons--standout save-button" value='Save' /></div>
 				</form>
-				{{^_new}}<form id="delete" action="/contacts/{{contactid}}/delete" method="post">
+				{{#path}}<form id="delete" action="{{path}}/delete" method="post">
 					<input type='submit' class="o-buttons o-buttons--standout delete-button" value='Delete' />
-				</form>{{/_new}}
+				</form>{{/path}}
 
 				<h2>Endpoint URLs</h2>
 				<small>Press save to update</small>
