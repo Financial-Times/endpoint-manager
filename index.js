@@ -21,8 +21,8 @@ var health_api = process.env.HEALTH_API || "http://healthcheck.ft.com/";
 if (health_api.slice(-1) != '/') health_api += '/';
 var health_apikey = process.env.HEALTH_APIKEY || "";
 var cmdb = new CMDB({
-	api: process.env.CMDBAPI,
-	apikey: process.env.APIKEY,
+	api: process.env.CMDB_API,
+	apikey: process.env.CMDB_APIKEY,
 });
 
 var path = require('path');
