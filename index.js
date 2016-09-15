@@ -17,6 +17,9 @@ var CMDB = require("cmdb.js");
 
 /** Environment variables **/
 var port = process.env.PORT || 3001;
+var health_api = process.env.HEALTH_API || "http://healthcheck.ft.com/";
+if (health_api.slice(-1) != '/') health_api += '/';
+var health_apikey = process.env.HEALTH_APIKEY || "";
 var cmdb = new CMDB({
 	api: process.env.CMDBAPI,
 	apikey: process.env.APIKEY,
@@ -195,7 +198,9 @@ function endpointController(endpoint) {
 		if (endpoint.healthSuffix) endpoint.urls.push({
 			type: 'health',
 			url: protocol+"://"+endpoint.id+"/"+endpoint.healthSuffix,
-			validateurl: "http://healthcheck.ft.com/validate?host="+encodeURIComponent(endpoint.id)+"&protocol="+protocol,
+			validateurl: health_api + "validate?host="+encodeURIComponent(endpoint.id)+"&protocol="+protocol,
+			validateapi: health_api + "validate.json?host="+encodeURIComponent(endpoint.id)+"&protocol="+protocol,
+			apikey: health_apikey,
 		});
 		if (endpoint.aboutSuffix) endpoint.urls.push({
 			type: 'about',

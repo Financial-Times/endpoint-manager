@@ -63,6 +63,18 @@
 				margin-bottom: 1em;
     			font-size: small;
 			}
+			.valid {
+				background: green;
+			}
+			.invalid {
+				background: red;
+			}
+			.upgrade {
+				background: chocolate;
+			}
+			.url > .save-button {
+				margin-left: 2em;
+			}
   		</style>
 
   		<script type="text/javascript">
@@ -110,6 +122,35 @@
 					}
 					idinput.addEventListener('change', updateBaseURL);
 					protocolinput.addEventListener('change', updateBaseURL);
+
+
+					var urlnodes = document.querySelectorAll(".url"), i;
+					for (i = 0; i < urlnodes.length; i++) {
+						checkValidity(urlnodes[i]);
+					}
+					function checkValidity(urlnode) {
+						fetch(urlnode.dataset.validateapi, {headers:{
+							key: urlnode.dataset.apikey,
+						}}).then(function (response) {
+							return response.json();
+						}).then(function (body) {
+							var msg, classname;
+							console.log(body);
+							if (!body.isValid) {
+								msg = "This is healthcheck is invalid";
+								classname = "invalid";
+							} else if(body.needsUpgrade) {
+								msg = "This healthcheck is valid, but isn't up-to-date with the latest standard";
+								classname = "upgrade";
+							} else {
+								msg = "This healthcheck is valid";
+								classname = "valid";
+							}
+							var savebutton = urlnode.querySelector(".save-button");
+							savebutton.firstChild.nodeValue = msg;
+							savebutton.className += " " + classname;
+						})
+					}
   				});
   			-->
   		</script>
@@ -188,9 +229,11 @@
 				<h2>Validate Endpoint URLs</h2>
 				<small>(Press save to update)</small>
 				<br/>
-				{{#urls}}
-					<div class='{{type}} url'><span class='urltype'>{{type}} URL:</span> <a href="{{url}}">{{url}}</a>{{#validateurl}} <a href="{{validateurl}}" class="o-buttons o-buttons--standout save-button" />Validate</a>{{/validateurl}}</div>
-				{{/urls}}
+				<ul>
+					{{#urls}}
+					<li class='{{type}} url' data-validateapi="{{validateapi}}" data-apikey="{{apikey}}"><span class='urltype'>{{type}} URL:</span> <a href="{{url}}">{{url}}</a>{{#validateurl}} <a href="{{validateurl}}" class="o-buttons o-buttons--standout save-button" />Check whether is Valid</a>{{/validateurl}}</li>
+					{{/urls}}
+				</ul>
 				{{/id}}
 			</div>
 		</div>
