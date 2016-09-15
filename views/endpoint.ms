@@ -94,6 +94,22 @@
 					}
 					var systemcodeinput = document.querySelector('#systemCode');
 					addChecks(systemcodeinput, systemcodeinput.parentNode);
+
+					var idinput = document.querySelector('#id');
+					addChecks(idinput, idinput.parentNode);
+
+					var protocolinput = document.querySelector('#protocol');
+
+					function updateBaseURL() {
+						var baseurl = (protocolinput.value == "both") ? "http" : protocolinput.value;
+						baseurl += "://" + idinput.value + "/";
+						var baseurlnodes = document.querySelectorAll(".baseurl"), i;
+						for (i = 0; i < baseurlnodes.length; i++) {
+							baseurlnodes[i].firstChild.nodeValue = baseurl;
+						}
+					}
+					idinput.addEventListener('change', updateBaseURL);
+					protocolinput.addEventListener('change', updateBaseURL);
   				});
   			-->
   		</script>
@@ -128,7 +144,7 @@
 					<div class="o-forms-group">
 						<label class="o-forms-label" for="protocol">Protocol</label>
 						<small class="o-forms-additional-info">Which protocol(s) the endpoint is served over</small>
-						<select class="o-forms-select" id="position" name="protocol" data-bind="protocol">
+						<select class="o-forms-select" id="protocol" name="protocol" data-bind="protocol">
 							{{#protocollist}}<option value="{{value}}" {{#selected}}selected{{/selected}}>{{name}}</option>{{/protocollist}}
 						</select>
 					</div>
@@ -137,14 +153,14 @@
 						<label class="o-forms-label" for="healthSuffix">Healthcheck Suffix</label>
 						<small class="o-forms-additional-info">The path of a healthcheck which meets our <a href="https://docs.google.com/document/d/18hefJjImF5IFp9WvPAm9Iq5_GmWzI9ahlKSzShpQl1s/edit">Healthcheck Standard</a></small>
 						<div class="o-forms-affix-wrapper">
-							<span class="o-forms-prefix">{{id}}/</span>
+							<span class="o-forms-prefix baseurl">{{baseurl}}</span>
 							<input name="healthSuffix" value="{{healthSuffix}}" default="__health" class="o-forms-text" id="healthSuffix"></input>
 						</div>
 					</div>
 					<div class="o-forms-group">
 						<label class="o-forms-label" for="aboutSuffix">About Suffix</label>
 						<div class="o-forms-affix-wrapper">
-							<span class="o-forms-prefix">{{id}}/</span>
+							<span class="o-forms-prefix baseurl">{{baseurl}}</span>
 							<input name="aboutSuffix" value="{{aboutSuffix}}" default="__about" class="o-forms-text" id="aboutSuffix"></input>
 						</div>
 					</div>

@@ -76,7 +76,7 @@ app.get('/', function (req, res) {
 			if (!b.dataItemID) return 1;
 			return a.dataItemID.toLowerCase() > b.dataItemID.toLowerCase() ? 1 : -1;
 		});
-		endpoints.forEach(tidyData);
+		endpoints.forEach(endpointController);
 		res.render('index', {endpoints: endpoints});
 	}).catch(function (error) {
 		res.status(502);
@@ -90,7 +90,7 @@ app.get('/', function (req, res) {
  */
 app.get('/manage/:endpointid', function (req, res) {
 	cmdb.getItem(res.locals, 'endpoint', req.params.endpointid).then(function (endpoint) {
-		res.render('endpoint', tidyData(endpoint));
+		res.render('endpoint', endpointController(endpoint));
 	}).catch(function (error) {
 		res.status(502);
 		res.render("error", {message: "Problem connecting to CMDB ("+error+")"});
@@ -110,7 +110,7 @@ app.post('/manage/:endpointid', function (req, res) {
 	if (req.body.systemCode) endpoint.system = {healthcheck: [req.body.systemCode]};
 	cmdb.putItem(res.locals, 'endpoint', req.params.endpointid, endpoint).then(function (endpoint) {
 		endpoint.saved = true;
-		res.render('endpoint', tidyData(endpoint));
+		res.render('endpoint', endpointController(endpoint));
 	}).catch(function (error) {
 		res.status(502);
 		res.render("error", {message: "Problem connecting to CMDB ("+error+")"});
@@ -140,6 +140,7 @@ app.get('/new', function (req, res) {
 		aboutSuffix: "__about",
 		protocollist: getProtocolList(),
 		localpath: '/new',
+		baseurl: 'http:///',
 	};
 	res.render('endpoint', defaultdata);
 });
@@ -171,9 +172,9 @@ app.listen(port, function () {
 });
 
 /** 
- * Tidies up the data coming from CMDB to something expected by the templates
+ * Transforms the data from CMDB into something expected by the templates
  */
-function tidyData(endpoint) {
+function endpointController(endpoint) {
 	endpoint.id = endpoint.dataItemID;
 	delete endpoint.dataItemID;
 	delete endpoint.dataTypeID;
@@ -183,8 +184,12 @@ function tidyData(endpoint) {
 	var protocols = [];
 	if (['http', 'https'].indexOf(endpoint.protocol) != -1) {
 		protocols.push(endpoint.protocol);
+		endpoint.baseurl = endpoint.protocol+"://"+endpoint.id+"/";
 	} else if (endpoint.protocol == "both") {
 		protocols = ['http', 'https'];
+
+		// In the form, just show http for the baseurl for simplicity
+		endpoint.baseurl = "http://"+endpoint.id+"/";
 	}
 	protocols.forEach(function (protocol) {
 		if (endpoint.healthSuffix) endpoint.urls.push({
@@ -214,22 +219,4 @@ function getProtocolList(selected) {
 		if (protocol.value == selected) protocol.selected = true;
 	});
 	return protocollist;
-}
-
-function updateProtocol(id, body, res) {
-
-	var endpoint = {
-		protocol: req.body.protocol,
-		healthSuffix: req.body.healthSuffix,
-		aboutSuffix: req.body.aboutSuffix,
-		isLive: !!req.body.isLive,
-	}
-	if (body.systemCode) endpoint.system = {healthcheck: [body.systemCode]};
-	cmdb.putItem(res.locals, 'endpoint', id, endpoint).then(function (endpoint) {
-		endpoint.saved = true;
-		res.render('endpoint', tidyData(endpoint));
-	}).catch(function (error) {
-		res.status(502);
-		res.render("error", {message: "Problem connecting to CMDB ("+error+")"});
-	});
 }
