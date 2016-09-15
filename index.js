@@ -98,13 +98,9 @@ app.get('/manage/:endpointid', function (req, res) {
 });
 
 /**
- * Gets info about a given Contact from the CMDB and provides a form for editing it
+ * Updates an Endpoint
  */
 app.post('/manage/:endpointid', function (req, res) {
-	if (req.body.systemCode) {
-		req.body.system = {healthcheck: [req.body.systemCode]};
-		delete req.body.systemCode;
-	}
 	var endpoint = {
 		protocol: req.body.protocol,
 		healthSuffix: req.body.healthSuffix,
@@ -119,6 +115,40 @@ app.post('/manage/:endpointid', function (req, res) {
 		res.status(502);
 		res.render("error", {message: "Problem connecting to CMDB ("+error+")"});
 	});
+});
+
+/**
+ * Deletes an Endpoint
+ */
+app.post('/manage/:endpointid/delete', function (req, res) {
+	cmdb.deleteItem(res.locals, 'endpoint', req.params.endpointid).then(function (endpoint) {
+
+		// TODO: show messaging to indicate the delete was successful
+		res.redirect(303, '/');
+	}).catch(function (error) {
+		res.status(502);
+		res.render("error", {message: "Problem connecting to CMDB ("+error+")"});
+	});
+});
+
+/**
+ * Displays blank endpoint form for adding new endpoints
+ */
+app.get('/new', function (req, res) {
+	var defaultdata = {
+		healthSuffix: "__health",
+		aboutSuffix: "__about",
+		protocollist: getProtocolList(),
+		localpath: '/new',
+	};
+	res.render('endpoint', defaultdata);
+});
+
+/**
+ * Redirect to the approprate path and treat like a save.
+ */
+app.post('/new', function (req, res) {
+	res.redirect(307, '/manage/' + req.body.id);
 });
 
 
@@ -148,14 +178,7 @@ function tidyData(endpoint) {
 	delete endpoint.dataItemID;
 	delete endpoint.dataTypeID;
 	endpoint.localpath = "/manage/"+encodeURIComponent(endpoint.id);
-	endpoint.protocollist = [
-		{name: "HTTP", value: "http"},
-		{name: "HTTPS", value: "https"},
-		{name: "HTTP & HTTPS", value: "both"},
-	];
-	endpoint.protocollist.forEach(function (protocol) {
-		if (protocol.value == endpoint.protocol) protocol.selected = true;
-	});
+	endpoint.protocollist = getProtocolList(endpoint.protocol);
 	endpoint.urls = [];
 	var protocols = [];
 	if (['http', 'https'].indexOf(endpoint.protocol) != -1) {
@@ -167,7 +190,7 @@ function tidyData(endpoint) {
 		if (endpoint.healthSuffix) endpoint.urls.push({
 			type: 'health',
 			url: protocol+"://"+endpoint.id+"/"+endpoint.healthSuffix,
-			validateurl: "http://healthcheck.ft.com/validate?host="+encodeURIComponent(endpoint.dataItemID)+"&protocol="+protocol,
+			validateurl: "http://healthcheck.ft.com/validate?host="+encodeURIComponent(endpoint.id)+"&protocol="+protocol,
 		});
 		if (endpoint.aboutSuffix) endpoint.urls.push({
 			type: 'about',
@@ -181,3 +204,32 @@ function tidyData(endpoint) {
 	return endpoint;
 }
 
+function getProtocolList(selected) {
+	var protocollist = [
+		{name: "HTTP", value: "http"},
+		{name: "HTTPS", value: "https"},
+		{name: "HTTP & HTTPS", value: "both"},
+	];
+	protocollist.forEach(function (protocol) {
+		if (protocol.value == selected) protocol.selected = true;
+	});
+	return protocollist;
+}
+
+function updateProtocol(id, body, res) {
+
+	var endpoint = {
+		protocol: req.body.protocol,
+		healthSuffix: req.body.healthSuffix,
+		aboutSuffix: req.body.aboutSuffix,
+		isLive: !!req.body.isLive,
+	}
+	if (body.systemCode) endpoint.system = {healthcheck: [body.systemCode]};
+	cmdb.putItem(res.locals, 'endpoint', id, endpoint).then(function (endpoint) {
+		endpoint.saved = true;
+		res.render('endpoint', tidyData(endpoint));
+	}).catch(function (error) {
+		res.status(502);
+		res.render("error", {message: "Problem connecting to CMDB ("+error+")"});
+	});
+}

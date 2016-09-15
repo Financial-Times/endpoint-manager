@@ -37,7 +37,10 @@
 		</header>
 		<div id='content' class="o-grid-container">
 			<div class="o-grid-row" data-o-grid-colspan="9">
-				Existing Endpoints:
+				<form id="new" action="/new" method="get">
+					<input type='submit' class="o-buttons o-buttons--standout " value='Add New Endpoint' />
+				</form>
+				<h2>Existing Endpoints</h2>
 				<ul>
 					{{#endpoints}}<li><a href="{{localpath}}">{{id}}</a></li>{{/endpoints}}
 				</ul>

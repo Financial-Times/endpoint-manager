@@ -113,7 +113,7 @@
 
 				<form action="{{localpath}}" method="post">
 					<div class='link-all'><a href="/">&lt;- Back to All Endpoints</a></div>
-					<h1>{{#_new}}Add New{{/_new}}{{^_new}}Edit{{/_new}} Endpoint</h1>
+					<h1>{{^id}}Add New{{/id}}{{#id}}Edit{{/id}} Endpoint</h1>
 					{{#saved}}<div class="o-forms-message o-forms-message--highlight" id='saved'>
 						<p>Endpoint data saved</p>
 					</div>{{/saved}}
@@ -121,7 +121,7 @@
 						<div class="o-forms-group">
 							<label class="o-forms-label" for="id">Base URL</label>
 							<small class="o-forms-additional-info">The base URL of the endpoint, not including protocol or __health and __about</small>
-							<input type="text" name="id" value="{{id}}" placeholder="Name of Contact" class="o-forms-text" id="id" required{{#id}} disabled{{/id}}></input>
+							<input type="text" name="id" value="{{id}}" placeholder="my-app.webservices.ft.com" class="o-forms-text" id="id" required{{#id}} disabled{{/id}}></input>
 						</div>
 					</div>
 					<div class="o-forms-group">
@@ -158,21 +158,23 @@
 					<div class="o-forms-group">
 						<label class="o-forms-label" for="systemCode">System Code</label>
 						<small class="o-forms-additional-info">The system code of the system this endpoint serves</small>
-						<input type="text" name="systemCode" class="o-forms-text" id="systemCode" pattern="^[a-z0-9\-]{3,32}$" value="{{systemCode}}" required></input>
+						<input type="text" name="systemCode" class="o-forms-text" id="systemCode" pattern="^[a-z0-9\-]{3,32}$" value="{{systemCode}}"></input>
 					<div class="o-forms-errortext">System Codes must consist of between 3 and 32 lowercase alphanumeric characters or hyphens.</div>
 					</div>
 
-					<div id="save"><input type='submit' class="o-buttons o-buttons--standout save-button" value='Save' /></div>
+					<div id="save"><input type='submit' class="o-buttons o-buttons--standout save-button" value='{{#id}}Save{{/id}}{{^id}}Create{{/id}}' /></div>
 				</form>
-				{{#path}}<form id="delete" action="{{path}}/delete" method="post">
+				{{#id}}<form id="delete" action="{{localpath}}/delete" method="post">
 					<input type='submit' class="o-buttons o-buttons--standout delete-button" value='Delete' />
-				</form>{{/path}}
-
-				<h2>Endpoint URLs</h2>
-				<small>Press save to update</small>
+				</form>
+				<br/><hr/>
+				<h2>Validate Endpoint URLs</h2>
+				<small>(Press save to update)</small>
+				<br/>
 				{{#urls}}
 					<div class='{{type}} url'><span class='urltype'>{{type}} URL:</span> <a href="{{url}}">{{url}}</a>{{#validateurl}} <a href="{{validateurl}}" class="o-buttons o-buttons--standout save-button" />Validate</a>{{/validateurl}}</div>
 				{{/urls}}
+				{{/id}}
 			</div>
 		</div>
 		<script src="https://build.origami.ft.com/v2/bundles/js?modules=o-header-services@^1.0.0,o-buttons@^4.0.0,o-forms@^2.0.3,o-grid@^4.2.1"></script>
