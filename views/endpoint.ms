@@ -121,6 +121,7 @@
 						<div class="o-forms-group">
 							<label class="o-forms-label" for="id">Base URL</label>
 							<small class="o-forms-additional-info">The base URL of the endpoint, not including protocol or __health and __about</small>
+							{{#id}}<small class="o-forms-additional-info">Can't be edited after creation.  If incorrect, create a new endpoint and delete the old one.</small>{{/id}}
 							<input type="text" name="id" value="{{id}}" placeholder="my-app.webservices.ft.com" class="o-forms-text" id="id" required{{#id}} disabled{{/id}}></input>
 						</div>
 					</div>
