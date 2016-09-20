@@ -110,7 +110,7 @@ app.post('/manage/:endpointid', function (req, res) {
 		aboutSuffix: req.body.aboutSuffix,
 		isLive: !!req.body.isLive,
 	}
-	if (req.body.systemCode) endpoint.system = {healthcheck: [req.body.systemCode]};
+	if (req.body.systemCode) endpoint.isHealthcheckFor = {system: [req.body.systemCode]};
 	cmdb.putItem(res.locals, 'endpoint', req.params.endpointid, endpoint).then(function (endpoint) {
 		endpoint.saved = true;
 		res.render('endpoint', endpointController(endpoint));
@@ -207,8 +207,8 @@ function endpointController(endpoint) {
 			url: protocol+"://"+endpoint.id+"/"+endpoint.aboutSuffix,
 		});
 	});
-	if (endpoint.system && endpoint.system.healthcheck) {
-		endpoint.systemCode = endpoint.system.healthcheck.pop();
+	if (endpoint.isHealthcheckFor && endpoint.isHealthcheckFor.system) {
+		endpoint.systemCode = endpoint.isHealthcheckFor.system.pop();
 	}
 	endpoint.isLive = (endpoint.isLive == "True");
 	return endpoint;
