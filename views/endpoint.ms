@@ -55,7 +55,7 @@
 			}
 			.link-all {
 				margin-bottom: 1em;
-    			font-size: small;
+				font-size: small;
 			}
 			.valid {
 				background: green;
@@ -72,7 +72,7 @@
 
 			#saved {
 				padding: 0;
-			    padding-bottom: 0.1em;
+				padding-bottom: 0.1em;
 			}
 			#saved .success {
 				background-color: green;
