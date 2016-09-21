@@ -195,11 +195,14 @@ function endpointController(endpoint) {
 		endpoint.baseurl = "http://"+endpoint.id+"/";
 	}
 	protocols.forEach(function (protocol) {
+		var validateparams = "?host="+encodeURIComponent(endpoint.id)
+			+ "&protocol=" + encodeURIComponent(protocol)
+			+ "&healthSuffix=" + encodeURIComponent(endpoint.healthSuffix);
 		if (endpoint.healthSuffix) endpoint.urls.push({
 			type: 'health',
 			url: protocol+"://"+endpoint.id+"/"+endpoint.healthSuffix,
-			validateurl: health_api + "validate?host="+encodeURIComponent(endpoint.id)+"&protocol="+protocol,
-			validateapi: health_api + "validate.json?host="+encodeURIComponent(endpoint.id)+"&protocol="+protocol,
+			validateurl: health_api + "validate"+validateparams,
+			validateapi: health_api + "validate.json"+validateparam,
 			apikey: health_apikey,
 		});
 		if (endpoint.aboutSuffix) endpoint.urls.push({
