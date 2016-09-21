@@ -202,7 +202,7 @@ function endpointController(endpoint) {
 			type: 'health',
 			url: protocol+"://"+endpoint.id+"/"+endpoint.healthSuffix,
 			validateurl: health_api + "validate"+validateparams,
-			validateapi: health_api + "validate.json"+validateparam,
+			validateapi: health_api + "validate.json"+validateparams,
 			apikey: health_apikey,
 		});
 		if (endpoint.aboutSuffix) endpoint.urls.push({
