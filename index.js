@@ -120,7 +120,7 @@ app.post('/manage/:endpointid', function (req, res) {
 			json: JSON.stringify(endpoint).replace(/,/g, ",\n\t").replace(/}/g, "\n}").replace(/{/g, "{\n\t"),
 			
 			// TODO: get actual url from cmdb.js
-			url: 'https://cmdb.ft.com/v2/items/endpoint/'+encodeURIComponent(req.params.endpointid),
+			url: 'https://cmdb.ft.com/v2/items/endpoint/'+encodeURIComponent(encodeURIComponent(req.params.endpointid)),
 		}
 		res.render('endpoint', endpointController(result));
 	}).catch(function (error) {
@@ -161,7 +161,7 @@ app.get('/new', function (req, res) {
  * Redirect to the approprate path and treat like a save.
  */
 app.post('/new', function (req, res) {
-	res.redirect(307, '/manage/' + encodeURIComponent(req.body.id));
+	res.redirect(307, '/manage/' + encodeURIComponent(encodeURIComponent(req.body.id)));
 });
 
 app.use(function(req, res, next) {
@@ -189,7 +189,7 @@ function endpointController(endpoint) {
 	endpoint.id = endpoint.dataItemID;
 	delete endpoint.dataItemID;
 	delete endpoint.dataTypeID;
-	endpoint.localpath = "/manage/"+encodeURIComponent(endpoint.id);
+	endpoint.localpath = "/manage/"+encodeURIComponent(encodeURIComponent(endpoint.id));
 	endpoint.protocollist = getProtocolList(endpoint.protocol);
 	endpoint.urls = [];
 	var protocols = [];
