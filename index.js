@@ -111,9 +111,18 @@ app.post('/manage/:endpointid', function (req, res) {
 		isLive: !!req.body.isLive,
 	}
 	if (req.body.systemCode) endpoint.isHealthcheckFor = {system: [req.body.systemCode]};
-	cmdb.putItem(res.locals, 'endpoint', req.params.endpointid, endpoint).then(function (endpoint) {
-		endpoint.saved = true;
-		res.render('endpoint', endpointController(endpoint));
+	cmdb.putItem(res.locals, 'endpoint', req.params.endpointid, endpoint).then(function (result) {
+		result.saved = {
+			locals: JSON.stringify(res.locals),
+			endpointid: req.params.endpointid,
+
+			// TODO: replace with pretty print function
+			json: JSON.stringify(endpoint).replace(/,/g, ",\n\t").replace(/}/g, "\n}").replace(/{/g, "{\n\t"),
+			
+			// TODO: get actual url from cmdb.js
+			url: 'https://cmdb.ft.com/v2/items/endpoint/'+encodeURIComponent(req.params.endpointid),
+		}
+		res.render('endpoint', endpointController(result));
 	}).catch(function (error) {
 		res.status(502);
 		res.render("error", {message: "Problem connecting to CMDB ("+error+")"});
@@ -154,7 +163,6 @@ app.get('/new', function (req, res) {
 app.post('/new', function (req, res) {
 	res.redirect(307, '/manage/' + req.body.id);
 });
-
 
 app.use(function(req, res, next) {
 	res.status(404).render('error', {message:"Page not found."});
