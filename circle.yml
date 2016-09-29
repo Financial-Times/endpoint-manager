@@ -1,0 +1,21 @@
+machine:
+  node:
+
+deployment:
+  staging:
+    branch: test
+    commands:
+      - heroku maintenance:on --app oi-endpoint-manager-test
+      - git push git@heroku.com:oi-endpoint-manager-test.git $CIRCLE_SHA1:refs/heads/master
+      - heroku maintenance:off --app oi-endpoint-manager-test
+
+  production:
+    branch: master
+    commands:
+      - heroku maintenance:on --app oi-endpoint-manager-prod
+      - git push git@heroku.com:oi-endpoint-manager-prod.git $CIRCLE_SHA1:refs/heads/master
+      - heroku maintenance:off --app oi-endpoint-manager-prod
+
+test:
+  override:
+    - touch no-tests

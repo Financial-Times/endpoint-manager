@@ -32,12 +32,6 @@
 				border-color: #900;
 				float: right;
 			}
-			#saved {
-			    transition: opacity 5s;
-			}
-			#saved.hide {
-				opacity: 0;
-			}
 			label {
 				display: block;
 			}
@@ -61,7 +55,7 @@
 			}
 			.link-all {
 				margin-bottom: 1em;
-    			font-size: small;
+				font-size: small;
 			}
 			.valid {
 				background: green;
@@ -75,18 +69,55 @@
 			.url > .save-button {
 				margin-left: 2em;
 			}
+
+			#saved {
+				padding: 0;
+				padding-bottom: 0.1em;
+			}
+			#saved .success {
+				background-color: green;
+				color: white;
+				padding: 8px;
+				border-radius: 5px 5px 0 0;
+				font-weight: bold;
+				font-size: large;
+			}
+			#saved aside > div {
+				margin: 8px;
+			}
+			#saved aside[data-collapse=true] > div {
+				display: none;
+			}
+			#saved aside > h3 {
+				cursor: pointer;
+				margin: 0.5em 3px;
+			}
+			#saved aside > h3:before {
+				width: 1em;
+				float: left;
+				text-align: center;
+			}
+			#saved aside[data-collapse="true"] > h3:before {
+				content: "+ ";
+			}
+			#saved aside[data-collapse="false"] > h3:before {
+				content: "- ";
+			}
+			#saved aside pre {
+				padding: 8px;
+				border: groove;
+				border-radius: 4px;
+			}
   		</style>
 
   		<script type="text/javascript">
   			<!--
 
   				document.addEventListener("DOMContentLoaded", function() {
-					window.setTimeout(function () {
-						var savedmessage = document.querySelector('#saved');
-						if (savedmessage) {
-							savedmessage.setAttribute("class", savedmessage.getAttribute("class")+" hide");
-						}
-					}, 5000);
+					var savedmessagetitle = document.querySelector('#saved h3');
+					if (savedmessagetitle) savedmessagetitle.addEventListener('click', function () {
+						savedmessagetitle.parentNode.dataset.collapse = savedmessagetitle.parentNode.dataset.collapse != "true";
+					});
 
 					/**
 					 * Check the validity of a field on page load and each time the field changes 
@@ -172,7 +203,17 @@
 					<div class='link-all'><a href="/">&lt;- Back to All Endpoints</a></div>
 					<h1>{{^id}}Add New{{/id}}{{#id}}Edit{{/id}} Endpoint</h1>
 					{{#saved}}<div class="o-forms-message o-forms-message--highlight" id='saved'>
-						<p>Endpoint data saved</p>
+						<p class='success'>Endpoint data saved succesfully</p>
+						<aside data-collapse='true'>
+							<h3>How can I automate this action?</h3>
+							<div>
+								<p>If you're using javascript, use the <a href="https://github.com/Financial-Times/cmdb.js">cmdb.js</a> library as follows:</p>
+								<pre>cmdb.putItem({{locals}}, "endpoint", "{{endpointid}}", {{json}});</pre>
+								<p>Alternatively, make a HTTP PUT request to <a href="{{url}}">{{url}}</a> with the following body:</p><pre>{{json}}</pre>
+								<p>NB: both these methods will require an <a href="https://cmdb-key-manager-prod.herokuapp.com/">API Key</a></p>
+							</div>
+
+						</aside>
 					</div>{{/saved}}
 					<div class="o-forms-wrapper o-forms-wrapper--highlight">
 						<div class="o-forms-group">

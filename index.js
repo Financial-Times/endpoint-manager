@@ -110,10 +110,19 @@ app.post('/manage/:endpointid', function (req, res) {
 		aboutSuffix: req.body.aboutSuffix,
 		isLive: !!req.body.isLive,
 	}
-	if (req.body.systemCode) endpoint.system = {healthcheck: [req.body.systemCode]};
-	cmdb.putItem(res.locals, 'endpoint', req.params.endpointid, endpoint).then(function (endpoint) {
-		endpoint.saved = true;
-		res.render('endpoint', endpointController(endpoint));
+	if (req.body.systemCode) endpoint.isHealthcheckFor = {system: [req.body.systemCode]};
+	cmdb.putItem(res.locals, 'endpoint', req.params.endpointid, endpoint).then(function (result) {
+		result.saved = {
+			locals: JSON.stringify(res.locals),
+			endpointid: req.params.endpointid,
+
+			// TODO: replace with pretty print function
+			json: JSON.stringify(endpoint).replace(/,/g, ",\n\t").replace(/}/g, "\n}").replace(/{/g, "{\n\t"),
+			
+			// TODO: get actual url from cmdb.js
+			url: 'https://cmdb.ft.com/v2/items/endpoint/'+encodeURIComponent(encodeURIComponent(req.params.endpointid)),
+		}
+		res.render('endpoint', endpointController(result));
 	}).catch(function (error) {
 		res.status(502);
 		res.render("error", {message: "Problem connecting to CMDB ("+error+")"});
@@ -152,9 +161,8 @@ app.get('/new', function (req, res) {
  * Redirect to the approprate path and treat like a save.
  */
 app.post('/new', function (req, res) {
-	res.redirect(307, '/manage/' + req.body.id);
+	res.redirect(307, '/manage/' + encodeURIComponent(encodeURIComponent(req.body.id)));
 });
-
 
 app.use(function(req, res, next) {
 	res.status(404).render('error', {message:"Page not found."});
@@ -181,7 +189,7 @@ function endpointController(endpoint) {
 	endpoint.id = endpoint.dataItemID;
 	delete endpoint.dataItemID;
 	delete endpoint.dataTypeID;
-	endpoint.localpath = "/manage/"+encodeURIComponent(endpoint.id);
+	endpoint.localpath = "/manage/"+encodeURIComponent(encodeURIComponent(endpoint.id));
 	endpoint.protocollist = getProtocolList(endpoint.protocol);
 	endpoint.urls = [];
 	var protocols = [];
@@ -195,11 +203,14 @@ function endpointController(endpoint) {
 		endpoint.baseurl = "http://"+endpoint.id+"/";
 	}
 	protocols.forEach(function (protocol) {
+		var validateparams = "?host="+encodeURIComponent(endpoint.id)
+			+ "&protocol=" + encodeURIComponent(protocol)
+			+ "&healthSuffix=" + encodeURIComponent(endpoint.healthSuffix);
 		if (endpoint.healthSuffix) endpoint.urls.push({
 			type: 'health',
 			url: protocol+"://"+endpoint.id+"/"+endpoint.healthSuffix,
-			validateurl: health_api + "validate?host="+encodeURIComponent(endpoint.id)+"&protocol="+protocol,
-			validateapi: health_api + "validate.json?host="+encodeURIComponent(endpoint.id)+"&protocol="+protocol,
+			validateurl: health_api + "validate"+validateparams,
+			validateapi: health_api + "validate.json"+validateparams,
 			apikey: health_apikey,
 		});
 		if (endpoint.aboutSuffix) endpoint.urls.push({
@@ -207,8 +218,8 @@ function endpointController(endpoint) {
 			url: protocol+"://"+endpoint.id+"/"+endpoint.aboutSuffix,
 		});
 	});
-	if (endpoint.system && endpoint.system.healthcheck) {
-		endpoint.systemCode = endpoint.system.healthcheck.pop();
+	if (endpoint.isHealthcheckFor && endpoint.isHealthcheckFor.system) {
+		endpoint.systemCode = endpoint.isHealthcheckFor.system.pop();
 	}
 	endpoint.isLive = (endpoint.isLive == "True");
 	return endpoint;
