@@ -12,9 +12,9 @@ deployment:
   production:
     branch: master
     commands:
-      - heroku maintenance:on --app oi-endpoint-manager-prod
-      - git push git@heroku.com:oi-endpoint-manager-prod.git $CIRCLE_SHA1:refs/heads/master
-      - heroku maintenance:off --app oi-endpoint-manager-prod
+      - heroku maintenance:on --app oi-endpoint-manager
+      - git push git@heroku.com:oi-endpoint-manager.git $CIRCLE_SHA1:refs/heads/master
+      - heroku maintenance:off --app oi-endpoint-manager
 
 test:
   override:
