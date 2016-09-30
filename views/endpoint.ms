@@ -141,14 +141,14 @@
 					var idinput = document.querySelector('#id');
 					addChecks(idinput, idinput.parentNode);
 
-					var nameinput = document.querySelector('#name');
-					addChecks(nameinput, nameinput.parentNode);
+					var baseURLinput = document.querySelector('#baseURL');
+					addChecks(baseURLinput, baseURLinput.parentNode);
 
 					var protocolinput = document.querySelector('#protocol');
 
 					function updateBaseURL() {
 						var baseurl = (protocolinput.value == "both") ? "http" : protocolinput.value;
-						baseurl += "://" + nameinput.value + "/";
+						baseurl += "://" + baseURLinput.value + "/";
 						var baseurlnodes = document.querySelectorAll(".baseurl"), i;
 						for (i = 0; i < baseurlnodes.length; i++) {
 							baseurlnodes[i].firstChild.nodeValue = baseurl;
@@ -219,16 +219,16 @@
 						</aside>
 					</div>{{/saved}}
 					<div class="o-forms-group">
-						<label class="o-forms-label" for="name">Base URL</label>
+						<label class="o-forms-label" for="baseURL">Base URL</label>
 						<small class="o-forms-additional-info">The base URL of the endpoint, not including protocol or __health and __about.</small>
-						<input type="text" name="name" value="{{name}}" placeholder="my-app.webservices.ft.com" class="o-forms-text" id="name" required></input>
+						<input type="text" name="baseURL" value="{{baseURL}}" placeholder="my-app.webservices.ft.com" class="o-forms-text" id="baseURL" required></input>
 					</div>
 					<div class="o-forms-wrapper o-forms-wrapper--highlight">
 						<div class="o-forms-group">
 							<label class="o-forms-label" for="id">ID</label>
 							<small class="o-forms-additional-info">A unique identification for a endpoint with a SINGLE healthcheck or about (defaults to base URL). If you have mulitple healthchecks for an endpoint then you must define unique identifications for each one.</small>
 							{{#id}}<small class="o-forms-additional-info">Can't be edited after creation.  If incorrect, create a new endpoint and delete the old one.</small>{{/id}}
-							<input type="text" name="id" value="{{id}}" placeholder="{{name}}" default="{{name}}" class="o-forms-text" id="id" {{#id}}disabled{{/id}}></input>
+							<input type="text" name="id" value="{{id}}" placeholder="{{baseURL}}" default="{{baseURL}}" class="o-forms-text" id="id" {{#id}}disabled{{/id}}></input>
 						</div>
 					</div>
 					<div class="o-forms-group">

@@ -105,7 +105,7 @@ app.get('/manage/:endpointid', function (req, res) {
  */
 app.post('/manage/:endpointid', function (req, res) {
 	var endpoint = {
-		name: req.body.name,
+		baseURL: req.body.baseURL,
 		protocol: req.body.protocol,
 		healthSuffix: req.body.healthSuffix,
 		aboutSuffix: req.body.aboutSuffix,
@@ -149,7 +149,7 @@ app.post('/manage/:endpointid/delete', function (req, res) {
  */
 app.get('/new', function (req, res) {
 	var defaultdata = {
-		name: "",
+		baseURL: "",
 		healthSuffix: "__health",
 		aboutSuffix: "__about",
 		protocollist: getProtocolList(),
@@ -197,12 +197,12 @@ function endpointController(endpoint) {
 	var protocols = [];
 	if (['http', 'https'].indexOf(endpoint.protocol) != -1) {
 		protocols.push(endpoint.protocol);
-		endpoint.baseurl = endpoint.protocol+"://"+endpoint.name+"/";
+		endpoint.baseurl = endpoint.protocol+"://"+endpoint.baseURL+"/";
 	} else if (endpoint.protocol == "both") {
 		protocols = ['http', 'https'];
 
 		// In the form, just show http for the baseurl for simplicity
-		endpoint.baseurl = "http://"+endpoint.name+"/";
+		endpoint.baseurl = "http://"+endpoint.baseURL+"/";
 	}
 	protocols.forEach(function (protocol) {
 		var validateparams = "?host="+encodeURIComponent(endpoint.id)
@@ -210,7 +210,7 @@ function endpointController(endpoint) {
 			+ "&healthSuffix=" + encodeURIComponent(endpoint.healthSuffix);
 		if (endpoint.healthSuffix) endpoint.urls.push({
 			type: 'health',
-			url: protocol+"://"+endpoint.name+"/"+endpoint.healthSuffix,
+			url: protocol+"://"+endpoint.baseURL+"/"+endpoint.healthSuffix,
 			validateurl: health_api + "validate"+validateparams,
 			validateapi: health_api + "validate.json"+validateparams,
 			apikey: health_apikey,
@@ -218,7 +218,7 @@ function endpointController(endpoint) {
 		if (endpoint.aboutSuffix) endpoint.urls.push({
 			type: 'about',
 
-			url: protocol+"://"+endpoint.name+"/"+endpoint.aboutSuffix,
+			url: protocol+"://"+endpoint.baseURL+"/"+endpoint.aboutSuffix,
 		});
 	});
 	if (endpoint.isHealthcheckFor && endpoint.isHealthcheckFor.system) {
