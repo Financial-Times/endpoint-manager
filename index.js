@@ -104,6 +104,9 @@ app.get('/manage/:endpointid', function (req, res) {
  * Updates an Endpoint
  */
 app.post('/manage/:endpointid', function (req, res) {
+	if (req.body.name == '') {
+		req.body.name = req.params.endpointid
+	}
 	var endpoint = {
 		name: req.body.name,
 		protocol: req.body.protocol,
@@ -210,14 +213,15 @@ function endpointController(endpoint) {
 			+ "&healthSuffix=" + encodeURIComponent(endpoint.healthSuffix);
 		if (endpoint.healthSuffix) endpoint.urls.push({
 			type: 'health',
-			url: protocol+"://"+endpoint.id+"/"+endpoint.healthSuffix,
+			url: protocol+"://"+endpoint.name+"/"+endpoint.healthSuffix,
 			validateurl: health_api + "validate"+validateparams,
 			validateapi: health_api + "validate.json"+validateparams,
 			apikey: health_apikey,
 		});
 		if (endpoint.aboutSuffix) endpoint.urls.push({
 			type: 'about',
-			url: protocol+"://"+endpoint.id+"/"+endpoint.aboutSuffix,
+
+			url: protocol+"://"+endpoint.name+"/"+endpoint.aboutSuffix,
 		});
 	});
 	if (endpoint.isHealthcheckFor && endpoint.isHealthcheckFor.system) {
