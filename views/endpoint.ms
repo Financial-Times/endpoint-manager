@@ -141,11 +141,14 @@
 					var idinput = document.querySelector('#id');
 					addChecks(idinput, idinput.parentNode);
 
+					var nameinput = document.querySelector('#name');
+					addChecks(nameinput, nameinput.parentNode);
+
 					var protocolinput = document.querySelector('#protocol');
 
 					function updateBaseURL() {
 						var baseurl = (protocolinput.value == "both") ? "http" : protocolinput.value;
-						baseurl += "://" + idinput.value + "/";
+						baseurl += "://" + nameinput.value + "/";
 						var baseurlnodes = document.querySelectorAll(".baseurl"), i;
 						for (i = 0; i < baseurlnodes.length; i++) {
 							baseurlnodes[i].firstChild.nodeValue = baseurl;
@@ -225,7 +228,7 @@
 							<label class="o-forms-label" for="id">ID</label>
 							<small class="o-forms-additional-info">A unique identification for a endpoint with a SINGLE healthcheck or about (defaults to base URL). If you have mulitple healthchecks for an endpoint then you must define unique identifications for each one.</small>
 							{{#id}}<small class="o-forms-additional-info">Can't be edited after creation.  If incorrect, create a new endpoint and delete the old one.</small>{{/id}}
-							<input type="text" name="id" value="{{id}}" default="{{name}}" class="o-forms-text" id="id" {{#id}}disabled{{/id}}></input>
+							<input type="text" name="id" value="{{id}}" placeholder="{{name}}" default="{{name}}" class="o-forms-text" id="id" {{#id}}disabled{{/id}}></input>
 						</div>
 					</div>
 					<div class="o-forms-group">
