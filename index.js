@@ -104,9 +104,6 @@ app.get('/manage/:endpointid', function (req, res) {
  * Updates an Endpoint
  */
 app.post('/manage/:endpointid', function (req, res) {
-	if (req.body.name == '') {
-		req.body.name = req.params.endpointid
-	}
 	var endpoint = {
 		name: req.body.name,
 		protocol: req.body.protocol,
