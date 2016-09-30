@@ -6,6 +6,7 @@ deployment:
     branch: separate-name
     commands:
       - heroku maintenance:on --app oi-endpoint-manager-dev
+      - git fetch origin --unshallow
       - git push git@heroku.com:oi-endpoint-manager-dev.git $CIRCLE_SHA1:refs/heads/master
       - heroku maintenance:off --app oi-endpoint-manager-dev
 
@@ -13,6 +14,7 @@ deployment:
     branch: test
     commands:
       - heroku maintenance:on --app oi-endpoint-manager-test
+      - git fetch origin --unshallow
       - git push git@heroku.com:oi-endpoint-manager-test.git $CIRCLE_SHA1:refs/heads/master
       - heroku maintenance:off --app oi-endpoint-manager-test
 
@@ -20,6 +22,7 @@ deployment:
     branch: master
     commands:
       - heroku maintenance:on --app oi-endpoint-manager
+      - git fetch origin --unshallow
       - git push git@heroku.com:oi-endpoint-manager.git $CIRCLE_SHA1:refs/heads/master
       - heroku maintenance:off --app oi-endpoint-manager
 
