@@ -197,12 +197,12 @@ function endpointController(endpoint) {
 	var protocols = [];
 	if (['http', 'https'].indexOf(endpoint.protocol) != -1) {
 		protocols.push(endpoint.protocol);
-		endpoint.baseurl = endpoint.protocol+"://"+endpoint.id+"/";
+		endpoint.baseurl = endpoint.protocol+"://"+endpoint.name+"/";
 	} else if (endpoint.protocol == "both") {
 		protocols = ['http', 'https'];
 
 		// In the form, just show http for the baseurl for simplicity
-		endpoint.baseurl = "http://"+endpoint.id+"/";
+		endpoint.baseurl = "http://"+endpoint.name+"/";
 	}
 	protocols.forEach(function (protocol) {
 		var validateparams = "?host="+encodeURIComponent(endpoint.id)
