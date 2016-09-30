@@ -105,6 +105,7 @@ app.get('/manage/:endpointid', function (req, res) {
  */
 app.post('/manage/:endpointid', function (req, res) {
 	var endpoint = {
+		name: req.body.name,
 		protocol: req.body.protocol,
 		healthSuffix: req.body.healthSuffix,
 		aboutSuffix: req.body.aboutSuffix,
@@ -148,6 +149,7 @@ app.post('/manage/:endpointid/delete', function (req, res) {
  */
 app.get('/new', function (req, res) {
 	var defaultdata = {
+		name: "",
 		healthSuffix: "__health",
 		aboutSuffix: "__about",
 		protocollist: getProtocolList(),

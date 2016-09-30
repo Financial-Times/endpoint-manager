@@ -3,6 +3,13 @@ machine:
 
 deployment:
   staging:
+    branch: separate-name
+    commands:
+      - heroku maintenance:on --app oi-endpoint-manager-dev
+      - git push git@heroku.com:oi-endpoint-manager-dev.git $CIRCLE_SHA1:refs/heads/master
+      - heroku maintenance:off --app oi-endpoint-manager-dev
+
+  staging:
     branch: test
     commands:
       - heroku maintenance:on --app oi-endpoint-manager-test
