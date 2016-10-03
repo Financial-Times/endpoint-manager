@@ -164,7 +164,11 @@ app.get('/new', function (req, res) {
  * Redirect to the approprate path and treat like a save.
  */
 app.post('/new', function (req, res) {
-	res.redirect(307, '/manage/' + encodeURIComponent(encodeURIComponent(req.body.id)));
+	endpointid = req.body.id
+	if (!endpointid.trim()) {
+		endpointid = req.body.base
+	}
+	res.redirect(307, '/manage/' + encodeURIComponent(encodeURIComponent(endpointid)));
 });
 
 app.use(function(req, res, next) {
