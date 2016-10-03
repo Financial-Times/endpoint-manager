@@ -141,14 +141,14 @@
 					var idinput = document.querySelector('#id');
 					addChecks(idinput, idinput.parentNode);
 
-					var baseURLinput = document.querySelector('#baseURL');
-					addChecks(baseURLinput, baseURLinput.parentNode);
+					var baseinput = document.querySelector('#base');
+					addChecks(baseinput, baseinput.parentNode);
 
 					var protocolinput = document.querySelector('#protocol');
 
 					function updateBaseURL() {
 						var baseurl = (protocolinput.value == "both") ? "http" : protocolinput.value;
-						baseurl += "://" + baseURLinput.value + "/";
+						baseurl += "://" + baseinput.value + "/";
 						var baseurlnodes = document.querySelectorAll(".baseurl"), i;
 						for (i = 0; i < baseurlnodes.length; i++) {
 							baseurlnodes[i].firstChild.nodeValue = baseurl;
@@ -219,16 +219,16 @@
 						</aside>
 					</div>{{/saved}}
 					<div class="o-forms-group">
-						<label class="o-forms-label" for="baseURL">Base URL</label>
+						<label class="o-forms-label" for="base">Base URL</label>
 						<small class="o-forms-additional-info">The base URL of the endpoint, not including protocol or __health and __about.</small>
-						<input type="text" name="baseURL" value="{{baseURL}}" placeholder="my-app.webservices.ft.com" class="o-forms-text" id="baseURL" required></input>
+						<input type="text" name="base" value="{{base}}" placeholder="my-app.webservices.ft.com" class="o-forms-text" id="base" required></input>
 					</div>
 					<div class="o-forms-wrapper o-forms-wrapper--highlight">
 						<div class="o-forms-group">
 							<label class="o-forms-label" for="id">ID</label>
 							<small class="o-forms-additional-info">A unique identification for a endpoint with a SINGLE healthcheck or about (defaults to base URL). If you have mulitple healthchecks for an endpoint then you must define unique identifications for each one.</small>
 							{{#id}}<small class="o-forms-additional-info">Can't be edited after creation.  If incorrect, create a new endpoint and delete the old one.</small>{{/id}}
-							<input type="text" name="id" value="{{id}}" placeholder="{{baseURL}}" default="{{baseURL}}" class="o-forms-text" id="id" {{#id}}disabled{{/id}}></input>
+							<input type="text" name="id" value="{{id}}" placeholder="{{base}}" default="{{base}}" class="o-forms-text" id="id" {{#id}}disabled{{/id}}></input>
 						</div>
 					</div>
 					<div class="o-forms-group">
@@ -243,14 +243,14 @@
 						<label class="o-forms-label" for="healthSuffix">Healthcheck Suffix</label>
 						<small class="o-forms-additional-info">The path of a healthcheck which meets our <a href="https://docs.google.com/document/d/18hefJjImF5IFp9WvPAm9Iq5_GmWzI9ahlKSzShpQl1s/edit">Healthcheck Standard</a></small>
 						<div class="o-forms-affix-wrapper">
-							<span class="o-forms-prefix baseurl">{{baseurl}}</span>
+							<span class="o-forms-prefix base">{{base}}</span>
 							<input name="healthSuffix" value="{{healthSuffix}}" default="__health" class="o-forms-text" id="healthSuffix"></input>
 						</div>
 					</div>
 					<div class="o-forms-group">
 						<label class="o-forms-label" for="aboutSuffix">About Suffix</label>
 						<div class="o-forms-affix-wrapper">
-							<span class="o-forms-prefix baseurl">{{baseurl}}</span>
+							<span class="o-forms-prefix base">{{base}}</span>
 							<input name="aboutSuffix" value="{{aboutSuffix}}" default="__about" class="o-forms-text" id="aboutSuffix"></input>
 						</div>
 					</div>

@@ -105,7 +105,7 @@ app.get('/manage/:endpointid', function (req, res) {
  */
 app.post('/manage/:endpointid', function (req, res) {
 	var endpoint = {
-		baseURL: req.body.baseURL,
+		base: req.body.base,
 		protocol: req.body.protocol,
 		healthSuffix: req.body.healthSuffix,
 		aboutSuffix: req.body.aboutSuffix,
@@ -149,7 +149,8 @@ app.post('/manage/:endpointid/delete', function (req, res) {
  */
 app.get('/new', function (req, res) {
 	var defaultdata = {
-		baseURL: "",
+		base: "",
+		endpointid: "",
 		healthSuffix: "__health",
 		aboutSuffix: "__about",
 		protocollist: getProtocolList(),
@@ -191,18 +192,19 @@ function endpointController(endpoint) {
 	endpoint.id = endpoint.dataItemID;
 	delete endpoint.dataItemID;
 	delete endpoint.dataTypeID;
+//   endpoint.base = endpoint.base;
 	endpoint.localpath = "/manage/"+encodeURIComponent(encodeURIComponent(endpoint.id));
 	endpoint.protocollist = getProtocolList(endpoint.protocol);
 	endpoint.urls = [];
 	var protocols = [];
 	if (['http', 'https'].indexOf(endpoint.protocol) != -1) {
 		protocols.push(endpoint.protocol);
-		endpoint.baseurl = endpoint.protocol+"://"+endpoint.baseURL+"/";
+		endpoint.baseurl = endpoint.protocol+"://"+endpoint.base+"/";
 	} else if (endpoint.protocol == "both") {
 		protocols = ['http', 'https'];
 
 		// In the form, just show http for the baseurl for simplicity
-		endpoint.baseurl = "http://"+endpoint.baseURL+"/";
+		endpoint.baseurl = "http://"+endpoint.base+"/";
 	}
 	protocols.forEach(function (protocol) {
 		var validateparams = "?host="+encodeURIComponent(endpoint.id)
@@ -210,15 +212,14 @@ function endpointController(endpoint) {
 			+ "&healthSuffix=" + encodeURIComponent(endpoint.healthSuffix);
 		if (endpoint.healthSuffix) endpoint.urls.push({
 			type: 'health',
-			url: protocol+"://"+endpoint.baseURL+"/"+endpoint.healthSuffix,
+			url: protocol+"://"+endpoint.base+"/"+endpoint.healthSuffix,
 			validateurl: health_api + "validate"+validateparams,
 			validateapi: health_api + "validate.json"+validateparams,
 			apikey: health_apikey,
 		});
 		if (endpoint.aboutSuffix) endpoint.urls.push({
 			type: 'about',
-
-			url: protocol+"://"+endpoint.baseURL+"/"+endpoint.aboutSuffix,
+			url: protocol+"://"+endpoint.base+"/"+endpoint.aboutSuffix,
 		});
 	});
 	if (endpoint.isHealthcheckFor && endpoint.isHealthcheckFor.system) {
