@@ -195,6 +195,9 @@ function endpointController(endpoint) {
 	if (!endpoint.id.trim()) {
 		endpoint.id = endpoint.base
 	}
+	if (!endpoint.base.trim()) {
+		endpoint.base = endpoint.id
+	}
 	endpoint.localpath = "/manage/"+encodeURIComponent(encodeURIComponent(endpoint.id));
 	endpoint.protocollist = getProtocolList(endpoint.protocol);
 	endpoint.urls = [];
