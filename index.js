@@ -192,7 +192,7 @@ function endpointController(endpoint) {
 	endpoint.id = endpoint.dataItemID;
 	delete endpoint.dataItemID;
 	delete endpoint.dataTypeID;
-	if !endpoint.id.trim() {
+	if (!endpoint.id.trim()) {
 		endpoint.id = endpoint.base
 	}
 	endpoint.localpath = "/manage/"+encodeURIComponent(encodeURIComponent(endpoint.id));
