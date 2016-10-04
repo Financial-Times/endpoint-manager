@@ -169,10 +169,10 @@ app.post('/new', function (req, res) {
 		endpointid = req.body.base
 	}
 	cmdb.getItem(res.locals, 'endpoint', endpointid).then(function (endpoint) {
-		req.body.id = 'retry'
+		res.render('error', {message:"Sorry, that ID is already in use."});
+	}).catch(function (error) {
+		res.redirect(307, '/manage/' + encodeURIComponent(encodeURIComponent(endpointid)));
 	});
-	res.redirect(307, '/manage/' + encodeURIComponent(encodeURIComponent(endpointid)));
-});
 
 app.use(function(req, res, next) {
 	res.status(404).render('error', {message:"Page not found."});
