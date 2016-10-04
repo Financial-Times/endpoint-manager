@@ -243,14 +243,14 @@
 						<label class="o-forms-label" for="healthSuffix">Healthcheck Suffix</label>
 						<small class="o-forms-additional-info">The path of a healthcheck which meets our <a href="https://docs.google.com/document/d/18hefJjImF5IFp9WvPAm9Iq5_GmWzI9ahlKSzShpQl1s/edit">Healthcheck Standard</a></small>
 						<div class="o-forms-affix-wrapper">
-							<span class="o-forms-prefix base">{{base}}</span>
+							<span class="o-forms-prefix baseurl">{{baseurl}}</span>
 							<input name="healthSuffix" value="{{healthSuffix}}" default="__health" class="o-forms-text" id="healthSuffix"></input>
 						</div>
 					</div>
 					<div class="o-forms-group">
 						<label class="o-forms-label" for="aboutSuffix">About Suffix</label>
 						<div class="o-forms-affix-wrapper">
-							<span class="o-forms-prefix base">{{base}}</span>
+							<span class="o-forms-prefix baseurl">{{baseurl}}</span>
 							<input name="aboutSuffix" value="{{aboutSuffix}}" default="__about" class="o-forms-text" id="aboutSuffix"></input>
 						</div>
 					</div>
