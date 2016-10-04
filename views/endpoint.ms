@@ -139,7 +139,7 @@
 					addChecks(systemcodeinput, systemcodeinput.parentNode);
 
 					var idinput = document.querySelector('#id');
-					addChecks(idinput, idinput.parentNode);
+					// checks for duplicate IDs are done prior to this function, no need for AddChecks call
 
 					var baseinput = document.querySelector('#base');
 					addChecks(baseinput, baseinput.parentNode);
