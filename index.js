@@ -169,9 +169,12 @@ app.post('/new', function (req, res) {
 		endpointid = req.body.base
 	};
 	cmdb.getItem(res.locals, 'endpoint', endpointid).then(function (endpoint) {
-		res.render('error', {message:"Sorry, that ID is already in use."});
+		req.body.iderror = "ID already in use, please re-enter"
+		res.render('endpoint', req.body);
+	}).catch(function (error) {
+		res.redirect(307, '/manage/' + encodeURIComponent(encodeURIComponent(endpointid)));
 	});
-	res.redirect(307, '/manage/' + encodeURIComponent(encodeURIComponent(endpointid)));
+
 });
 
 app.use(function(req, res, next) {
