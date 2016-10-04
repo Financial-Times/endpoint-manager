@@ -167,7 +167,7 @@ app.post('/new', function (req, res) {
 	endpointid = req.body.id
 	if (!endpointid.trim()) {
 		endpointid = req.body.base
-	}
+	};
 	cmdb.getItem(res.locals, 'endpoint', endpointid).then(function (endpoint) {
 		res.render('error', {message:"Sorry, that ID is already in use."});
 	});
@@ -200,8 +200,8 @@ function endpointController(endpoint) {
 	delete endpoint.dataItemID;
 	delete endpoint.dataTypeID;
 	if (!endpoint.hasOwnProperty('base')) {
-		endpoint.base = endpoint.id
-	}
+		endpoint.base = endpoint.id;
+	};
 	endpoint.localpath = "/manage/"+encodeURIComponent(encodeURIComponent(endpoint.id));
 	endpoint.protocollist = getProtocolList(endpoint.protocol);
 	endpoint.urls = [];
