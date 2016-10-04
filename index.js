@@ -172,7 +172,7 @@ app.post('/new', function (req, res) {
 		res.render('error', {message:"Sorry, that ID is already in use."});
 	});
 	res.redirect(307, '/manage/' + encodeURIComponent(encodeURIComponent(endpointid)));
-
+});
 
 app.use(function(req, res, next) {
 	res.status(404).render('error', {message:"Page not found."});
