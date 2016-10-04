@@ -156,7 +156,7 @@
 					}
 					idinput.addEventListener('change', updateBaseURL);
 					protocolinput.addEventListener('change', updateBaseURL);
-
+					baseinput.addEventListener('change', updateBaseURL);
 
 					var urlnodes = document.querySelectorAll(".url"), i;
 					for (i = 0; i < urlnodes.length; i++) {
