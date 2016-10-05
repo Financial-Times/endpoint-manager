@@ -167,8 +167,14 @@ app.post('/new', function (req, res) {
 	endpointid = req.body.id
 	if (!endpointid.trim()) {
 		endpointid = req.body.base
-	}
-	res.redirect(307, '/manage/' + encodeURIComponent(encodeURIComponent(endpointid)));
+	};
+	cmdb.getItem(res.locals, 'endpoint', endpointid).then(function (endpoint) {
+		req.body.iderror = "ID already in use, please re-enter"
+		res.render('endpoint', req.body);
+	}).catch(function (error) {
+		res.redirect(307, '/manage/' + encodeURIComponent(encodeURIComponent(endpointid)));
+	});
+
 });
 
 app.use(function(req, res, next) {
@@ -197,8 +203,8 @@ function endpointController(endpoint) {
 	delete endpoint.dataItemID;
 	delete endpoint.dataTypeID;
 	if (!endpoint.hasOwnProperty('base')) {
-		endpoint.base = endpoint.id
-	}
+		endpoint.base = endpoint.id;
+	};
 	endpoint.localpath = "/manage/"+encodeURIComponent(encodeURIComponent(endpoint.id));
 	endpoint.protocollist = getProtocolList(endpoint.protocol);
 	endpoint.urls = [];
