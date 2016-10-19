@@ -234,8 +234,8 @@ function endpointController(endpoint) {
 			url: protocol+"://"+endpoint.base+"/"+endpoint.aboutSuffix,
 		});
 	});
-	if (endpoint.isHealthcheckFor && endpoint.isHealthcheckFor.system && endpoint.isHealthcheckFor.system.dataItemID) {
-		endpoint.systemCode = endpoint.isHealthcheckFor.system.dataItemID;
+	if (endpoint.isHealthcheckFor && endpoint.isHealthcheckFor.system && endpoint.isHealthcheckFor.system[0].dataItemID) {
+		endpoint.systemCode = endpoint.isHealthcheckFor.system[0].dataItemID;
 	}
 	endpoint.isLive = (endpoint.isLive == "True");
 	return endpoint;
