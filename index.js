@@ -111,7 +111,7 @@ app.post('/manage/:endpointid', function (req, res) {
 		aboutSuffix: req.body.aboutSuffix,
 		isLive: !!req.body.isLive,
 	}
-	if (req.body.systemCode) endpoint.isHealthcheckFor = {system: [{'dataItemID': eq.body.systemCode}]};
+	if (req.body.systemCode) endpoint.isHealthcheckFor = {system: [{'dataItemID':req.body.systemCode}]};
 	cmdb.putItem(res.locals, 'endpoint', req.params.endpointid, endpoint).then(function (result) {
 		result.saved = {
 			locals: JSON.stringify(res.locals),
