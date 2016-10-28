@@ -142,7 +142,7 @@ app.get('/SortedByLive', function (req, res) {
 /**
  * We have a filter request!
  */
-app.get('/filter', function (req, res) {
+app.post('/filter', function (req, res) {
 	console.time('CMDB api call for filtered endpoints')
 	endpointsurl = process.env.CMDB_API + "items/endpoint"
 	endpointfilter = ''
