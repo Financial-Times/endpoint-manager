@@ -151,13 +151,13 @@ app.post('/filter', function (req, res) {
 	}
 	if (req.body.filter_systemCode) {
 		if (!endpointsfilter) {
-			endpointsfilter = endpointfilter + '&'
+			endpointsfilter = endpointsfilter + '&'
 		}
 		endpointsfilter = endpointsfilter + 'systemCode=' + req.body.filter_systemCode
 	}
 	if (req.body.filter_live) {
 		if (!endpointsfilter) {
-			endpointsfilter = endpointfilter + '&'
+			endpointsfilter = endpointsfilter + '&'
 		}
 		endpointsfilter = endpointsfilter + 'isLive=' + req.body.filter_live
 	}
