@@ -147,13 +147,19 @@ app.post('/filter', function (req, res) {
 	endpointsurl = process.env.CMDB_API + "items/endpoint"
 	endpointsfilter = ''
 	if (req.body.filter_url) {
-		endpointsfilter = endpointsfilter + req.body.filter_url
+		endpointsfilter = endpointsfilter + 'dataItemID=' + req.body.filter_url
 	}
 	if (req.body.filter_systemCode) {
-		endpointsfilter = endpointsfilter + req.body.filter_systemCode
+		if (!endpointsfilter) {
+			endpointsfilter = endpointfilter + '&'
+		}
+		endpointsfilter = endpointsfilter + 'systemCode=' + req.body.filter_systemCode
 	}
 	if (req.body.filter_live) {
-		endpointsfilter = endpointsfilter + req.body.filter_live
+		if (!endpointsfilter) {
+			endpointsfilter = endpointfilter + '&'
+		}
+		endpointsfilter = endpointsfilter + 'isLive=' + req.body.filter_live
 	}
 	if (endpointsfilter) {
 		endpointsurl = endpointsurl + '?' + endpointsfilter
