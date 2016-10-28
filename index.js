@@ -153,7 +153,7 @@ app.post('/filter', function (req, res) {
 		if (!endpointsfilter) {
 			endpointsfilter = endpointsfilter + '&'
 		}
-		endpointsfilter = endpointsfilter + 'systemCode=' + req.body.filter_systemCode
+		endpointsfilter = endpointsfilter + 'systemCode=' + req.body.filter_systemCode // you cannot send related fields as filters to cmdb!
 	}
 	if (req.body.filter_live) {
 		if (!endpointsfilter) {
@@ -166,6 +166,9 @@ app.post('/filter', function (req, res) {
 	}
 	console.log(endpointsurl)
 	cmdb._fetchAll(res.locals, endpointsurl).then(function (endpoints) {
+		// we need a filter function here to strip out the filtered related items
+		// ...
+		// then we can sort - or pass control to a sort fucntion
 		endpoints.sort(function (a,b){
 			if (!a.dataItemID) return -1;
 			if (!b.dataItemID) return 1;

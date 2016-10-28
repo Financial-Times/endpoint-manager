@@ -66,15 +66,15 @@
 								</div>
 							</div>
 						</div>
-						<input type='submit' class="o-buttons o-buttons--standout " value='Filter' />
+						<input type='submit' class="o-buttons o-buttons--standout " value='Filter (blanks show whole index) ' />
 					</div>
 				</form>
 
 				<table id='basic'>
 					<thead>
-						<td><a href="/SortedByURL">url</a></td>
-						<td><a href="/SortedBySystemCode">systemCode</a></td>
-						<td><a href="/SortedByLive">live</a></td>
+						<td><a href="/SortedByURL">url (click to sort)</a></td>
+						<td><a href="/SortedBySystemCode">systemCode (click to sort)</a></td>
+						<td><a href="/SortedByLive">live (click to sort)</a></td>
 					</thead>
 					<tbody>
 						{{#endpoints}}
