@@ -144,7 +144,7 @@ app.get('/SortedByLive', function (req, res) {
  */
 app.get('/filter', function (req, res) {
 	console.time('CMDB api call for filtered endpoints')
-	endpointsurl = process.env.CMDB_API + "items/endpoints"
+	endpointsurl = process.env.CMDB_API + "items/endpoint"
 	endpointfilter = ''
 	if (req.body.filter_url) {
 		endpointsfilter = endpointsfilter + req.body.filter_url

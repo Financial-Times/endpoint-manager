@@ -48,16 +48,22 @@
 
 				<h2>Existing Endpoints</h2>
 
-				<form id="filter" action="/filter" method="get">
+				<form id="filter" action="/filter" method="post">
 					<div class="o-forms-group">
 						<div class="o-grid-container">
-							<div class="o-grid-row" data-o-grid-colspan="3">
-								<label class="o-forms-label" for="filter_url">URL</label>
-								<input name="filter_url" value="{{filter_url}}" class="o-forms-text" id="filter_url"></input>
-								<label class="o-forms-label" for="filter_systemCode">System Code</label>
-								<input name="filter_systemCode" value="{{filter_systemCode}}" class="o-forms-text" id="filter_systemCode"></input>
-								<label class="o-forms-label" for="filter_live">is Live?</label>
-								<input name="filter_live" value="{{filter_live}}" class="o-forms-text" id="filter_live"></input>
+							<div class="o-grid-row">
+								<div data-o-grid-colspan="3">
+									<label class="o-forms-label" for="filter_url">URL</label>
+									<input name="filter_url" value="{{filter_url}}" class="o-forms-text" id="filter_url"></input>
+								</div>
+								<div data-o-grid-colspan="3">
+									<label class="o-forms-label" for="filter_systemCode">System Code</label>
+									<input name="filter_systemCode" value="{{filter_systemCode}}" class="o-forms-text" id="filter_systemCode"></input>
+								</div>
+								<div data-o-grid-colspan="3">
+									<label class="o-forms-label" for="filter_live">is Live?</label>
+									<input name="filter_live" value="{{filter_live}}" class="o-forms-text" id="filter_live"></input>
+								</div>
 							</div>
 						</div>
 						<input type='submit' class="o-buttons o-buttons--standout " value='Filter' />
