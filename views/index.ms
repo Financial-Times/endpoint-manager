@@ -54,12 +54,8 @@
 							<div class="o-grid-row" data-o-grid-colspan="3">
 								<label class="o-forms-label" for="filter_url">URL</label>
 								<input name="filter_url" value="{{filter_url}}" class="o-forms-text" id="filter_url"></input>
-							</div>
-							<div class="o-grid-row" data-o-grid-colspan="3">
 								<label class="o-forms-label" for="filter_systemCode">System Code</label>
 								<input name="filter_systemCode" value="{{filter_systemCode}}" class="o-forms-text" id="filter_systemCode"></input>
-							</div>
-							<div class="o-grid-row" data-o-grid-colspan="3">
 								<label class="o-forms-label" for="filter_live">is Live?</label>
 								<input name="filter_live" value="{{filter_live}}" class="o-forms-text" id="filter_live"></input>
 							</div>
