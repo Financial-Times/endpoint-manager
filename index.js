@@ -143,7 +143,19 @@ app.get('/SortedByLive', function (req, res) {
  * We have a filter request!
  */
 app.get('/filter', function (req, res) {
-	cmdb.getAllItems(res.locals, 'endpoint').then(function (endpoints) {
+	console.time('CMDB api call for filtered endpoints')
+	endpointsurl = process.env.CMDB_API + "/items/endpoints"
+	if (req.body.filter_url) {
+		endpointsurl = endpointsurl + req.body.filter_url
+	}
+	if (req.body.filter_systemCode) {
+		endpointsurl = endpointsurl + req.body.filter_systemCode
+	}
+	if (req.body.filter_live) {
+		endpointsurl = endpointsurl + req.body.filter_live
+	}
+	console.log(endpointsurl)
+	cmdb._fetchAll(res.locals, endpointsurl).then(function (endpoints) {
 		endpoints.sort(function (a,b){
 			if (!a.dataItemID) return -1;
 			if (!b.dataItemID) return 1;
