@@ -83,7 +83,7 @@ app.get('/', function (req, res) {
 		res.render('index', {endpoints: endpoints});
 	}).catch(function (error) {
 		res.status(502);
-		res.render("error", {message: "Problem connecting to CMDB ("+error+")"});
+		res.render("error", {message: "Problem obtaining list of endpoints from CMDB ("+error+")"});
 	});
 });
 
@@ -96,7 +96,7 @@ app.get('/manage/:endpointid', function (req, res) {
 		res.render('endpoint', endpointController(endpoint));
 	}).catch(function (error) {
 		res.status(502);
-		res.render("error", {message: "Problem connecting to CMDB ("+error+")"});
+		res.render("error", {message: "Problem obtaining details for "+req.params.endpointid+" from CMDB ("+error+")"});
 	});
 });
 
@@ -126,7 +126,7 @@ app.post('/manage/:endpointid', function (req, res) {
 		res.render('endpoint', endpointController(result));
 	}).catch(function (error) {
 		res.status(502);
-		res.render("error", {message: "Problem connecting to CMDB ("+error+")"});
+		res.render("error", {message: "Problem posting details for "+req.params.endpointid+" to CMDB ("+error+")"});
 	});
 });
 
@@ -140,7 +140,7 @@ app.post('/manage/:endpointid/delete', function (req, res) {
 		res.redirect(303, '/');
 	}).catch(function (error) {
 		res.status(502);
-		res.render("error", {message: "Problem connecting to CMDB ("+error+")"});
+		res.render("error", {message: "Problem deleting "+req.params.endpointid+" from CMDB ("+error+")"});
 	});
 });
 
