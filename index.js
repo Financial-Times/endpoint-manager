@@ -87,6 +87,23 @@ app.get('/', function (req, res) {
 	});
 });
 
+/**
+ * Gets a list of Endpoints from the CMDB and renders them
+ */
+app.get('/SortedBySystemCode', function (req, res) {
+	cmdb.getAllItems(res.locals, 'endpoint').then(function (endpoints) {
+		endpoints.sort(function (a,b){
+			if (!a.isHealthcheckFor.system[0].dataItemID) return -1;
+			if (!b.isHealthcheckFor.system[0].dataItemID) return 1;
+			return a.isHealthcheckFor.system[0].dataItemID.toLowerCase() > b.isHealthcheckFor.system[0].dataItemID.toLowerCase() ? 1 : -1;
+		});
+		endpoints.forEach(endpointController);
+		res.render('index', {endpoints: endpoints});
+	}).catch(function (error) {
+		res.status(502);
+		res.render("error", {message: "Problem obtaining list of systemcode ordered endpoints from CMDB ("+error+")"});
+	});
+});
 
 /**
  * Gets info about a given Contact from the CMDB and provides a form for editing it

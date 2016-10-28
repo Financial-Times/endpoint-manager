@@ -5,6 +5,10 @@
 		<title>Endpoint Manager</title>
 		<meta name=viewport content="width=device-width, initial-scale=1">
 		<link rel="stylesheet" href="https://build.origami.ft.com/v2/bundles/css?modules=o-header-services@^1.0.0,o-buttons@^4.0.0,o-forms@^2.0.3,o-grid@^4.2.1">
+		<style type="text/css">{{> cssbundle}}</style>
+		<script type="text/javascript">
+			{{> jsbundle}}
+		</script>
 		<style type="text/css">
 		  	body {
 				margin:0;
@@ -40,11 +44,12 @@
 				<form id="new" action="/new" method="get">
 					<input type='submit' class="o-buttons o-buttons--standout " value='Add New Endpoint' />
 				</form>
+
 				<h2>Existing Endpoints</h2>
 				<table id='basic'>
 					<thead>
 						<td>url</td>
-						<td>systemCode</td>
+						<td><a href="/SortedBySystemCode">systemCode</a></td>
 						<td>live</td>
 					</thead>
 					<tbody>
