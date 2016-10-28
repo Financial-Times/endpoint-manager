@@ -88,7 +88,24 @@ app.get('/', function (req, res) {
 });
 
 /**
- * Gets a list of Endpoints from the CMDB and renders them
+ * Gets a list of Endpoints from the CMDB, sorts by systemcode and renders them
+ */
+app.get('/SortedByURL', function (req, res) {
+	cmdb.getAllItems(res.locals, 'endpoint').then(function (endpoints) {
+		endpoints.sort(function (a,b){
+			if (!a.dataItemID) return -1;
+			if (!b.dataItemID) return 1;
+			return a.dataItemID.toLowerCase() > b.dataItemID.toLowerCase() ? 1 : -1;
+		});
+		endpoints.forEach(endpointController);
+		res.render('index', {endpoints: endpoints});
+	}).catch(function (error) {
+		res.status(502);
+		res.render("error", {message: "Problem obtaining list of url ordered endpoints from CMDB ("+error+")"});
+	});
+});
+/**
+ * Gets a list of Endpoints from the CMDB, sorts by systemcode and renders them
  */
 app.get('/SortedBySystemCode', function (req, res) {
 	cmdb.getAllItems(res.locals, 'endpoint').then(function (endpoints) {
@@ -102,6 +119,41 @@ app.get('/SortedBySystemCode', function (req, res) {
 	}).catch(function (error) {
 		res.status(502);
 		res.render("error", {message: "Problem obtaining list of systemcode ordered endpoints from CMDB ("+error+")"});
+	});
+});
+/**
+ * Gets a list of Endpoints from the CMDB, sorts by systemcode and renders them
+ */
+app.get('/SortedByLive', function (req, res) {
+	cmdb.getAllItems(res.locals, 'endpoint').then(function (endpoints) {
+		endpoints.sort(function (a,b){
+			if (!a.isLive) return -1;
+			if (!b.isLive) return 1;
+			return a.isLive.toLowerCase() > b.isLive.toLowerCase() ? 1 : -1;
+		});
+		endpoints.forEach(endpointController);
+		res.render('index', {endpoints: endpoints});
+	}).catch(function (error) {
+		res.status(502);
+		res.render("error", {message: "Problem obtaining list of islive ordered endpoints from CMDB ("+error+")"});
+	});
+});
+
+/**
+ * We have a filter request!
+ */
+app.get('/filter', function (req, res) {
+	cmdb.getAllItems(res.locals, 'endpoint').then(function (endpoints) {
+		endpoints.sort(function (a,b){
+			if (!a.dataItemID) return -1;
+			if (!b.dataItemID) return 1;
+			return a.dataItemID.toLowerCase() > b.dataItemID.toLowerCase() ? 1 : -1;
+		});
+		endpoints.forEach(endpointController);
+		res.render('index', {endpoints: endpoints});
+	}).catch(function (error) {
+		res.status(502);
+		res.render("error", {message: "Problem obtaining list of endpoints from CMDB ("+error+")"});
 	});
 });
 

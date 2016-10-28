@@ -49,9 +49,15 @@
 				<h2>Existing Endpoints</h2>
 				<table id='basic'>
 					<thead>
-						<td>url</td>
+						<td><a href="/SortedByURL">url</a></td>
 						<td><a href="/SortedBySystemCode">systemCode</a></td>
-						<td>live</td>
+						<td><a href="/SortedByLive">live</a></td>
+						<form id="filter" action="/filter" method="get">
+							<input name="filter_url" value="{{filter_url}}" class="o-forms-text" id="filter_url"></input>
+							<input name="filter_systemCode" value="{{filter_systemCode}}" class="o-forms-text" id="filter_systemCode"></input>
+							<input name="filter_live" value="{{filter_live}}" class="o-forms-text" id="filter_live"></input>
+							<input type='submit' class="o-buttons o-buttons--standout " value='Filter' />
+						</form>
 					</thead>
 					<tbody>
 						{{#endpoints}}
