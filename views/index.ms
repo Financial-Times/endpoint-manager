@@ -48,7 +48,7 @@
 
 				<h2>Existing Endpoints</h2>
 
-				<form id="filter" action="/filter" method="post">
+				<form id="filter" action="/" method="get">
 					<div class="o-forms-group">
 						<div class="o-grid-container">
 							<div class="o-grid-row">
@@ -72,7 +72,7 @@
 
 				<table id='basic'>
 					<thead>
-						<td><a href="/?sortby=URL">url (click to sort)</a></td>
+						<td><a href="/?sortby=dataItemID">url (click to sort)</a></td>
 						<td><a href="/?sortby=SystemCode">systemCode (click to sort)</a></td>
 						<td><a href="/?sortby=isLive">live (click to sort)</a></td>
 					</thead>

@@ -73,8 +73,28 @@ app.use(authS3O);
  * Gets a list of Endpoints from the CMDB and renders them
  */
 app.get('/', function (req, res) {
-	cmdb.getAllItems(res.locals, 'endpoint').then(function (endpoints) {
-		console.log(req.query) // check how sort param is provided
+	endpointsurl = process.env.CMDB_API + "items/endpoint"
+	endpointsfilter = ''
+	if (req.body.filter_url) {
+		endpointsfilter = endpointsfilter + 'dataItemID=' + req.body.filter_url
+	}
+	if (req.body.filter_systemCode) {
+		if (!endpointsfilter) {
+			endpointsfilter = endpointsfilter + '&'
+		}
+		endpointsfilter = endpointsfilter + 'systemCode=' + req.body.filter_systemCode // you cannot send related fields as filters to cmdb!
+	}
+	if (req.body.filter_live) {
+		if (!endpointsfilter) {
+			endpointsfilter = endpointsfilter + '&'
+		}
+		endpointsfilter = endpointsfilter + 'isLive=' + req.body.filter_live
+	}
+	if (endpointsfilter) {
+		endpointsurl = endpointsurl + '?' + endpointsfilter
+	}
+	console.log(endpointsurl)
+	cmdb._fetchAll(res.locals, endpointsurl).then(function (endpoints) {
 		if (req.query.sortby) { console.log(req.query.sortby) } // check how sort param is provided
 		endpoints.sort(CompareOnKey(req.query.sortby));
 		endpoints.forEach(endpointController);
@@ -87,14 +107,12 @@ app.get('/', function (req, res) {
 
 
 function CompareOnKey(key) {
-	console.log(key);
 	return function(a,b) {
 		if (!key) {  // default to url sort
 			key = 'dataItemID';
 		}
 		avalue = a[key];
 		bvalue = b[key];
-		console.log(avalue,bvalue);
 		if (!avalue) return -1;
 		if (!bvalue) return 1;
 		return avalue.toLowerCase() > bvalue.toLowerCase() ? 1 : -1;
