@@ -75,8 +75,8 @@ app.use(authS3O);
 app.get('/', function (req, res) {
 	cmdb.getAllItems(res.locals, 'endpoint').then(function (endpoints) {
 		console.log(req,res) // check how sort param is provided
-		console.log(req.sortby) // check how sort param is provided
-		console.log(req,sortby) // check how sort param is provided
+		if (req.sortby) { console.log(req.sortby) } // check how sort param is provided
+		if (res.sortby) { console.log(res.sortby) } // check how sort param is provided
 		endpoints.sort(function (a,b){
 			if (!a.dataItemID) return -1;
 			if (!b.dataItemID) return 1;
