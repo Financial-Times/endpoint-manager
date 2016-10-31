@@ -89,14 +89,15 @@ app.get('/', function (req, res) {
 function CompareOnKey(key) {
 	console.log(key);
 	return function(a,b) {
-	if (!key) {  // default to url sort
-		key = dataItemID;
-	}
-	avalue = a[key];
-	bvalue = b[key];
-	if (!avalue) return -1;
-	if (!bvalue) return 1;
-	return avalue.toLowerCase() > bvalue.toLowerCase() ? 1 : -1;
+		if (!key) {  // default to url sort
+			key = dataItemID;
+		}
+		avalue = a[key];
+		bvalue = b[key];
+		if (!avalue) return -1;
+		if (!bvalue) return 1;
+		return avalue.toLowerCase() > bvalue.toLowerCase() ? 1 : -1;
+	};
 }
 
 /**
