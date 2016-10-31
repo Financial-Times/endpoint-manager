@@ -75,22 +75,22 @@ app.use(authS3O);
 app.get('/', function (req, res) {
 	endpointsurl = process.env.CMDB_API + "items/endpoint"
 	endpointsfilter = ''
-	if (req.body.filter_url) {
-		endpointsfilter = endpointsfilter + 'dataItemID=' + req.body.filter_url
+	if (req.query.filter_url) {
+		endpointsfilter = endpointsfilter + 'dataItemID=' + req.query.filter_url
 	}
-	if (req.body.filter_systemCode) {
-		if (!endpointsfilter) {
+	if (req.query.filter_systemCode) {
+		if (endpointsfilter > '') {
 			endpointsfilter = endpointsfilter + '&'
 		}
-		endpointsfilter = endpointsfilter + 'systemCode=' + req.body.filter_systemCode // you cannot send related fields as filters to cmdb!
+		endpointsfilter = endpointsfilter + 'systemCode=' + req.query.filter_systemCode // you cannot send related fields as filters to cmdb!
 	}
-	if (req.body.filter_live) {
-		if (!endpointsfilter) {
+	if (req.query.filter_live) {
+		if (endpointsfilter > '') {
 			endpointsfilter = endpointsfilter + '&'
 		}
-		endpointsfilter = endpointsfilter + 'isLive=' + req.body.filter_live
+		endpointsfilter = endpointsfilter + 'isLive=' + req.query.filter_live
 	}
-	if (endpointsfilter) {
+	if (endpointsfilter > '') {
 		endpointsurl = endpointsurl + '?' + endpointsfilter
 	}
 	console.log(endpointsurl)
@@ -118,50 +118,6 @@ function CompareOnKey(key) {
 		return avalue.toLowerCase() > bvalue.toLowerCase() ? 1 : -1;
 	};
 }
-
-
-/**
- * We have a filter request!
- */
-app.post('/filter', function (req, res) {
-	console.time('CMDB api call for filtered endpoints')
-	endpointsurl = process.env.CMDB_API + "items/endpoint"
-	endpointsfilter = ''
-	if (req.body.filter_url) {
-		endpointsfilter = endpointsfilter + 'dataItemID=' + req.body.filter_url
-	}
-	if (req.body.filter_systemCode) {
-		if (!endpointsfilter) {
-			endpointsfilter = endpointsfilter + '&'
-		}
-		endpointsfilter = endpointsfilter + 'systemCode=' + req.body.filter_systemCode // you cannot send related fields as filters to cmdb!
-	}
-	if (req.body.filter_live) {
-		if (!endpointsfilter) {
-			endpointsfilter = endpointsfilter + '&'
-		}
-		endpointsfilter = endpointsfilter + 'isLive=' + req.body.filter_live
-	}
-	if (endpointsfilter) {
-		endpointsurl = endpointsurl + '?' + endpointsfilter
-	}
-	console.log(endpointsurl)
-	cmdb._fetchAll(res.locals, endpointsurl).then(function (endpoints) {
-		// we need a filter function here to strip out the filtered related items
-		// ...
-		// then we can sort - or pass control to a sort fucntion
-		endpoints.sort(function (a,b){
-			if (!a.dataItemID) return -1;
-			if (!b.dataItemID) return 1;
-			return a.dataItemID.toLowerCase() > b.dataItemID.toLowerCase() ? 1 : -1;
-		});
-		endpoints.forEach(endpointController);
-		res.render('index', {endpoints: endpoints});
-	}).catch(function (error) {
-		res.status(502);
-		res.render("error", {message: "Problem obtaining list of endpoints from CMDB ("+error+")"});
-	});
-});
 
 /**
  * Gets info about a given Contact from the CMDB and provides a form for editing it
