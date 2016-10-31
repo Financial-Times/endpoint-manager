@@ -76,7 +76,7 @@ app.get('/', function (req, res) {
 	cmdb.getAllItems(res.locals, 'endpoint').then(function (endpoints) {
 		console.log(req.query) // check how sort param is provided
 		if (req.query.sortby) { console.log(req.query.sortby) } // check how sort param is provided
-		endpoints.sort(endpointCompare(req.query.sortby));
+		endpoints.sort(CompareOnKey(req.query.sortby));
 		endpoints.forEach(endpointController);
 		res.render('index', {endpoints: endpoints});
 	}).catch(function (error) {
@@ -86,23 +86,14 @@ app.get('/', function (req, res) {
 });
 
 
-function endpointCompare(a,b,c) {
-	if (!c) {  // default to url sort
-		avalue = a.dataItemID
-		bvalue = b.dataItemID
+function CompareOnKey(key) {
+	console.log(key);
+	return function(a,b) {
+	if (!key) {  // default to url sort
+		key = dataItemID;
 	}
-	if (c == 'URL') {
-		avalue = a.dataItemID
-		bvalue = b.dataItemID
-	}
-	if (c == 'systemCode') {
-		avalue = a.systemCode
-		bvalue = b.systemCode
-	}
-	if (c == 'isLive') {
-		avalue = a.isLive
-		bvalue = b.isLive
-	}
+	avalue = a[key];
+	bvalue = b[key];
 	if (!avalue) return -1;
 	if (!bvalue) return 1;
 	return avalue.toLowerCase() > bvalue.toLowerCase() ? 1 : -1;
