@@ -72,9 +72,9 @@
 
 				<table id='basic'>
 					<thead>
-						<td><a href="/SortedByURL">url (click to sort)</a></td>
-						<td><a href="/SortedBySystemCode">systemCode (click to sort)</a></td>
-						<td><a href="/SortedByLive">live (click to sort)</a></td>
+						<td><a href="/?sortby=URL">url (click to sort)</a></td>
+						<td><a href="/?sortby=SystemCode">systemCode (click to sort)</a></td>
+						<td><a href="/?sortby=isLive">live (click to sort)</a></td>
 					</thead>
 					<tbody>
 						{{#endpoints}}
