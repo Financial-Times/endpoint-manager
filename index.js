@@ -75,13 +75,8 @@ app.use(authS3O);
 app.get('/', function (req, res) {
 	cmdb.getAllItems(res.locals, 'endpoint').then(function (endpoints) {
 		console.log(req,res) // check how sort param is provided
-		if (req.sortby) { console.log(req.sortby) } // check how sort param is provided
-		if (res.sortby) { console.log(res.sortby) } // check how sort param is provided
-		endpoints.sort(function (a,b){
-			if (!a.dataItemID) return -1;
-			if (!b.dataItemID) return 1;
-			return a.dataItemID.toLowerCase() > b.dataItemID.toLowerCase() ? 1 : -1;
-		});
+		if (res.query.sortby) { console.log(res.query.sortby) } // check how sort param is provided
+		endpoints.sort(endpointCompare(res.query.sortby));
 		endpoints.forEach(endpointController);
 		res.render('index', {endpoints: endpoints});
 	}).catch(function (error) {
@@ -89,6 +84,29 @@ app.get('/', function (req, res) {
 		res.render("error", {message: "Problem obtaining list of endpoints from CMDB ("+error+")"});
 	});
 });
+
+
+function endpointCompare(a,b,c) {
+	if (!c) {  // default to url sort
+		avalue = a.dataItemID
+		bvalue = b.dataItemID
+	}
+	if (c == 'URL') {
+		avalue = a.dataItemID
+		bvalue = b.dataItemID
+	}
+	if (c == 'systemCode') {
+		avalue = a.systemCode
+		bvalue = b.systemCode
+	}
+	if (c == 'isLive') {
+		avalue = a.isLive
+		bvalue = b.isLive
+	}
+	if (!avalue) return -1;
+	if (!bvalue) return 1;
+	return avalue.toLowerCase() > bvalue.toLowerCase() ? 1 : -1;
+}
 
 /**
  * Gets a list of Endpoints from the CMDB, sorts by systemcode and renders them
