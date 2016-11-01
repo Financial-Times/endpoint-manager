@@ -93,6 +93,7 @@ app.get('/', function (req, res) {
 	if (endpointsfilter > '') {
 		endpointsurl = endpointsurl + '?' + endpointsfilter
 	}
+	endpointsurl = endpointsurl + '&objectDetail=False&subjectDetail=False' // hide related item detail
 	console.log(endpointsurl)
 	cmdb._fetchAll(res.locals, endpointsurl).then(function (endpoints) {
 		if (req.query.sortby) { console.log(req.query.sortby) } // check how sort param is provided
