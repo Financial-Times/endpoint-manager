@@ -3,8 +3,8 @@
 		<div class='o-grid-row'>
 			<a href="/" class='o-header-services__ftlogo'></a>
 			<div class='o-header-services__title'>
-				<h1 class='o-header-services__product-name'>System Registry</h1>
-				<span class='o-header-subrand__product-tagline'>Maintain System Information</span>
+				<h1 class='o-header-services__product-name'>Endpoint Manager</h1>
+				<span class='o-header-subrand__product-tagline'>Update healthcheck and about endpoints</span>
 			</div>
 		</div>
 	</div>

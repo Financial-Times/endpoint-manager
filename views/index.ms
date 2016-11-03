@@ -53,7 +53,7 @@
 							<thead>
 								<td><a href="/?sortby=dataItemID">url</a></td>
 								<td><a href="/?sortby=SystemCode">systemCode</a></td>
-								<td><a href="/?sortby=isLive">is live?</a></td>
+								<td><a href="/?sortby=isLive">live?</a></td>
 								<td><a href="/?sortby=protocol">protocol</a></td>
 								<td><a href="/?sortby=health">health</a></td>
 								<td><a href="/?sortby=about">about</a></td>
