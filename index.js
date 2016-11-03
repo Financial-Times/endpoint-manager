@@ -90,6 +90,24 @@ app.get('/', function (req, res) {
 		}
 		endpointsfilter = endpointsfilter + 'isLive=' + req.query.filter_live
 	}
+	if (req.query.filter_live) {
+		if (endpointsfilter > '') {
+			endpointsfilter = endpointsfilter + '&'
+		}
+		endpointsfilter = endpointsfilter + 'protocol=' + req.query.filter_protocol
+	}
+	if (req.query.filter_live) {
+		if (endpointsfilter > '') {
+			endpointsfilter = endpointsfilter + '&'
+		}
+		endpointsfilter = endpointsfilter + 'healthSuffix=' + req.query.filter_health
+	}
+	if (req.query.filter_live) {
+		if (endpointsfilter > '') {
+			endpointsfilter = endpointsfilter + '&'
+		}
+		endpointsfilter = endpointsfilter + 'aboutSuffix=' + req.query.filter_about
+	}
 	if (endpointsfilter > '') {
 		endpointsfilter = endpointsfilter + '&'
 	}

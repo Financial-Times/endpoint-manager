@@ -60,9 +60,21 @@
 									<label class="o-forms-label" for="filter_systemCode">System Code</label>
 									<input name="filter_systemCode" value="{{filter_systemCode}}" class="o-forms-text" id="filter_systemCode"></input>
 								</div>
-								<div data-o-grid-colspan="3">
+								<div data-o-grid-colspan="1">
 									<label class="o-forms-label" for="filter_live">is Live?</label>
 									<input name="filter_live" value="{{filter_live}}" class="o-forms-text" id="filter_live"></input>
+								</div>
+								<div data-o-grid-colspan="2">
+									<label class="o-forms-label" for="filter_protocol">Protocol</label>
+									<input name="filter_protocol" value="{{filter_protocol}}" class="o-forms-text" id="filter_protocol"></input>
+								</div>
+								<div data-o-grid-colspan="3">
+									<label class="o-forms-label" for="filter_health">Health</label>
+									<input name="filter_health" value="{{filter_health}}" class="o-forms-text" id="filter_health"></input>
+								</div>
+								<div data-o-grid-colspan="3">
+									<label class="o-forms-label" for="filter_about">About</label>
+									<input name="filter_about" value="{{filter_about}}" class="o-forms-text" id="filter_about"></input>
 								</div>
 							</div>
 						</div>
@@ -72,9 +84,12 @@
 
 				<table id='basic'>
 					<thead>
-						<td><a href="/?sortby=dataItemID">url (click to sort)</a></td>
-						<td><a href="/?sortby=SystemCode">systemCode (click to sort)</a></td>
-						<td><a href="/?sortby=isLive">live (click to sort)</a></td>
+						<td><a href="/?sortby=dataItemID">url</a></td>
+						<td><a href="/?sortby=SystemCode">systemCode</a></td>
+						<td><a href="/?sortby=isLive">is live?</a></td>
+						<td><a href="/?sortby=protocol">protocol</a></td>
+						<td><a href="/?sortby=health">health</a></td>
+						<td><a href="/?sortby=about">about</a></td>
 					</thead>
 					<tbody>
 						{{#endpoints}}
@@ -82,6 +97,9 @@
 							<td><a href="{{localpath}}">{{id}}</a></td>
 							<td>{{systemCode}}</td>
 							<td>{{isLive}}</td>
+							<td>{{protocol}}</td>
+							<td>{{healthSuffix}}</td>
+							<td>{{aboutSuffix}}</td>
 						</tr>
 						{{/endpoints}}
 					</tbody>
