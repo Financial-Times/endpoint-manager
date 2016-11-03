@@ -13,6 +13,9 @@ app.engine('ms', mustacheExpress());
 app.set('view engine', 'ms');
 app.set('views', __dirname + '/views');
 
+// Set the public directory as public for serving assets
+app.use(express.static('public'));
+
 var CMDB = require("cmdb.js");
 
 /** Environment variables **/
