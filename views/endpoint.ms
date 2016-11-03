@@ -28,6 +28,7 @@
 						<small class="o-forms__additional-info">The base URL of the endpoint, not including protocol or __health and __about.</small>
 						<input type="text" name="base" value="{{base}}" placeholder="my-app.webservices.ft.com" class="o-forms__text" id="base" required></input>
 					</div>
+
 					<div class="o-forms--wide o-forms__wrapper o-forms__wrapper--highlight">
 						<div class="o-forms o-forms--wide {{#iderror}}o-forms__error{{/iderror}}">
 							<label class="o-forms__label" for="id">ID</label>
@@ -37,6 +38,7 @@
 							{{#iderror}}<div class="o-forms__errortext">{{iderror}}</div>{{/iderror}}
 						</div>
 					</div>
+
 					<div class="o-forms o-forms--wide">
 						<label class="o-forms__label" for="protocol">Protocol</label>
 						<small class="o-forms__additional-info">Which protocol(s) the endpoint is served over</small>
@@ -53,6 +55,7 @@
 							<input name="healthSuffix" value="{{healthSuffix}}" default="__health" class="o-forms__text" id="healthSuffix"></input>
 						</div>
 					</div>
+
 					<div class="o-forms o-forms--wide">
 						<label class="o-forms__label" for="aboutSuffix">About Suffix</label>
 						<div class="o-forms__affix-wrapper">
