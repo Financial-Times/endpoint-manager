@@ -91,6 +91,10 @@ app.get('/', function (req, res) {
 		endpointsfilter = endpointsfilter + 'isLive=' + req.query.filter_live
 	}
 	if (endpointsfilter > '') {
+		endpointsfilter = endpointsfilter + '&'
+	}
+	endpointsfilter = endpointsfilter + 'outputfields=name,serviceTier&objectDetail=False&subjectDetail=False' // hide related item detail
+	if (endpointsfilter > '') {
 		endpointsurl = endpointsurl + '?' + endpointsfilter
 	}
 	endpointsurl = endpointsurl + '&objectDetail=False&subjectDetail=False' // hide related item detail
