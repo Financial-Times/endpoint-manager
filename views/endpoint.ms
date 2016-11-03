@@ -8,9 +8,9 @@
 			<div class="o-grid-row" data-o-grid-colspan="9">
 
 				<form action="{{localpath}}" method="post">
-					<div class='link-all'><a href="/">&lt;- Back to All Endpoints</a></div>
+					<div class='link-all'><a href="/"><i class="o-icons-icon o-icons-icon--arrow-left"></i>Back to All Endpoints</a></div>
 					<h1>{{^id}}Add New{{/id}}{{#id}}Edit{{/id}} Endpoint</h1>
-					{{#saved}}<div class="o-forms__message o-forms__message--highlight" id='saved'>
+					{{#saved}}<div class="o-forms-message o-forms-message--highlight" id='saved'>
 						<p class='success'>Endpoint data saved succesfully</p>
 						<aside data-collapse='true'>
 							<h3>How can I automate this action?</h3>
@@ -28,7 +28,7 @@
 						<small class="o-forms__additional-info">The base URL of the endpoint, not including protocol or __health and __about.</small>
 						<input type="text" name="base" value="{{base}}" placeholder="my-app.webservices.ft.com" class="o-forms__text" id="base" required></input>
 					</div>
-					<div class="o-forms__wrapper o-forms__wrapper--highlight">
+					<div class="o-forms o-forms--wide o-forms__wrapper o-forms__wrapper--highlight">
 						<div class="o-forms o-forms--wide {{#iderror}}o-forms__-error{{/iderror}}">
 							<label class="o-forms__label" for="id">ID</label>
 							<small class="o-forms__additional-info">A unique identification for a endpoint with a SINGLE healthcheck or about (defaults to base URL). If you have mulitple healthchecks for an endpoint then you must define unique identifications for each one.</small>
@@ -62,7 +62,7 @@
 					</div>
 
 					<div class="o-forms o-forms--wide">
-						<input type="checkbox" class="o-forms__checkbox o-forms__checkbox--highlight" id="isLive" data-bind="acceptMarketingOptIn" {{#isLive}}checked{{/isLive}} name="isLive"></input>
+						<input type="checkbox" class="o-forms__checkbox o-forms__checkbox--highlight" id="isLive" data-bind="isLive" {{#isLive}}checked{{/isLive}} name="isLive"></input>
 						<label for="isLive" class="o-forms__label">Handles live traffic</label>
 						<small class="o-forms__additional-info">Used for deciding whether Operations Team need to know about this endpoint.  <br />Non-production environments and production environments which aren't yet live should leave this box unchecked.</small>
 					</div>

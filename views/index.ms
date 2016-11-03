@@ -51,12 +51,12 @@
 					<div data-o-grid-colspan="9">
 						<table class="o-table o-table--row-stripes" data-o-component="o-table">
 							<thead>
-								<td><a href="/?sortby=dataItemID">url</a></td>
-								<td><a href="/?sortby=SystemCode">systemCode</a></td>
-								<td><a href="/?sortby=isLive">live?</a></td>
-								<td><a href="/?sortby=protocol">protocol</a></td>
-								<td><a href="/?sortby=health">health</a></td>
-								<td><a href="/?sortby=about">about</a></td>
+								<th><a href="/?sortby=dataItemID">url</a></th>
+								<th><a href="/?sortby=SystemCode">systemCode</a></th>
+								<th><a href="/?sortby=isLive">live?</a></th>
+								<th><a href="/?sortby=protocol">protocol</a></th>
+								<th><a href="/?sortby=health">health</a></th>
+								<th><a href="/?sortby=about">about</a></th>
 							</thead>
 							<tbody>
 								{{#endpoints}}
