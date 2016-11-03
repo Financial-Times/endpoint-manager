@@ -4,10 +4,6 @@
 	<body>
 		{{> _header }}
 		<div id='content' class="o-grid-container">
-			<div class="o-grid-row" data-o-grid-colspan="9">
-				<form id="new" action="/new" method="get">
-					<input type='submit' class="o-buttons o-buttons--standout " value='Add New Endpoint' />
-				</form>
 
 				<h2>Existing Endpoints</h2>
 
@@ -72,9 +68,13 @@
 							</tbody>
 						</table>
 					</div>
+					<div data-o-grid-colspan="3">
+						<form id="new" action="/new" method="get">
+							<input type='submit' class="o-buttons o-buttons--standout " value='Add New Endpoint' />
+						</form>
+					</div>
 				</div>
 
-			</div>
 		</div>
 		<script src="https://build.origami.ft.com/v2/bundles/js?modules=o-header-services@^1.0.0,o-buttons@^4.0.0,o-forms@^2.0.3,o-grid@^4.2.1"></script>
 	</body>
