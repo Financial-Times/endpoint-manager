@@ -93,19 +93,19 @@ app.get('/', function (req, res) {
 		}
 		endpointsfilter = endpointsfilter + 'isLive=' + req.query.filter_live
 	}
-	if (req.query.filter_live) {
+	if (req.query.filter_protocol) {
 		if (endpointsfilter > '') {
 			endpointsfilter = endpointsfilter + '&'
 		}
 		endpointsfilter = endpointsfilter + 'protocol=' + req.query.filter_protocol
 	}
-	if (req.query.filter_live) {
+	if (req.query.filter_health) {
 		if (endpointsfilter > '') {
 			endpointsfilter = endpointsfilter + '&'
 		}
 		endpointsfilter = endpointsfilter + 'healthSuffix=' + req.query.filter_health
 	}
-	if (req.query.filter_live) {
+	if (req.query.filter_about) {
 		if (endpointsfilter > '') {
 			endpointsfilter = endpointsfilter + '&'
 		}
@@ -118,7 +118,6 @@ app.get('/', function (req, res) {
 	if (endpointsfilter > '') {
 		endpointsurl = endpointsurl + '?' + endpointsfilter
 	}
-	endpointsurl = endpointsurl + '&objectDetail=False&subjectDetail=False' // hide related item detail
 	console.log(endpointsurl)
 	cmdb._fetchAll(res.locals, endpointsurl).then(function (endpoints) {
 		if (req.query.sortby) { console.log(req.query.sortby) } // check how sort param is provided
