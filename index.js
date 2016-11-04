@@ -77,48 +77,15 @@ app.use(authS3O);
  * Gets a list of Endpoints from the CMDB and renders them
  */
 app.get('/', function (req, res) {
-	endpointsurl = process.env.CMDB_API + "items/endpoint"
-	console.log("params:",req.query)
-	endpointsfilter = querystring.stringify(req.query)
-	console.log("url:",endpointsfilter)
-//	endpointsfilter = ''
-//	if (req.query.filter_url) {
-//		endpointsfilter = endpointsfilter + 'dataItemID=' + req.query.filter_url
-//	}
-//	if (req.query.filter_systemCode) {
-//		if (endpointsfilter > '') {
-//			endpointsfilter = endpointsfilter + '&'
-//		}
-//		endpointsfilter = endpointsfilter + 'systemCode=' + req.query.filter_systemCode // you cannot send related fields as filters to cmdb!
-//	}
-//	if (req.query.filter_live) {
-//		if (endpointsfilter > '') {
-//			endpointsfilter = endpointsfilter + '&'
-//		}
-//		endpointsfilter = endpointsfilter + 'isLive=' + req.query.filter_live
-//	}
-//	if (req.query.filter_protocol) {
-//		if (endpointsfilter > '') {
-//			endpointsfilter = endpointsfilter + '&'
-//		}
-//		endpointsfilter = endpointsfilter + 'protocol=' + req.query.filter_protocol
-//	}
-//	if (req.query.filter_health) {
-//		if (endpointsfilter > '') {
-//			endpointsfilter = endpointsfilter + '&'
-//		}
-//		endpointsfilter = endpointsfilter + 'healthSuffix=' + req.query.filter_health
-//	}
-//	if (req.query.filter_about) {
-//		if (endpointsfilter > '') {
-//			endpointsfilter = endpointsfilter + '&'
-//		}
-//		endpointsfilter = endpointsfilter + 'aboutSuffix=' + req.query.filter_about
-//	}
-//	if (endpointsfilter > '') {
-//		endpointsfilter = endpointsfilter + '&'
-//	}
-	endpointsfilter = endpointsfilter + 'outputfields=name,serviceTier,isLive,protocol,healthSuffix,aboutSuffix&objectDetail=False&subjectDetail=False' // hide related item detail
+	endpointsurl = process.env.CMDB_API + "items/endpoint";
+	params = req.query;
+	console.log("params:",params);
+	params[outputfields] = "name,serviceTier,isLive,protocol,healthSuffix,aboutSuffix";
+	params[objectDetail] = "False";
+	params[subjectDetail] = "False";
+	params = remove_empty_values(params);
+	endpointsfilter = querystring.stringify(params);
+	console.log("url:",endpointsfilter);
 	if (endpointsfilter > '') {
 		endpointsurl = endpointsurl + '?' + endpointsfilter
 	}
@@ -311,4 +278,21 @@ function getProtocolList(selected) {
 		if (protocol.value == selected) protocol.selected = true;
 	});
 	return protocollist;
+}
+
+function remove_blank_values(obj, recurse) {
+	for (var i in obj) {
+		if (obj[i] === null || obj[i] === '') {
+			delete obj[i];
+		} else {
+			if (recurse && typeof obj[i] === 'object') {
+				remove_blank_values(obj[i], recurse);
+				if (Object.keys(obj[i]).length == 0) {
+					{
+						delete obj[i];
+					}
+				}
+			}
+		}
+	}
 }
