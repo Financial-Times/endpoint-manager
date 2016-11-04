@@ -83,7 +83,7 @@ app.get('/', function (req, res) {
 	params['outputfields'] = "name,serviceTier,isLive,protocol,healthSuffix,aboutSuffix";
 	params['objectDetail'] = "False";
 	params['subjectDetail'] = "False";
-	params = remove_empty_values(params);
+	params = remove_blank_values(params);
 	endpointsfilter = querystring.stringify(params);
 	console.log("url:",endpointsfilter);
 	if (endpointsfilter > '') {
