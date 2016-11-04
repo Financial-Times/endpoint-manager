@@ -23,6 +23,7 @@
 
 						</aside>
 					</div>{{/saved}}
+
 					<div class="o-forms o-forms--wide">
 						<label class="o-forms__label" for="base">Base URL</label>
 						<small class="o-forms__additional-info">The base URL of the endpoint, not including protocol or __health and __about.</small>
@@ -75,7 +76,7 @@
 						<label class="o-forms__label" for="systemCode">System Code</label>
 						<small class="o-forms__additional-info">The system code of the system this endpoint serves</small>
 						<input type="text" name="systemCode" class="o-forms__text" id="systemCode" pattern="^[a-z0-9\-]{3,32}$" value="{{systemCode}}"></input>
-					<div class="o-forms__errortext">System Codes must consist of between 3 and 32 lowercase alphanumeric characters or hyphens.</div>
+						<div class="o-forms__errortext">System Codes must consist of between 3 and 32 lowercase alphanumeric characters or hyphens.</div>
 					</div>
 
 					<div id="save"><input type='submit' class="o-buttons o-buttons--standout save-button" value='{{#id}}Save{{/id}}{{^id}}Create{{/id}}' /></div>
