@@ -80,9 +80,9 @@ app.get('/', function (req, res) {
 	endpointsurl = process.env.CMDB_API + "items/endpoint";
 	params = req.query;
 	console.log("params:",params);
-	params[outputfields] = "name,serviceTier,isLive,protocol,healthSuffix,aboutSuffix";
-	params[objectDetail] = "False";
-	params[subjectDetail] = "False";
+	params['outputfields'] = "name,serviceTier,isLive,protocol,healthSuffix,aboutSuffix";
+	params['objectDetail'] = "False";
+	params['subjectDetail'] = "False";
 	params = remove_empty_values(params);
 	endpointsfilter = querystring.stringify(params);
 	console.log("url:",endpointsfilter);
