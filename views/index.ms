@@ -12,28 +12,28 @@
 						<div class="o-grid-container">
 							<div class="o-grid-row">
 								<div data-o-grid-colspan="3">
-									<label class="o-forms__label" for="filter_url">URL</label>
-									<input name="filter_url" value="{{filter_url}}" class="o-forms__text" id="filter_url"></input>
+									<label class="o-forms__label" for="dataItemID">URL</label>
+									<input name="dataItemID" value="{{dataItemID}}" class="o-forms__text" id="dataItemID"></input>
 								</div>
 								<div data-o-grid-colspan="3">
-									<label class="o-forms__label" for="filter_systemCode">System Code</label>
-									<input name="filter_systemCode" value="{{filter_systemCode}}" class="o-forms__text" id="filter_systemCode"></input>
+									<label class="o-forms__label" for="systemCode">System Code</label>
+									<input name="systemCode" value="{{systemCode}}" class="o-forms__text" id="systemCode"></input>
 								</div>
 								<div data-o-grid-colspan="1">
-									<label class="o-forms__label" for="filter_live">Live?</label>
-									<input name="filter_live" value="{{filter_live}}" class="o-forms__text" id="filter_live"></input>
+									<label class="o-forms__label" for="isLive">Live?</label>
+									<input name="isLive" value="{{isLive}}" class="o-forms__text" id="isLive"></input>
 								</div>
 								<div data-o-grid-colspan="2">
-									<label class="o-forms__label" for="filter_protocol">Protocol</label>
-									<input name="filter_protocol" value="{{filter_protocol}}" class="o-forms__text" id="filter_protocol"></input>
+									<label class="o-forms__label" for="protocol">Protocol</label>
+									<input name="protocol" value="{{protocol}}" class="o-forms__text" id="protocol"></input>
 								</div>
 								<div data-o-grid-colspan="3">
-									<label class="o-forms__label" for="filter_health">Health</label>
-									<input name="filter_health" value="{{filter_health}}" class="o-forms__text" id="filter_health"></input>
+									<label class="o-forms__label" for="healthSuffix">Health</label>
+									<input name="healthSuffix" value="{{healthSuffix}}" class="o-forms__text" id="healthSuffix"></input>
 								</div>
 								<div data-o-grid-colspan="3">
-									<label class="o-forms__label" for="filter_about">About</label>
-									<input name="filter_about" value="{{filter_about}}" class="o-forms__text" id="filter_about"></input>
+									<label class="o-forms__label" for="aboutSuffix">About</label>
+									<input name="aboutSuffix" value="{{aboutSuffix}}" class="o-forms__text" id="aboutSuffix"></input>
 								</div>
 							</div>
 						</div>

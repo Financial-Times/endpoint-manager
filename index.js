@@ -77,43 +77,46 @@ app.use(authS3O);
  */
 app.get('/', function (req, res) {
 	endpointsurl = process.env.CMDB_API + "items/endpoint"
-	endpointsfilter = ''
-	if (req.query.filter_url) {
-		endpointsfilter = endpointsfilter + 'dataItemID=' + req.query.filter_url
-	}
-	if (req.query.filter_systemCode) {
-		if (endpointsfilter > '') {
-			endpointsfilter = endpointsfilter + '&'
-		}
-		endpointsfilter = endpointsfilter + 'systemCode=' + req.query.filter_systemCode // you cannot send related fields as filters to cmdb!
-	}
-	if (req.query.filter_live) {
-		if (endpointsfilter > '') {
-			endpointsfilter = endpointsfilter + '&'
-		}
-		endpointsfilter = endpointsfilter + 'isLive=' + req.query.filter_live
-	}
-	if (req.query.filter_protocol) {
-		if (endpointsfilter > '') {
-			endpointsfilter = endpointsfilter + '&'
-		}
-		endpointsfilter = endpointsfilter + 'protocol=' + req.query.filter_protocol
-	}
-	if (req.query.filter_health) {
-		if (endpointsfilter > '') {
-			endpointsfilter = endpointsfilter + '&'
-		}
-		endpointsfilter = endpointsfilter + 'healthSuffix=' + req.query.filter_health
-	}
-	if (req.query.filter_about) {
-		if (endpointsfilter > '') {
-			endpointsfilter = endpointsfilter + '&'
-		}
-		endpointsfilter = endpointsfilter + 'aboutSuffix=' + req.query.filter_about
-	}
-	if (endpointsfilter > '') {
-		endpointsfilter = endpointsfilter + '&'
-	}
+	console.log("params:",req.query)
+	endpointsfilter = querystring.stringify(req.query)
+	console.log("url:",endpointsfilter)
+//	endpointsfilter = ''
+//	if (req.query.filter_url) {
+//		endpointsfilter = endpointsfilter + 'dataItemID=' + req.query.filter_url
+//	}
+//	if (req.query.filter_systemCode) {
+//		if (endpointsfilter > '') {
+//			endpointsfilter = endpointsfilter + '&'
+//		}
+//		endpointsfilter = endpointsfilter + 'systemCode=' + req.query.filter_systemCode // you cannot send related fields as filters to cmdb!
+//	}
+//	if (req.query.filter_live) {
+//		if (endpointsfilter > '') {
+//			endpointsfilter = endpointsfilter + '&'
+//		}
+//		endpointsfilter = endpointsfilter + 'isLive=' + req.query.filter_live
+//	}
+//	if (req.query.filter_protocol) {
+//		if (endpointsfilter > '') {
+//			endpointsfilter = endpointsfilter + '&'
+//		}
+//		endpointsfilter = endpointsfilter + 'protocol=' + req.query.filter_protocol
+//	}
+//	if (req.query.filter_health) {
+//		if (endpointsfilter > '') {
+//			endpointsfilter = endpointsfilter + '&'
+//		}
+//		endpointsfilter = endpointsfilter + 'healthSuffix=' + req.query.filter_health
+//	}
+//	if (req.query.filter_about) {
+//		if (endpointsfilter > '') {
+//			endpointsfilter = endpointsfilter + '&'
+//		}
+//		endpointsfilter = endpointsfilter + 'aboutSuffix=' + req.query.filter_about
+//	}
+//	if (endpointsfilter > '') {
+//		endpointsfilter = endpointsfilter + '&'
+//	}
 	endpointsfilter = endpointsfilter + 'outputfields=name,serviceTier,isLive,protocol,healthSuffix,aboutSuffix&objectDetail=False&subjectDetail=False' // hide related item detail
 	if (endpointsfilter > '') {
 		endpointsurl = endpointsurl + '?' + endpointsfilter
