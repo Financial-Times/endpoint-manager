@@ -84,12 +84,8 @@ app.get('/', function (req, res) {
 	params['objectDetail'] = "False";
 	params['subjectDetail'] = "False";
 	remove_blank_values(params);
-	endpointsfilter = querystring.stringify(params);
-	console.log("url:",endpointsfilter);
-	if (endpointsfilter > '') {
-		endpointsurl = endpointsurl + '?' + endpointsfilter
-	}
-	console.log(endpointsurl)
+	endpointsurl = endpointsurl + '?' +querystring.stringify(params);
+	console.log("url:",endpointsurl)
 	cmdb._fetchAll(res.locals, endpointsurl).then(function (endpoints) {
 		if (req.query.sortby) { console.log(req.query.sortby) } // check how sort param is provided
 		endpoints.sort(CompareOnKey(req.query.sortby));
