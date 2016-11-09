@@ -80,6 +80,8 @@ app.get('/', function (req, res) {
 	endpointsurl = process.env.CMDB_API + "items/endpoint";
 	params = req.query;
 	console.log("params:",params);
+	sortby = params.sortby
+	delete params.sortby // to avoid it being added to cmdb params
 	params['outputfields'] = "name,serviceTier,isLive,protocol,healthSuffix,aboutSuffix";
 	params['objectDetail'] = "False";
 	params['subjectDetail'] = "False";
@@ -87,8 +89,7 @@ app.get('/', function (req, res) {
 	endpointsurl = endpointsurl + '?' +querystring.stringify(params);
 	console.log("url:",endpointsurl)
 	cmdb._fetchAll(res.locals, endpointsurl).then(function (endpoints) {
-		if (req.query.sortby) { console.log(req.query.sortby) } // check how sort param is provided
-		endpoints.sort(CompareOnKey(req.query.sortby));
+		endpoints.sort(CompareOnKey(sortby));
 		endpoints.forEach(endpointController);
 		res.render('index', {endpoints: endpoints});
 	}).catch(function (error) {
