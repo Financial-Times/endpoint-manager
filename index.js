@@ -2,6 +2,7 @@ var express = require('express');
 var app = express();
 var request = require("request");
 var bodyParser = require('body-parser');
+const querystring = require('querystring');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -12,6 +13,9 @@ var mustacheExpress = require('mustache-express');
 app.engine('ms', mustacheExpress());
 app.set('view engine', 'ms');
 app.set('views', __dirname + '/views');
+
+// Set the public directory as public for serving assets
+app.use(express.static('public'));
 
 var CMDB = require("cmdb.js");
 
@@ -73,20 +77,40 @@ app.use(authS3O);
  * Gets a list of Endpoints from the CMDB and renders them
  */
 app.get('/', function (req, res) {
-	cmdb.getAllItems(res.locals, 'endpoint').then(function (endpoints) {
-		endpoints.sort(function (a,b){
-			if (!a.dataItemID) return -1;
-			if (!b.dataItemID) return 1;
-			return a.dataItemID.toLowerCase() > b.dataItemID.toLowerCase() ? 1 : -1;
-		});
+	endpointsurl = process.env.CMDB_API + "items/endpoint";
+	params = req.query;
+	console.log("params:",params);
+	sortby = params.sortby
+	delete params.sortby // to avoid it being added to cmdb params
+	params['outputfields'] = "name,serviceTier,isLive,protocol,healthSuffix,aboutSuffix";
+	params['objectDetail'] = "False";
+	params['subjectDetail'] = "False";
+	remove_blank_values(params);
+	endpointsurl = endpointsurl + '?' +querystring.stringify(params);
+	console.log("url:",endpointsurl)
+	cmdb._fetchAll(res.locals, endpointsurl).then(function (endpoints) {
+		endpoints.sort(CompareOnKey(sortby));
 		endpoints.forEach(endpointController);
 		res.render('index', {endpoints: endpoints});
 	}).catch(function (error) {
 		res.status(502);
-		res.render("error", {message: "Problem connecting to CMDB ("+error+")"});
+		res.render("error", {message: "Problem obtaining list of endpoints from CMDB ("+error+")"});
 	});
 });
 
+
+function CompareOnKey(key) {
+	return function(a,b) {
+		if (!key) {  // default to url sort
+			key = 'dataItemID';
+		}
+		avalue = a[key];
+		bvalue = b[key];
+		if (!avalue) return -1;
+		if (!bvalue) return 1;
+		return avalue.toLowerCase() > bvalue.toLowerCase() ? 1 : -1;
+	};
+}
 
 /**
  * Gets info about a given Contact from the CMDB and provides a form for editing it
@@ -96,7 +120,7 @@ app.get('/manage/:endpointid', function (req, res) {
 		res.render('endpoint', endpointController(endpoint));
 	}).catch(function (error) {
 		res.status(502);
-		res.render("error", {message: "Problem connecting to CMDB ("+error+")"});
+		res.render("error", {message: "Problem obtaining details for "+req.params.endpointid+" from CMDB ("+error+")"});
 	});
 });
 
@@ -126,7 +150,7 @@ app.post('/manage/:endpointid', function (req, res) {
 		res.render('endpoint', endpointController(result));
 	}).catch(function (error) {
 		res.status(502);
-		res.render("error", {message: "Problem connecting to CMDB ("+error+")"});
+		res.render("error", {message: "Problem posting details for "+req.params.endpointid+" to CMDB ("+error+")"});
 	});
 });
 
@@ -140,7 +164,7 @@ app.post('/manage/:endpointid/delete', function (req, res) {
 		res.redirect(303, '/');
 	}).catch(function (error) {
 		res.status(502);
-		res.render("error", {message: "Problem connecting to CMDB ("+error+")"});
+		res.render("error", {message: "Problem deleting "+req.params.endpointid+" from CMDB ("+error+")"});
 	});
 });
 
@@ -251,4 +275,21 @@ function getProtocolList(selected) {
 		if (protocol.value == selected) protocol.selected = true;
 	});
 	return protocollist;
+}
+
+function remove_blank_values(obj, recurse) {
+	for (var i in obj) {
+		if (obj[i] === null || obj[i] === '') {
+			delete obj[i];
+		} else {
+			if (recurse && typeof obj[i] === 'object') {
+				remove_blank_values(obj[i], recurse);
+				if (Object.keys(obj[i]).length == 0) {
+					{
+						delete obj[i];
+					}
+				}
+			}
+		}
+	}
 }
