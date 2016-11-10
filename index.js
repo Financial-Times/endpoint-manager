@@ -2,6 +2,7 @@ var express = require('express');
 var app = express();
 var request = require("request");
 var bodyParser = require('body-parser');
+const querystring = require('querystring');
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -12,6 +13,9 @@ var mustacheExpress = require('mustache-express');
 app.engine('ms', mustacheExpress());
 app.set('view engine', 'ms');
 app.set('views', __dirname + '/views');
+
+// Set the public directory as public for serving assets
+app.use(express.static('public'));
 
 var CMDB = require("cmdb.js");
 
@@ -73,20 +77,40 @@ app.use(authS3O);
  * Gets a list of Endpoints from the CMDB and renders them
  */
 app.get('/', function (req, res) {
-	cmdb.getAllItems(res.locals, 'endpoint').then(function (endpoints) {
-		endpoints.sort(function (a,b){
-			if (!a.dataItemID) return -1;
-			if (!b.dataItemID) return 1;
-			return a.dataItemID.toLowerCase() > b.dataItemID.toLowerCase() ? 1 : -1;
-		});
+	endpointsurl = process.env.CMDB_API + "items/endpoint";
+	params = req.query;
+	console.log("params:",params);
+	sortby = params.sortby
+	delete params.sortby // to avoid it being added to cmdb params
+	params['outputfields'] = "name,serviceTier,isLive,protocol,healthSuffix,aboutSuffix";
+	params['objectDetail'] = "False";
+	params['subjectDetail'] = "False";
+	remove_blank_values(params);
+	endpointsurl = endpointsurl + '?' +querystring.stringify(params);
+	console.log("url:",endpointsurl)
+	cmdb._fetchAll(res.locals, endpointsurl).then(function (endpoints) {
+		endpoints.sort(CompareOnKey(sortby));
 		endpoints.forEach(endpointController);
 		res.render('index', {endpoints: endpoints});
 	}).catch(function (error) {
 		res.status(502);
-		res.render("error", {message: "Problem connecting to CMDB ("+error+")"});
+		res.render("error", {message: "Problem obtaining list of endpoints from CMDB ("+error+")"});
 	});
 });
 
+
+function CompareOnKey(key) {
+	return function(a,b) {
+		if (!key) {  // default to url sort
+			key = 'dataItemID';
+		}
+		avalue = a[key];
+		bvalue = b[key];
+		if (!avalue) return -1;
+		if (!bvalue) return 1;
+		return avalue.toLowerCase() > bvalue.toLowerCase() ? 1 : -1;
+	};
+}
 
 /**
  * Gets info about a given Contact from the CMDB and provides a form for editing it
@@ -96,7 +120,7 @@ app.get('/manage/:endpointid', function (req, res) {
 		res.render('endpoint', endpointController(endpoint));
 	}).catch(function (error) {
 		res.status(502);
-		res.render("error", {message: "Problem connecting to CMDB ("+error+")"});
+		res.render("error", {message: "Problem obtaining details for "+req.params.endpointid+" from CMDB ("+error+")"});
 	});
 });
 
@@ -105,12 +129,13 @@ app.get('/manage/:endpointid', function (req, res) {
  */
 app.post('/manage/:endpointid', function (req, res) {
 	var endpoint = {
+		base: req.body.base,
 		protocol: req.body.protocol,
 		healthSuffix: req.body.healthSuffix,
 		aboutSuffix: req.body.aboutSuffix,
 		isLive: !!req.body.isLive,
 	}
-	if (req.body.systemCode) endpoint.isHealthcheckFor = {system: [req.body.systemCode]};
+	if (req.body.systemCode) endpoint.isHealthcheckFor = {system: [{'dataItemID':req.body.systemCode}]};
 	cmdb.putItem(res.locals, 'endpoint', req.params.endpointid, endpoint).then(function (result) {
 		result.saved = {
 			locals: JSON.stringify(res.locals),
@@ -125,7 +150,7 @@ app.post('/manage/:endpointid', function (req, res) {
 		res.render('endpoint', endpointController(result));
 	}).catch(function (error) {
 		res.status(502);
-		res.render("error", {message: "Problem connecting to CMDB ("+error+")"});
+		res.render("error", {message: "Problem posting details for "+req.params.endpointid+" to CMDB ("+error+")"});
 	});
 });
 
@@ -139,7 +164,7 @@ app.post('/manage/:endpointid/delete', function (req, res) {
 		res.redirect(303, '/');
 	}).catch(function (error) {
 		res.status(502);
-		res.render("error", {message: "Problem connecting to CMDB ("+error+")"});
+		res.render("error", {message: "Problem deleting "+req.params.endpointid+" from CMDB ("+error+")"});
 	});
 });
 
@@ -148,6 +173,8 @@ app.post('/manage/:endpointid/delete', function (req, res) {
  */
 app.get('/new', function (req, res) {
 	var defaultdata = {
+		base: "",
+		endpointid: "",
 		healthSuffix: "__health",
 		aboutSuffix: "__about",
 		protocollist: getProtocolList(),
@@ -161,7 +188,17 @@ app.get('/new', function (req, res) {
  * Redirect to the approprate path and treat like a save.
  */
 app.post('/new', function (req, res) {
-	res.redirect(307, '/manage/' + encodeURIComponent(encodeURIComponent(req.body.id)));
+	endpointid = req.body.id
+	if (!endpointid.trim()) {
+		endpointid = req.body.base
+	};
+	cmdb.getItem(res.locals, 'endpoint', endpointid).then(function (endpoint) {
+		req.body.iderror = "ID already in use, please re-enter"
+		res.render('endpoint', req.body);
+	}).catch(function (error) {
+		res.redirect(307, '/manage/' + encodeURIComponent(encodeURIComponent(endpointid)));
+	});
+
 });
 
 app.use(function(req, res, next) {
@@ -189,18 +226,21 @@ function endpointController(endpoint) {
 	endpoint.id = endpoint.dataItemID;
 	delete endpoint.dataItemID;
 	delete endpoint.dataTypeID;
+	if (!endpoint.hasOwnProperty('base')) {
+		endpoint.base = endpoint.id;
+	};
 	endpoint.localpath = "/manage/"+encodeURIComponent(encodeURIComponent(endpoint.id));
 	endpoint.protocollist = getProtocolList(endpoint.protocol);
 	endpoint.urls = [];
 	var protocols = [];
 	if (['http', 'https'].indexOf(endpoint.protocol) != -1) {
 		protocols.push(endpoint.protocol);
-		endpoint.baseurl = endpoint.protocol+"://"+endpoint.id+"/";
+		endpoint.baseurl = endpoint.protocol+"://"+endpoint.base+"/";
 	} else if (endpoint.protocol == "both") {
 		protocols = ['http', 'https'];
 
 		// In the form, just show http for the baseurl for simplicity
-		endpoint.baseurl = "http://"+endpoint.id+"/";
+		endpoint.baseurl = "http://"+endpoint.base+"/";
 	}
 	protocols.forEach(function (protocol) {
 		var validateparams = "?host="+encodeURIComponent(endpoint.id)
@@ -208,18 +248,18 @@ function endpointController(endpoint) {
 			+ "&healthSuffix=" + encodeURIComponent(endpoint.healthSuffix);
 		if (endpoint.healthSuffix) endpoint.urls.push({
 			type: 'health',
-			url: protocol+"://"+endpoint.id+"/"+endpoint.healthSuffix,
+			url: protocol+"://"+endpoint.base+"/"+endpoint.healthSuffix,
 			validateurl: health_api + "validate"+validateparams,
 			validateapi: health_api + "validate.json"+validateparams,
 			apikey: health_apikey,
 		});
 		if (endpoint.aboutSuffix) endpoint.urls.push({
 			type: 'about',
-			url: protocol+"://"+endpoint.id+"/"+endpoint.aboutSuffix,
+			url: protocol+"://"+endpoint.base+"/"+endpoint.aboutSuffix,
 		});
 	});
-	if (endpoint.isHealthcheckFor && endpoint.isHealthcheckFor.system) {
-		endpoint.systemCode = endpoint.isHealthcheckFor.system.pop();
+	if (endpoint.isHealthcheckFor && endpoint.isHealthcheckFor.system && endpoint.isHealthcheckFor.system[0].dataItemID) {
+		endpoint.systemCode = endpoint.isHealthcheckFor.system[0].dataItemID;
 	}
 	endpoint.isLive = (endpoint.isLive == "True");
 	return endpoint;
@@ -235,4 +275,21 @@ function getProtocolList(selected) {
 		if (protocol.value == selected) protocol.selected = true;
 	});
 	return protocollist;
+}
+
+function remove_blank_values(obj, recurse) {
+	for (var i in obj) {
+		if (obj[i] === null || obj[i] === '') {
+			delete obj[i];
+		} else {
+			if (recurse && typeof obj[i] === 'object') {
+				remove_blank_values(obj[i], recurse);
+				if (Object.keys(obj[i]).length == 0) {
+					{
+						delete obj[i];
+					}
+				}
+			}
+		}
+	}
 }
