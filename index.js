@@ -83,7 +83,7 @@ app.get('/', function (req, res) {
 	console.log("params:",params);
 	sortby = params.sortby
 	delete params.sortby // to avoid it being added to cmdb params
-	params['outputfields'] = "isHealthcheckFor,isLive,protocol,healthSuffix,aboutSuffix";
+	params['outputfields'] = "base,isHealthcheckFor,isLive,protocol,healthSuffix,aboutSuffix";
 	params['page'] = "1";
 	remove_blank_values(params);
 	endpointsurl = endpointsurl + '?' +querystring.stringify(params);
