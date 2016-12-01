@@ -84,8 +84,6 @@ app.get('/', function (req, res) {
 	sortby = params.sortby
 	delete params.sortby // to avoid it being added to cmdb params
 	params['outputfields'] = "isHealthcheckFor,isLive,protocol,healthSuffix,aboutSuffix";
-	params['objectDetail'] = "False";
-	params['subjectDetail'] = "False";
 	params['page'] = "1";
 	remove_blank_values(params);
 	endpointsurl = endpointsurl + '?' +querystring.stringify(params);
