@@ -86,12 +86,13 @@ app.get('/', function (req, res) {
 	params['outputfields'] = "isHealthcheckFor,isLive,protocol,healthSuffix,aboutSuffix";
 	params['objectDetail'] = "False";
 	params['subjectDetail'] = "False";
+	params['page'] = "1";
 	remove_blank_values(params);
 	endpointsurl = endpointsurl + '?' +querystring.stringify(params);
 	console.log("url:",endpointsurl)
 	cmdb._fetchAll(res.locals, endpointsurl).then(function (endpoints) {
-		endpoints.sort(CompareOnKey(sortby));
 		endpoints.forEach(indexController);
+		endpoints.sort(CompareOnKey(sortby));
 		res.render('index', {endpoints: endpoints});
 	}).catch(function (error) {
 		res.status(502);
