@@ -88,7 +88,7 @@ app.get('/', function (req, res) {
 	remove_blank_values(params);
 	endpointsurl = endpointsurl + '?' +querystring.stringify(params);
 	console.log("url:",endpointsurl)
-	cmdb._fetchAll(res.locals, endpointsurl).then(function (endpoints) {
+	cmdb._fetch(res.locals, endpointsurl).then(function (endpoints) {
 		endpoints.forEach(indexController);
 		endpoints.sort(CompareOnKey(sortby));
 		res.render('index', {endpoints: endpoints});
