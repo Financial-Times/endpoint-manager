@@ -78,7 +78,7 @@ app.use(authS3O);
  */
 app.get('/', function (req, res) {
     res.setHeader('Cache-Control', 'no-cache');
-	endpointsurl = process.env.CMDB_API + "items/endpoint";
+	endpointsurl = "items/endpoint";
 	params = req.query;
 	console.log("params:",params);
 	sortby = params.sortby
