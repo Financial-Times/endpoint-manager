@@ -12,14 +12,14 @@
 						<div class="o-grid-container">
 							<div class="o-grid-row">
 								<div data-o-grid-colspan="3">
-									<label class="o-forms__label" for="dataItemID">URL</label>
+									<label class="o-forms__label" for="dataItemID">ID</label>
 									<small class="o-forms__additional-info">Please be exact.</small>
 									<input name="dataItemID" value="{{dataItemID}}" class="o-forms__text" id="dataItemID"></input>
 								</div>
 								<div data-o-grid-colspan="3">
-									<label class="o-forms__label" for="systemCode">System Code</label>
+									<label class="o-forms__label" for="base">URL</label>
 									<small class="o-forms__additional-info">Wildcards (* and ?) can be used.</small>
-									<input name="systemCode" value="{{systemCode}}" class="o-forms__text" id="systemCode"></input>
+									<input name="base" value="{{base}}" class="o-forms__text" id="base"></input>
 								</div>
 								<div data-o-grid-colspan="3">
 									<label class="o-forms__label" for="isLive">Live?</label>
@@ -73,7 +73,8 @@
 				<div data-o-grid-colspan="9">
 					<table class="o-table o-table--row-stripes" data-o-component="o-table">
 						<thead>
-							<th><a href="/?sortby=dataItemID">url</a></th>
+							<th><a href="/?sortby=dataItemID">ID</a></th>
+							<th><a href="/?sortby=base">URL</a></th>
 							<th><a href="/?sortby=SystemCode">systemCode</a></th>
 							<th><a href="/?sortby=isLive">live?</a></th>
 							<th><a href="/?sortby=protocol">protocol</a></th>
@@ -84,6 +85,7 @@
 							{{#endpoints}}
 								<tr>
 									<td><a href="{{localpath}}">{{id}}</a></td>
+									<td>{{base}}</td>
 									<td>{{systemCode}}</td>
 									<td>{{isLive}}</td>
 									<td>{{protocol}}</td>
