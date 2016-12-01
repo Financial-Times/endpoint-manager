@@ -77,6 +77,7 @@ app.use(authS3O);
  * Gets a list of Endpoints from the CMDB and renders them
  */
 app.get('/', function (req, res) {
+    res.setHeader('Cache-Control', 'no-cache');
 	endpointsurl = process.env.CMDB_API + "items/endpoint";
 	params = req.query;
 	console.log("params:",params);
@@ -116,6 +117,7 @@ function CompareOnKey(key) {
  * Gets info about a given Contact from the CMDB and provides a form for editing it
  */
 app.get('/manage/:endpointid', function (req, res) {
+    res.setHeader('Cache-Control', 'no-cache');
 	cmdb.getItem(res.locals, 'endpoint', req.params.endpointid).then(function (endpoint) {
 		res.render('endpoint', endpointController(endpoint));
 	}).catch(function (error) {
@@ -128,6 +130,7 @@ app.get('/manage/:endpointid', function (req, res) {
  * Updates an Endpoint
  */
 app.post('/manage/:endpointid', function (req, res) {
+    res.setHeader('Cache-Control', 'no-cache');
 	var endpoint = {
 		base: req.body.base,
 		protocol: req.body.protocol,
@@ -158,6 +161,7 @@ app.post('/manage/:endpointid', function (req, res) {
  * Deletes an Endpoint
  */
 app.post('/manage/:endpointid/delete', function (req, res) {
+    res.setHeader('Cache-Control', 'no-cache');
 	cmdb.deleteItem(res.locals, 'endpoint', req.params.endpointid).then(function (endpoint) {
 
 		// TODO: show messaging to indicate the delete was successful
@@ -172,6 +176,7 @@ app.post('/manage/:endpointid/delete', function (req, res) {
  * Displays blank endpoint form for adding new endpoints
  */
 app.get('/new', function (req, res) {
+    res.setHeader('Cache-Control', 'no-cache');
 	var defaultdata = {
 		base: "",
 		endpointid: "",
@@ -188,6 +193,7 @@ app.get('/new', function (req, res) {
  * Redirect to the approprate path and treat like a save.
  */
 app.post('/new', function (req, res) {
+    res.setHeader('Cache-Control', 'no-cache');
 	endpointid = req.body.id
 	if (!endpointid.trim()) {
 		endpointid = req.body.base
@@ -206,6 +212,7 @@ app.use(function(req, res, next) {
 });
 
 app.use(function(err, req, res, next) {
+    res.setHeader('Cache-Control', 'no-cache');
 	console.error(err.stack);
 	res.status(500);
 	if (res.get('Content-Type') && res.get('Content-Type').indexOf("json") != -1) {

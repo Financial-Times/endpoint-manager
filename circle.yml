@@ -3,7 +3,7 @@ machine:
 
 deployment:
   dev:
-    branch: filter-index
+    branch: no-cache
     commands:
       - heroku maintenance:on --app oi-endpoint-manager-dev
       - git fetch origin --unshallow

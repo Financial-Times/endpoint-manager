@@ -8,31 +8,37 @@
 			<form id="filter" action="/" method="get">
 				<div class="o-forms-group">
 					<fieldset>
-						<legend class="o-forms__label" for="filter">Endpoint Filtering</legend>
+						<legend class="o-forms__label" for="filter">Endpoint Filtering (enter one or more fields)</legend>
 						<div class="o-grid-container">
 							<div class="o-grid-row">
 								<div data-o-grid-colspan="3">
 									<label class="o-forms__label" for="dataItemID">URL</label>
+									<small class="o-forms__additional-info">Please be exact.</small>
 									<input name="dataItemID" value="{{dataItemID}}" class="o-forms__text" id="dataItemID"></input>
 								</div>
 								<div data-o-grid-colspan="3">
 									<label class="o-forms__label" for="systemCode">System Code</label>
+									<small class="o-forms__additional-info">Wildcards (* and ?) can be used.</small>
 									<input name="systemCode" value="{{systemCode}}" class="o-forms__text" id="systemCode"></input>
 								</div>
 								<div data-o-grid-colspan="1">
 									<label class="o-forms__label" for="isLive">Live?</label>
+									<small class="o-forms__additional-info">Wildcards (* and ?) can be used.</small>
 									<input name="isLive" value="{{isLive}}" class="o-forms__text" id="isLive"></input>
 								</div>
 								<div data-o-grid-colspan="2">
 									<label class="o-forms__label" for="protocol">Protocol</label>
+									<small class="o-forms__additional-info">Wildcards (* and ?) can be used.</small>
 									<input name="protocol" value="{{protocol}}" class="o-forms__text" id="protocol"></input>
 								</div>
 								<div data-o-grid-colspan="3">
 									<label class="o-forms__label" for="healthSuffix">Health</label>
+									<small class="o-forms__additional-info">Wildcards (* and ?) can be used.</small>
 									<input name="healthSuffix" value="{{healthSuffix}}" class="o-forms__text" id="healthSuffix"></input>
 								</div>
 								<div data-o-grid-colspan="3">
 									<label class="o-forms__label" for="aboutSuffix">About</label>
+									<small class="o-forms__additional-info">Wildcards (* and ?) can be used.</small>
 									<input name="aboutSuffix" value="{{aboutSuffix}}" class="o-forms__text" id="aboutSuffix"></input>
 								</div>
 							</div>
