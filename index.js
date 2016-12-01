@@ -83,7 +83,7 @@ app.get('/', function (req, res) {
 	console.log("params:",params);
 	sortby = params.sortby
 	delete params.sortby // to avoid it being added to cmdb params
-	params['outputfields'] = "base,systemCode,isLive,protocol,healthSuffix,aboutSuffix";
+	params['outputfields'] = "isHealthcheckFor,isLive,protocol,healthSuffix,aboutSuffix";
 	params['objectDetail'] = "False";
 	params['subjectDetail'] = "False";
 	remove_blank_values(params);
@@ -91,7 +91,7 @@ app.get('/', function (req, res) {
 	console.log("url:",endpointsurl)
 	cmdb._fetchAll(res.locals, endpointsurl).then(function (endpoints) {
 		endpoints.sort(CompareOnKey(sortby));
-		endpoints.forEach(endpointController);
+		endpoints.forEach(indexController);
 		res.render('index', {endpoints: endpoints});
 	}).catch(function (error) {
 		res.status(502);
@@ -225,6 +225,21 @@ app.use(function(err, req, res, next) {
 app.listen(port, function () {
 	console.log('App listening on port '+port);
 });
+
+
+
+/** 
+ * Transforms the data from CMDB into something expected by the index
+ */
+function indexController(endpoint) {
+	endpoint.id = endpoint.dataItemID;
+	endpoint.localpath = "/manage/"+encodeURIComponent(encodeURIComponent(endpoint.id));
+	if (endpoint.isHealthcheckFor && endpoint.isHealthcheckFor.system && endpoint.isHealthcheckFor.system[0].dataItemID) {
+		endpoint.systemCode = endpoint.isHealthcheckFor.system[0].dataItemID;
+	}
+	return endpoint;
+}
+
 
 /** 
  * Transforms the data from CMDB into something expected by the templates
