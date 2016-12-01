@@ -21,12 +21,12 @@
 									<small class="o-forms__additional-info">Wildcards (* and ?) can be used.</small>
 									<input name="systemCode" value="{{systemCode}}" class="o-forms__text" id="systemCode"></input>
 								</div>
-								<div data-o-grid-colspan="1">
+								<div data-o-grid-colspan="3">
 									<label class="o-forms__label" for="isLive">Live?</label>
 									<small class="o-forms__additional-info">Wildcards (* and ?) can be used.</small>
 									<input name="isLive" value="{{isLive}}" class="o-forms__text" id="isLive"></input>
 								</div>
-								<div data-o-grid-colspan="2">
+								<div data-o-grid-colspan="3">
 									<label class="o-forms__label" for="protocol">Protocol</label>
 									<small class="o-forms__additional-info">Wildcards (* and ?) can be used.</small>
 									<input name="protocol" value="{{protocol}}" class="o-forms__text" id="protocol"></input>
