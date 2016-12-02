@@ -77,20 +77,19 @@ app.use(authS3O);
  * Gets a list of Endpoints from the CMDB and renders them
  */
 app.get('/', function (req, res) {
+    res.setHeader('Cache-Control', 'no-cache');
 	endpointsurl = process.env.CMDB_API + "items/endpoint";
 	params = req.query;
 	console.log("params:",params);
 	sortby = params.sortby
 	delete params.sortby // to avoid it being added to cmdb params
-	params['outputfields'] = "name,serviceTier,isLive,protocol,healthSuffix,aboutSuffix";
-	params['objectDetail'] = "False";
-	params['subjectDetail'] = "False";
+	params['outputfields'] = "isHealthcheckFor,isLive,protocol,healthSuffix,aboutSuffix";
 	remove_blank_values(params);
 	endpointsurl = endpointsurl + '?' +querystring.stringify(params);
 	console.log("url:",endpointsurl)
 	cmdb._fetchAll(res.locals, endpointsurl).then(function (endpoints) {
+		endpoints.forEach(indexController);
 		endpoints.sort(CompareOnKey(sortby));
-		endpoints.forEach(endpointController);
 		res.render('index', {endpoints: endpoints});
 	}).catch(function (error) {
 		res.status(502);
@@ -116,6 +115,7 @@ function CompareOnKey(key) {
  * Gets info about a given Contact from the CMDB and provides a form for editing it
  */
 app.get('/manage/:endpointid', function (req, res) {
+    res.setHeader('Cache-Control', 'no-cache');
 	cmdb.getItem(res.locals, 'endpoint', req.params.endpointid).then(function (endpoint) {
 		res.render('endpoint', endpointController(endpoint));
 	}).catch(function (error) {
@@ -128,6 +128,7 @@ app.get('/manage/:endpointid', function (req, res) {
  * Updates an Endpoint
  */
 app.post('/manage/:endpointid', function (req, res) {
+    res.setHeader('Cache-Control', 'no-cache');
 	var endpoint = {
 		base: req.body.base,
 		protocol: req.body.protocol,
@@ -158,6 +159,7 @@ app.post('/manage/:endpointid', function (req, res) {
  * Deletes an Endpoint
  */
 app.post('/manage/:endpointid/delete', function (req, res) {
+    res.setHeader('Cache-Control', 'no-cache');
 	cmdb.deleteItem(res.locals, 'endpoint', req.params.endpointid).then(function (endpoint) {
 
 		// TODO: show messaging to indicate the delete was successful
@@ -172,6 +174,7 @@ app.post('/manage/:endpointid/delete', function (req, res) {
  * Displays blank endpoint form for adding new endpoints
  */
 app.get('/new', function (req, res) {
+    res.setHeader('Cache-Control', 'no-cache');
 	var defaultdata = {
 		base: "",
 		endpointid: "",
@@ -188,6 +191,7 @@ app.get('/new', function (req, res) {
  * Redirect to the approprate path and treat like a save.
  */
 app.post('/new', function (req, res) {
+    res.setHeader('Cache-Control', 'no-cache');
 	endpointid = req.body.id
 	if (!endpointid.trim()) {
 		endpointid = req.body.base
@@ -206,6 +210,7 @@ app.use(function(req, res, next) {
 });
 
 app.use(function(err, req, res, next) {
+    res.setHeader('Cache-Control', 'no-cache');
 	console.error(err.stack);
 	res.status(500);
 	if (res.get('Content-Type') && res.get('Content-Type').indexOf("json") != -1) {
@@ -218,6 +223,21 @@ app.use(function(err, req, res, next) {
 app.listen(port, function () {
 	console.log('App listening on port '+port);
 });
+
+
+
+/** 
+ * Transforms the data from CMDB into something expected by the index
+ */
+function indexController(endpoint) {
+	endpoint.id = endpoint.dataItemID;
+	endpoint.localpath = "/manage/"+encodeURIComponent(encodeURIComponent(endpoint.id));
+	if (endpoint.isHealthcheckFor && endpoint.isHealthcheckFor.system && endpoint.isHealthcheckFor.system[0].dataItemID) {
+		endpoint.systemCode = endpoint.isHealthcheckFor.system[0].dataItemID;
+	}
+	return endpoint;
+}
+
 
 /** 
  * Transforms the data from CMDB into something expected by the templates
