@@ -73,8 +73,7 @@
 				<div data-o-grid-colspan="9">
 					<table class="o-table o-table--row-stripes" data-o-component="o-table">
 						<thead>
-							<th><a href="/?sortby=dataItemID">ID</a></th>
-							<th><a href="/?sortby=base">URL</a></th>
+							<th><a href="/?sortby=dataItemID">URL</a></th>
 							<th><a href="/?sortby=SystemCode">systemCode</a></th>
 							<th><a href="/?sortby=isLive">live?</a></th>
 							<th><a href="/?sortby=protocol">protocol</a></th>
@@ -85,7 +84,6 @@
 							{{#endpoints}}
 								<tr>
 									<td><a href="{{localpath}}">{{id}}</a></td>
-									<td>{{base}}</td>
 									<td>{{systemCode}}</td>
 									<td>{{isLive}}</td>
 									<td>{{protocol}}</td>
