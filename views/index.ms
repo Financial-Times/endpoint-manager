@@ -73,7 +73,7 @@
 				<div data-o-grid-colspan="9">
 					<table class="o-table o-table--row-stripes" data-o-component="o-table">
 						<thead>
-							<th><a href="/?sortby=dataItemID">URL</a></th>
+							<th><a href="/?sortby=dataItemID">url</a></th>
 							<th><a href="/?sortby=SystemCode">systemCode</a></th>
 							<th><a href="/?sortby=isLive">live?</a></th>
 							<th><a href="/?sortby=protocol">protocol</a></th>

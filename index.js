@@ -78,7 +78,7 @@ app.use(authS3O);
  */
 app.get('/', function (req, res) {
     res.setHeader('Cache-Control', 'no-cache');
-	endpointsurl = "items/endpoint";
+	endpointsurl = process.env.CMDB_API + "items/endpoint";
 	params = req.query;
 	console.log("params:",params);
 	sortby = params.sortby
@@ -87,7 +87,7 @@ app.get('/', function (req, res) {
 	remove_blank_values(params);
 	endpointsurl = endpointsurl + '?' +querystring.stringify(params);
 	console.log("url:",endpointsurl)
-	cmdb._fetch(res.locals, endpointsurl).then(function (endpoints) {
+	cmdb._fetchAll(res.locals, endpointsurl).then(function (endpoints) {
 		endpoints.forEach(indexController);
 		endpoints.sort(CompareOnKey(sortby));
 		res.render('index', {endpoints: endpoints});
