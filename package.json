@@ -22,9 +22,9 @@
     "express": "^4.13.4",
     "express-ftwebservice": "^2.2.2",
     "mustache-express": "^1.2.2",
-    "s3o-middleware": "^1.6.0"
+    "s3o-middleware": "^1.8.0"
   },
   "engines": {
-    "node": "5.3.0"
+    "node": "6.9.1"
   }
 }
