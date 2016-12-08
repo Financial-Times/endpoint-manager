@@ -30,7 +30,7 @@
 					</div>
 
 					<div class="o-forms--wide o-forms__wrapper o-forms__wrapper--highlight">
-						<div class="o-forms o-forms--wide {{#iderror}}o-forms__error{{/iderror}}">
+						<div class="o-forms o-forms--wide {{#iderror}}o-forms--error{{/iderror}}">
 							<label class="o-forms__label" for="id">ID</label>
 							<small class="o-forms__additional-info">A unique identification for a endpoint with a SINGLE healthcheck or about (defaults to base URL). If you have mulitple healthchecks for an endpoint then you must define unique identifications for each one.</small>
 							{{#id}}<small class="o-forms__additional-info">Can't be edited after creation.  If incorrect, create a new endpoint and delete the old one.</small>{{/id}}

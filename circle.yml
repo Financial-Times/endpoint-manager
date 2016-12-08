@@ -4,7 +4,7 @@ machine:
 
 deployment:
   dev:
-    branch: no-cache
+    branch: MON-2216
     commands:
       - heroku maintenance:on --app oi-endpoint-manager-dev
       - git fetch origin --unshallow
