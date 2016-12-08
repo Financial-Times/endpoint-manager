@@ -80,31 +80,31 @@
 
 					<div id="save"><input type='submit' class="o-buttons o-buttons--standout save-button" value='{{#id}}Save{{/id}}{{^id}}Create{{/id}}' /></div>
 				</form>
-				{{#id}}
-				<div class='o-grid-row' data-o-grid-colspan="9">
-					<div class='delete-notice-container'>
-						<h2><i class="o-icons-icon o-icons-icon--warning o-icons--big"></i>Delete this record</h2>
-						<p><strong>Warning:</strong> this action cannot be undone</p>
-						<div>
-					    		<form id="delete" action="{{localpath}}/delete" method="post">
-								<input type='submit' class="o-buttons o-buttons--standout delete-button" value='Delete' />
-					    		</form>
-						</div>
-				    	</div>
-				</div>
-				<div class='o-grid-row' data-o-grid-colspan="9">
-					<br/><hr/>
-					<h2>Validate Endpoint URLs</h2>
-					<small>(Press save to update)</small>
-					<br/>
-					<ul>
-					{{#urls}}
-					<li class='{{type}} url' data-validateapi="{{validateapi}}" data-apikey="{{apikey}}"><span class='urltype'>{{type}} URL:</span> <a href="{{url}}">{{url}}</a>{{#validateurl}} <a href="{{validateurl}}" class="o-buttons o-buttons--standout save-button" />Check whether is Valid</a>{{/validateurl}}</li>
-					{{/urls}}
-					</ul>
-				</div>
-				{{/id}}
 			</div>
+			{{#id}}
+			<div class='o-grid-row' data-o-grid-colspan="9">
+				<div class='delete-notice-container'>
+					<h2><i class="o-icons-icon o-icons-icon--warning o-icons--big"></i>Delete this record</h2>
+					<p><strong>Warning:</strong> this action cannot be undone</p>
+					<div>
+				    		<form id="delete" action="{{localpath}}/delete" method="post">
+							<input type='submit' class="o-buttons o-buttons--standout delete-button" value='Delete' />
+				    		</form>
+					</div>
+			    	</div>
+			</div>
+			<div class='o-grid-row' data-o-grid-colspan="9">
+				<br/><hr/>
+				<h2>Validate Endpoint URLs</h2>
+				<small>(Press save to update)</small>
+				<br/>
+				<ul>
+				{{#urls}}
+				<li class='{{type}} url' data-validateapi="{{validateapi}}" data-apikey="{{apikey}}"><span class='urltype'>{{type}} URL:</span> <a href="{{url}}">{{url}}</a>{{#validateurl}} <a href="{{validateurl}}" class="o-buttons o-buttons--standout save-button" />Check whether is Valid</a>{{/validateurl}}</li>
+				{{/urls}}
+				</ul>
+			</div>
+			{{/id}}
 		</div>
 		<script src="https://build.origami.ft.com/v2/bundles/js?modules=o-header-services@^1.0.0,o-buttons@^4.0.0,o-forms@^2.0.3,o-grid@^4.2.1"></script>
 	</body>
