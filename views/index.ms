@@ -45,6 +45,7 @@
 							<div class="o-grid-row">
 								<div data-o-grid-colspan="3">
 									<input type='submit' class="o-buttons o-buttons--standout " value='Filter' />
+									<a class="o-buttons o-buttons--standout" href="/">Clear</a>
 								</div>
 							</div>
 						</div>
@@ -57,7 +58,7 @@
 			<div class="o-grid-container">
 				<div class="o-grid-row">
 					<div data-o-grid-colspan="3">
-						<h2>Existing Endpoints</h2>
+						<h2>Existing Endpoints ({{endpoints.length}})</h2>
 					</div>
 					<div data-o-grid-colspan="3">
 					</div>
@@ -73,12 +74,12 @@
 				<div data-o-grid-colspan="9">
 					<table class="o-table o-table--row-stripes" data-o-component="o-table">
 						<thead>
-							<th><a href="/?sortby=dataItemID">url</a></th>
-							<th><a href="/?sortby=SystemCode">systemCode</a></th>
-							<th><a href="/?sortby=isLive">live?</a></th>
-							<th><a href="/?sortby=protocol">protocol</a></th>
-							<th><a href="/?sortby=health">health</a></th>
-							<th><a href="/?sortby=about">about</a></th>
+							<th><a href="/?dataItemID={{dataItemID}}&amp;base={{base}}&amp;isLive={{isLive}}&amp;protocol={{protocol}}&amp;healthSuffix={{healthSuffix}}&amp;aboutSuffix={{aboutSuffix}}&amp;sortby=dataItemID">url</a></th>
+							<th><a href="/?dataItemID={{dataItemID}}&amp;base={{base}}&amp;isLive={{isLive}}&amp;protocol={{protocol}}&amp;healthSuffix={{healthSuffix}}&amp;aboutSuffix={{aboutSuffix}}&amp;sortby=SystemCode">systemCode</a></th>
+							<th><a href="/?dataItemID={{dataItemID}}&amp;base={{base}}&amp;isLive={{isLive}}&amp;protocol={{protocol}}&amp;healthSuffix={{healthSuffix}}&amp;aboutSuffix={{aboutSuffix}}&amp;sortby=isLive">live?</a></th>
+							<th><a href="/?dataItemID={{dataItemID}}&amp;base={{base}}&amp;isLive={{isLive}}&amp;protocol={{protocol}}&amp;healthSuffix={{healthSuffix}}&amp;aboutSuffix={{aboutSuffix}}&amp;sortby=protocol">protocol</a></th>
+							<th><a href="/?dataItemID={{dataItemID}}&amp;base={{base}}&amp;isLive={{isLive}}&amp;protocol={{protocol}}&amp;healthSuffix={{healthSuffix}}&amp;aboutSuffix={{aboutSuffix}}&amp;sortby=health">health</a></th>
+							<th><a href="/?dataItemID={{dataItemID}}&amp;base={{base}}&amp;isLive={{isLive}}&amp;protocol={{protocol}}&amp;healthSuffix={{healthSuffix}}&amp;aboutSuffix={{aboutSuffix}}&amp;sortby=about">about</a></th>
 						</thead>
 						<tbody>
 							{{#endpoints}}
