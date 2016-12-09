@@ -78,25 +78,29 @@ app.use(authS3O);
  */
 app.get('/', function (req, res) {
     res.setHeader('Cache-Control', 'no-cache');
-	endpointsurl = process.env.CMDB_API + "items/endpoint";
-	params = req.query;
-	console.log("params:",params);
+    console.time('CMDB api call for all endpoints')
 	sortby = params.sortby
-	delete params.sortby // to avoid it being added to cmdb params
-	params['outputfields'] = "isHealthcheckFor,isLive,protocol,healthSuffix,aboutSuffix";
-	remove_blank_values(params);
-	endpointsurl = endpointsurl + '?' +querystring.stringify(params);
-	console.log("url:",endpointsurl)
-	cmdb._fetchAll(res.locals, endpointsurl).then(function (endpoints) {
+	cmdb._fetchAll(res.locals, endpointsurl(req)).then(function (endpoints) {
 		endpoints.forEach(indexController);
 		endpoints.sort(CompareOnKey(sortby));
-		res.render('index', {endpoints: endpoints});
+        console.timeEnd('CMDB api call for all endpoints')
+        // render the index and the filter parameters
+		res.render('index', Object.assign({endpoints: endpoints}, req.query));
 	}).catch(function (error) {
 		res.status(502);
 		res.render("error", {message: "Problem obtaining list of endpoints from CMDB ("+error+")"});
 	});
 });
 
+function endpointsURL(req) {
+	endpointsurl = process.env.CMDB_API + "items/endpoint";
+	cmdbarams = req.query;
+	console.log("cmdbparams:",cmdbparams);
+	cmdbparams['outputfields'] = "isHealthcheckFor,isLive,protocol,healthSuffix,aboutSuffix";
+	remove_blank_values(cmdbparams);
+	endpointsurl = endpointsurl + '?' +querystring.stringify(cmdbparams);
+	console.log("url:",endpointsurl)
+}
 
 function CompareOnKey(key) {
 	return function(a,b) {
