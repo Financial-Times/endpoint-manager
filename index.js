@@ -100,6 +100,7 @@ function endpointsURL(req) {
 	remove_blank_values(cmdbparams);
 	endpointsurl = endpointsurl + '?' +querystring.stringify(cmdbparams);
 	console.log("url:",endpointsurl)
+    return endpointsurl
 }
 
 function CompareOnKey(key) {
