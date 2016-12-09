@@ -94,7 +94,7 @@ app.get('/', function (req, res) {
 
 function endpointsURL(req) {
 	endpointsurl = process.env.CMDB_API + "items/endpoint";
-	cmdbarams = req.query;
+	cmdbparams = req.query;
 	console.log("cmdbparams:",cmdbparams);
 	cmdbparams['outputfields'] = "isHealthcheckFor,isLive,protocol,healthSuffix,aboutSuffix";
 	remove_blank_values(cmdbparams);
