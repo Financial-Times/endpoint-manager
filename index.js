@@ -79,7 +79,7 @@ app.use(authS3O);
 app.get('/', function (req, res) {
     res.setHeader('Cache-Control', 'no-cache');
     console.time('CMDB api call for all endpoints')
-	sortby = params.sortby
+    sortby = req.query.sortby
 	cmdb._fetchAll(res.locals, endpointsurl(req)).then(function (endpoints) {
 		endpoints.forEach(indexController);
 		endpoints.sort(CompareOnKey(sortby));

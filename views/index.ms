@@ -58,7 +58,7 @@
 			<div class="o-grid-container">
 				<div class="o-grid-row">
 					<div data-o-grid-colspan="3">
-						<h2>Existing Endpoints</h2>
+						<h2>Existing Endpoints ({{endpoints.length}})</h2>
 					</div>
 					<div data-o-grid-colspan="3">
 					</div>
