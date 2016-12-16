@@ -93,7 +93,7 @@
 							</div>
 						</div>
 						{{/relationships}}
-						{{^relationships}}<div class="empty">This contact is not being referenced</div>{{/relationships}}
+						{{^relationships}}<div class="empty">This endpoint is not being referenced</div>{{/relationships}}
 					</div>
 
 					{{#lastUpdate}}<div class="last-update">Endpoint Last Updated: {{lastUpdate}}</div>{{/lastUpdate}}
@@ -116,7 +116,7 @@
 			    	</div>
 			</div>
 			{{/relationships}}
-			
+
 			<div class='o-grid-row' data-o-grid-colspan="9">
 				<br/><hr/>
 				<h2>Validate Endpoint URLs</h2>

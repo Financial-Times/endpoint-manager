@@ -123,7 +123,7 @@ function CompareOnKey(key) {
 }
 
 /**
- * Gets info about a given Contact from the CMDB and provides a form for editing it
+ * Gets info about a given Endpoint from the CMDB and provides a form for editing it
  */
 app.get('/manage/:endpointid', function (req, res) {
     res.setHeader('Cache-Control', 'no-cache');
