@@ -86,7 +86,7 @@ app.get('/', function (req, res) {
     res.setHeader('Cache-Control', 'no-cache');
     console.time('CMDB api call for all endpoints')
     sortby = req.query.sortby
-    if req.query.page {
+    if (req.query.page) {
     	page = req.query.page
     } else {
     	page = 1
