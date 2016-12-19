@@ -57,10 +57,10 @@
 
 			<div class="o-grid-container">
 				<div class="o-grid-row">
-					<div data-o-grid-colspan="3">
+					<div data-o-grid-colspan="4">
 						<h2>Existing Endpoints ({{endpoints.length}})</h2>
 					</div>
-					<div data-o-grid-colspan="3">
+					<div data-o-grid-colspan="2">
 					</div>
 					<div data-o-grid-colspan="3">
 						<form id="new" action="/new" method="get">

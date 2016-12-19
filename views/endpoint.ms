@@ -23,10 +23,11 @@
 						</aside>
 					</div>{{/saved}}
 
-					<div class="o-forms o-forms--wide">
+					<div class="o-forms o-forms--wide {{#dependerror}}o-forms--error{{/dependerror}}">
 						<label class="o-forms__label" for="base">Base URL</label>
 						<small class="o-forms__additional-info">The base URL of the endpoint, not including protocol or __health and __about.</small>
 						<input type="text" name="base" value="{{base}}" placeholder="my-app.webservices.ft.com" class="o-forms__text" id="base" required></input>
+						{{#dependerror}}<div class="o-forms__errortext">{{dependerror}}</div>{{/dependerror}}
 					</div>
 
 					<div class="o-forms--wide o-forms__wrapper o-forms__wrapper--highlight">
@@ -78,10 +79,31 @@
 						<div class="o-forms__errortext">System Codes must consist of between 3 and 32 lowercase alphanumeric characters or hyphens.</div>
 					</div>
 
+					<div class="o-forms o-forms--wide">
+						<label class="o-forms__label" for="programme">Related Items({{relationships.length}})</label>
+						{{#relationships}}
+						<div class="o-grid-container">
+							<div class="o-grid-row">
+								<div data-o-grid-colspan="3">
+									{{reltype}}
+								</div>
+								<div data-o-grid-colspan="3">
+									{{#relitemlink}}<a href="{{relitemlink}}">{{/relitemlink}}{{relitem}}{{#relitemlink}}</a>{{/relitemlink}}
+								</div>
+							</div>
+						</div>
+						{{/relationships}}
+						{{^relationships}}<div class="empty">This endpoint is not being referenced</div>{{/relationships}}
+					</div>
+
+					{{#lastUpdate}}<div class="last-update">Endpoint Last Updated: {{lastUpdate}}</div>{{/lastUpdate}}
+
 					<div id="save"><input type='submit' class="o-buttons o-buttons--standout save-button" value='{{#id}}Save{{/id}}{{^id}}Create{{/id}}' /></div>
 				</form>
 			</div>
+
 			{{#id}}
+			{{^relationships}}
 			<div class='o-grid-row' data-o-grid-colspan="9">
 				<div class='delete-notice-container'>
 					<h2><i class="o-icons-icon o-icons-icon--warning o-icons--big"></i>Delete this record</h2>
@@ -93,6 +115,8 @@
 					</div>
 			    	</div>
 			</div>
+			{{/relationships}}
+
 			<div class='o-grid-row' data-o-grid-colspan="9">
 				<br/><hr/>
 				<h2>Validate Endpoint URLs</h2>
@@ -105,6 +129,7 @@
 				</ul>
 			</div>
 			{{/id}}
+
 		</div>
 		<script src="https://build.origami.ft.com/v2/bundles/js?modules=o-header-services@^1.0.0,o-buttons@^4.0.0,o-forms@^2.0.3,o-grid@^4.2.1"></script>
 	</body>
