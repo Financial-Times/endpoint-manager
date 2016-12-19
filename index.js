@@ -99,7 +99,7 @@ app.get('/', function (req, res) {
 });
 
 function endpointsURL(req) {
-	endpointsurl = process.env.CMDB_API + "items/endpoint";
+	endpointsurl = "items/endpoint";
 	cmdbparams = req.query;
 	console.log("cmdbparams:",cmdbparams);
     delete cmdbparams.sortby // to avoid it being added to cmdb params
