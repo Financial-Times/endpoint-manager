@@ -67,8 +67,6 @@
 						{{/pages}}
 						</div>
 					</div>
-					<div data-o-grid-colspan="2">
-					</div>
 					<div data-o-grid-colspan="3">
 						<form id="new" action="/new" method="get">
 							<input type='submit' class="o-buttons o-buttons--standout o-buttons--big" value='Add New Endpoint' />
