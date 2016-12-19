@@ -60,6 +60,13 @@
 					<div data-o-grid-colspan="4">
 						<h2>Existing Endpoints ({{endpoints.length}})</h2>
 					</div>
+					<div data-o-grid-colspan="4">
+						<div class="o-buttons__pagination">
+						{{#pages}}
+							<a class="o-buttons" href="/?page={{number}}">{{number}}</a>
+						{{/pages}}
+						</div>
+					</div>
 					<div data-o-grid-colspan="2">
 					</div>
 					<div data-o-grid-colspan="3">
