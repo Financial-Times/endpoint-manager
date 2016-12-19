@@ -86,7 +86,12 @@ app.get('/', function (req, res) {
     res.setHeader('Cache-Control', 'no-cache');
     console.time('CMDB api call for all endpoints')
     sortby = req.query.sortby
-	cmdb._fetch(res.locals, endpointsURL(req)).then(function (endpoints) {
+    if req.query.page {
+    	page = req.query.page
+    } else {
+    	page = 1
+    }
+	cmdb._fetch(res.locals, endpointsURL(req, page)).then(function (endpoints) {
 		endpoints.forEach(indexController);
 		endpoints.sort(CompareOnKey(sortby));
         console.timeEnd('CMDB api call for all endpoints')
@@ -98,13 +103,13 @@ app.get('/', function (req, res) {
 	});
 });
 
-function endpointsURL(req) {
+function endpointsURL(req, page) {
 	endpointsurl = "items/endpoint";
 	cmdbparams = req.query;
 	console.log("cmdbparams:",cmdbparams);
     delete cmdbparams.sortby // to avoid it being added to cmdb params
 	cmdbparams['outputfields'] = "isHealthcheckFor,isLive,protocol,healthSuffix,aboutSuffix";
-	cmdbparams['page'] = "1";
+	cmdbparams['page'] = page;
 	remove_blank_values(cmdbparams);
 	endpointsurl = endpointsurl + '?' +querystring.stringify(cmdbparams);
 	console.log("url:",endpointsurl)
