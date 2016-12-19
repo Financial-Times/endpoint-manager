@@ -104,6 +104,7 @@ function endpointsURL(req) {
 	console.log("cmdbparams:",cmdbparams);
     delete cmdbparams.sortby // to avoid it being added to cmdb params
 	cmdbparams['outputfields'] = "isHealthcheckFor,isLive,protocol,healthSuffix,aboutSuffix";
+	cmdbparams['page'] = "1";
 	remove_blank_values(cmdbparams);
 	endpointsurl = endpointsurl + '?' +querystring.stringify(cmdbparams);
 	console.log("url:",endpointsurl)
