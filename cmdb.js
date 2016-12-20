@@ -81,7 +81,6 @@ cmdb.prototype._fetchCount = function fetchCount(locals, url, timeout = 6000) {
         var items = response.json().length
 
         // aim to get "Count: Pages: nnn, Items: nnn"
-        console.log(response.headers)
 		var countstext = response.headers.get('Count');
 		if (countstext) {
 			// we now have "Pages: nnn, Items: nnn"
@@ -92,7 +91,6 @@ cmdb.prototype._fetchCount = function fetchCount(locals, url, timeout = 6000) {
 				items = counts[1].split(':')[1].trim();
 			}
 		}
-		console.log("pages",pages,"items",items)
    		return {"pages":pages,"items":items};
 	});
 }
@@ -230,7 +228,7 @@ cmdb.prototype.deleteItem = function deleteItem(locals, type, key, timeout = 600
  * @returns {Promise<Array>} A list of objects which have the type specified (NB: This refers to CMDB types, not native javascript types)
  */
 cmdb.prototype.getAllItems = function getAllItems(locals, type, criteria = "None", timeout = 6000) {
-	var path = this.api + encodeURIComponent('items/' + encodeURIComponent(type))
+	var path = this.api + 'items/' + encodeURIComponent(type);
 	if (criteria && criteria != 'None') {
 		path = path + "&" + criteria
 	}
@@ -247,7 +245,7 @@ cmdb.prototype.getAllItems = function getAllItems(locals, type, criteria = "None
  * @returns {Promise<Array>} A list of objects which have the type specified (NB: This refers to CMDB types, not native javascript types)
  */
 cmdb.prototype.getAllItemFields = function getAllItemFields(locals, type, fields = "ALL", criteria = "None", timeout = 6000) {
-	var path = this.api + encodeURIComponent('items/' + encodeURIComponent(type))
+	var path = this.api + 'items/' + encodeURIComponent(type);
 	if (fields && fields != 'ALL') {
 		path = path + "&outputfields=" + fields
 	}
@@ -267,7 +265,7 @@ cmdb.prototype.getAllItemFields = function getAllItemFields(locals, type, fields
  * @returns {Promise<Object>} The data about the count of items held in the CMDB
  */
 cmdb.prototype.getItemCount = function getItemCount(locals, type, criteria = "None", timeout = 6000){
-	var path = this.api + encodeURIComponent('items/' + encodeURIComponent(type));
+	var path = this.api + 'items/' + encodeURIComponent(type);
 	if (criteria && criteria != 'None') {
 		path = path + "&" + criteria
 	}
@@ -284,7 +282,7 @@ cmdb.prototype.getItemCount = function getItemCount(locals, type, criteria = "No
  * @returns {Promise<Object>} The data about the item held in the CMDB
  */
 cmdb.prototype.getItemPage = function getItemPage(locals, type, page = 1, criteria = "None", timeout = 6000){
-	var path = this.api + encodeURIComponent('items/' + encodeURIComponent(type));
+	var path = this.api + 'items/' + encodeURIComponent(type);
 	if (criteria && criteria != 'None') {
 		path = path + "&" + criteria
 	}
