@@ -95,7 +95,7 @@ app.get('/', function (req, res) {
     	} else {
     		page = 1
     	}
-		cmdb._fetch(res.locals, endpointsURL(req, page)).then(function (endpoints) {
+		cmdb.getItemPage(res.locals, 'endpoint', page, endpointFilter(req), endpointFields(req)).then(function (endpoints) {
 			endpoints.forEach(indexController);
 			endpoints.sort(CompareOnKey(sortby));
         	console.timeEnd('CMDB api call for all endpoints')
@@ -111,17 +111,18 @@ app.get('/', function (req, res) {
 	});		
 });
 
-function endpointsURL(req, page) {
-	endpointsurl = "items/endpoint";
+function endpointFilter(req) {
 	cmdbparams = req.query;
 	console.log("cmdbparams:",cmdbparams);
     delete cmdbparams.sortby // to avoid it being added to cmdb params
-	cmdbparams['outputfields'] = "isHealthcheckFor,isLive,protocol,healthSuffix,aboutSuffix";
-	cmdbparams['page'] = page;
 	remove_blank_values(cmdbparams);
-	endpointsurl = endpointsurl + '?' +querystring.stringify(cmdbparams);
-	console.log("url:",endpointsurl)
-    return endpointsurl
+	endpointfilter = querystring.stringify(cmdbparams);
+	console.log("filter:",endpointfilter)
+    return endpointfilter
+}
+
+function endpointFields(req) {
+	return "isHealthcheckFor,isLive,protocol,healthSuffix,aboutSuffix";
 }
 
 function CompareOnKey(key) {

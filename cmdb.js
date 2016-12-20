@@ -1,5 +1,6 @@
 require('es6-promise').polyfill();
 require('isomorphic-fetch');
+const querystring = require('querystring');
 
 /**
  * Object representing the CMDB API
@@ -264,7 +265,7 @@ cmdb.prototype.getAllItemFields = function getAllItemFields(locals, type, fields
  * @param {number} timeout - The timeout limit (optional)
  * @returns {Promise<Object>} The data about the count of items held in the CMDB
  */
-cmdb.prototype.getItemCount = function getItemCount(locals, type, criteria = "None", timeout = 6000){
+cmdb.prototype.getItemCount = function getItemCount(locals, type, criteria = "None", timeout = 6000) {
 	var path = this.api + 'items/' + encodeURIComponent(type);
 	if (criteria && criteria != 'None') {
 		path = path + "&" + criteria
@@ -281,12 +282,14 @@ cmdb.prototype.getItemCount = function getItemCount(locals, type, criteria = "No
  * @param {number} timeout - The timeout limit (optional)
  * @returns {Promise<Object>} The data about the item held in the CMDB
  */
-cmdb.prototype.getItemPage = function getItemPage(locals, type, page = 1, criteria = "None", timeout = 6000){
-	var path = this.api + 'items/' + encodeURIComponent(type);
-	if (criteria && criteria != 'None') {
+cmdb.prototype.getItemPage = function getItemPage(locals, type, page = 1, fields, criteria, timeout = 6000) {
+	var path = this.api + 'items/' + encodeURIComponent(type) + '?page=' + page;
+	if (criteria) {
 		path = path + "&" + criteria
 	}
-	path = path + "&page=" + page
+	if (fields) {
+		path = path + '&outputfields=' + fields
+	}
 	return this._fetch(locals, path, undefined, undefined, timeout);
 };
 
