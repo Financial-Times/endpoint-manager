@@ -17,7 +17,9 @@ app.set('views', __dirname + '/views');
 // Set the public directory as public for serving assets
 app.use(express.static('public'));
 
-var CMDB = require("./cmdb.js");
+// var CMDB = require("./cmdb.js");
+var path = require('path');
+var CMDB = require( path.resolve( __dirname, "./cmdb.js" ) );
 
 /** Environment variables **/
 var port = process.env.PORT || 3001;
