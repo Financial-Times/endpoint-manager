@@ -63,7 +63,7 @@
 					<div data-o-grid-colspan="4">
 						<div class="o-buttons__pagination">
 						{{#pages}}
-							<a class="o-buttons" href="/?page={{number}}">{{number}}</a>
+							<a class="o-buttons" aria-selected="{{selected}}" href="?dataItemID={{dataItemID}}&amp;base={{base}}&amp;isLive={{isLive}}&amp;protocol={{protocol}}&amp;healthSuffix={{healthSuffix}}&amp;aboutSuffix={{aboutSuffix}}&amp;sortby=dataItemID&amp;page={{number}}">{{number}}</a>
 						{{/pages}}
 						</div>
 					</div>

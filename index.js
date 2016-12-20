@@ -99,8 +99,17 @@ app.get('/', function (req, res) {
 			endpoints.forEach(indexController);
 			endpoints.sort(CompareOnKey(sortby));
         	console.timeEnd('CMDB api call for all endpoints')
+        	// prepare pagination links
+        	pagination = []
+        	for (pageno in counters['pages']) {
+        		if (pageno == page) {
+	        		pages.append({'number':pageno, 'selected':true })
+        		} else {
+	        		pages.append({'number':pageno, 'selected':false })
+	        	}
+        	}
         	// render the index and the filter parameters
-			res.render('index', Object.assign({'pages':[{'number':'01'},{'number':'02'},{'number':'03'},{'number':'04'},{'number':'05'}]}, {endpoints: endpoints}, req.query));
+			res.render('index', Object.assign({'pages':pagination}, {endpoints: endpoints}, req.query));
 		}).catch(function (error) {
 			res.status(502);
 			res.render("error", {message: "Problem obtaining list of endpoints from CMDB ("+error+")"});
