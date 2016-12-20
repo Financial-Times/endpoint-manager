@@ -101,12 +101,17 @@ app.get('/', function (req, res) {
         	console.timeEnd('CMDB api call for all endpoints')
         	// prepare pagination links
         	pagination = []
-        	for (pageno in counters['pages']) {
+        	var pageno = page - 4
+        	if (pageno < 1) {
+        		pageno = 1
+        	}
+        	while (pageno < counters['pages'] && pagination.length < 8) {
         		if (pageno == page) {
-	        		pages.append({'number':pageno, 'selected':true })
+	        		pagination.append({'number':pageno, 'selected':true })
         		} else {
-	        		pages.append({'number':pageno, 'selected':false })
+	        		pagination.append({'number':pageno, 'selected':false })
 	        	}
+	        	pageno = pageno + 1
         	}
         	// render the index and the filter parameters
 			res.render('index', Object.assign({'pages':pagination}, {endpoints: endpoints}, req.query));
