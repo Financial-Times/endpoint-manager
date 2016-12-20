@@ -17,7 +17,7 @@ app.set('views', __dirname + '/views');
 // Set the public directory as public for serving assets
 app.use(express.static('public'));
 
-var CMDB = require("cmdb.js");
+var CMDB = require("./cmdb.js");
 
 /** Environment variables **/
 var port = process.env.PORT || 3001;
@@ -84,6 +84,13 @@ app.use(authS3O);
  */
 app.get('/', function (req, res) {
     res.setHeader('Cache-Control', 'no-cache');
+	cmdb.getItemCount(res.locals, 'endpoint').then(function (endpointCount) {
+		console.log(endpointcount)
+	}).catch(function (error) {
+		res.status(502);
+		res.render("error", {message: "Problem obtaining list of endpoints from CMDB ("+error+")"});
+	});		
+
     console.time('CMDB api call for all endpoints')
     sortby = req.query.sortby
     if (req.query.page) {
