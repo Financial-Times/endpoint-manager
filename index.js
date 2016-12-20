@@ -105,7 +105,7 @@ app.get('/', function (req, res) {
         	if (pageno < 1) {
         		pageno = 1
         	}
-        	while (pageno < counters['pages'] && pagination.length < 8) {
+        	while (pageno <= counters['pages'] && pagination.length < 8) {
         		if (pageno == page) {
 	        		pagination.push({'number':pageno, 'selected':true })
         		} else {
