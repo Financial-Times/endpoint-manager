@@ -283,7 +283,7 @@ cmdb.prototype.getItemCount = function getItemCount(locals, type, criteria = "No
  * @returns {Promise<Object>} The data about the item held in the CMDB
  */
 cmdb.prototype.getItemPage = function getItemPage(locals, type, page = 1, fields, criteria, timeout = 6000) {
-	var path = this.api + 'items/' + encodeURIComponent(type) + '?page=' + page;
+	var path = 'items/' + encodeURIComponent(type) + '?page=' + page;
 	if (criteria) {
 		path = path + "&" + criteria
 	}
