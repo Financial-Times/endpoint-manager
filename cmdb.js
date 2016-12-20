@@ -40,7 +40,7 @@ cmdb.prototype._fetch = function _fetch(locals, path, method, body, timeout = 60
 	}
 
 	// HACK: CMDB decodes paths before they hit its router, so do an extra encode on the whole path here
-	path = encodeURIComponent(path);
+//	path = encodeURIComponent(path);
 	
 	return fetch(this.api + path, params).then(function(response) {
 		if (response.status >= 400) {
