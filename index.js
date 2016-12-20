@@ -86,7 +86,9 @@ app.use(authS3O);
  */
 app.get('/', function (req, res) {
     res.setHeader('Cache-Control', 'no-cache');
-	cmdb.getItemCount(res.locals, 'endpoint').then(function (counters) {
+    console.time('CMDB api call for endpoint count')
+	cmdb.getItemCount(res.locals, 'endpoint', endpointFilter(req)).then(function (counters) {
+      	console.timeEnd('CMDB api call for endpoint count')
 		console.log(counters)
 	    console.time('CMDB api call for all endpoints')
     	sortby = req.query.sortby

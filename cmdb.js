@@ -265,9 +265,9 @@ cmdb.prototype.getAllItemFields = function getAllItemFields(locals, type, fields
  * @param {number} timeout - The timeout limit (optional)
  * @returns {Promise<Object>} The data about the count of items held in the CMDB
  */
-cmdb.prototype.getItemCount = function getItemCount(locals, type, criteria = "None", timeout = 6000) {
-	var path = this.api + 'items/' + encodeURIComponent(type);
-	if (criteria && criteria != 'None') {
+cmdb.prototype.getItemCount = function getItemCount(locals, type, criteria, timeout = 6000) {
+	var path = this.api + 'items/' + encodeURIComponent(type) + '?page=1&outputfields=';
+	if (criteria) {
 		path = path + "&" + criteria
 	}
 	return this._fetchCount(locals, path, timeout);
