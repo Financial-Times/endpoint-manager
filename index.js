@@ -110,6 +110,7 @@ app.get('/', function (req, res) {
         	// prefix for page 1
         	if (pageno != 1 ) {
 	       		pagination.push({'number':1, 'selected':false })
+	       		pagination.push({'faux':true})
    		   	}
    		   	// main set of page links centerde around the current page
         	while (pageno <= counters['pages'] && pagination.length < 8) {
@@ -122,6 +123,7 @@ app.get('/', function (req, res) {
         	}
         	// suffix for last page
         	if (pageno < counters['pages'] ) {
+	       		pagination.push({'faux':true})
 	       		pagination.push({'number':counters['pages'], 'selected':false })
    		   	}
         	// render the index and the filter parameters
