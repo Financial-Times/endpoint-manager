@@ -91,6 +91,7 @@ cmdb.prototype._fetchCount = function fetchCount(locals, url, timeout = 6000) {
 				items = counts[1].split(':')[1].trim();
 			}
 		}
+		console.log("pages",pages,"items",items)
    		return {"pages":pages,"items":items};
 	});
 }

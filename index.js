@@ -249,7 +249,7 @@ app.use(function(req, res, next) {
 });
 
 app.use(function(err, req, res, next) {
-    res.setHeader('Cache-Control', 'no-cache');
+//    res.setHeader('Cache-Control', 'no-cache');
 	console.error(err.stack);
 	res.status(500);
 	if (res.get('Content-Type') && res.get('Content-Type').indexOf("json") != -1) {
