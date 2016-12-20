@@ -81,7 +81,8 @@ cmdb.prototype._fetchCount = function fetchCount(locals, url, timeout = 6000) {
         var items = response.json().length
 
         // aim to get "Count: Pages: nnn, Items: nnn"
-		var countstext = parse_link_header(response.headers.get('count'));
+        console.log(response.headers)
+		var countstext = response.headers.get('Count');
 		if (countstext) {
 			// we now have "Pages: nnn, Items: nnn"
 			var counts = countstext.split(',');
