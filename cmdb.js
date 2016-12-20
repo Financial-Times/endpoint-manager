@@ -88,8 +88,8 @@ cmdb.prototype._fetchCount = function fetchCount(locals, url, timeout = 6000) {
 			var counts = countstext.split(',');
 			if (counts.length == 2) {
 				// we now have "Pages: nnn" and "Items: nnn"
-				pages = counts[0].split(':')[1].trim();
-				items = counts[1].split(':')[1].trim();
+				pages = Number(counts[0].split(':')[1].trim());
+				items = Number(counts[1].split(':')[1].trim());
 			}
 		}
    		return {"pages":pages,"items":items};
