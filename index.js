@@ -95,7 +95,7 @@ app.get('/', function (req, res) {
     	} else {
     		page = 1
     	}
-		cmdb.getItemPage(res.locals, 'endpoint', page, endpointFilter(req), endpointFields(req)).then(function (endpoints) {
+		cmdb.getItemPage(res.locals, 'endpoint', page, endpointFields(req), endpointFilter(req)).then(function (endpoints) {
 			endpoints.forEach(indexController);
 			endpoints.sort(CompareOnKey(sortby));
         	console.timeEnd('CMDB api call for all endpoints')

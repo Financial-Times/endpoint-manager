@@ -39,7 +39,6 @@ cmdb.prototype._fetch = function _fetch(locals, path, method, body, timeout = 60
 		params.headers['FT-Forwarded-Auth'] = "ad:"+ locals.s3o_username;
 	}
 
-	console.log("_fetch:",path,params)
 	// HACK: CMDB decodes paths before they hit its router, so do an extra encode on the whole path here
 //	path = encodeURIComponent(path);
 	
