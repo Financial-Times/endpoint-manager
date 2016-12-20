@@ -107,6 +107,11 @@ app.get('/', function (req, res) {
         	if (pageno < 1) {
         		pageno = 1
         	}
+        	// prefix for page 1
+        	if (pageno != 1 ) {
+	       		pagination.push({'number':1, 'selected':false })
+   		   	}
+   		   	// main set of page links centerde around the current page
         	while (pageno <= counters['pages'] && pagination.length < 8) {
         		if (pageno == page) {
 	        		pagination.push({'number':pageno, 'selected':true })
@@ -115,6 +120,10 @@ app.get('/', function (req, res) {
 	        	}
 	        	pageno = pageno + 1
         	}
+        	// suffix for last page
+        	if (pageno < counters['pages'] ) {
+	       		pagination.push({'number':counters['pages'], 'selected':false })
+   		   	}
         	// render the index and the filter parameters
 			res.render('index', Object.assign({'pages':pagination}, {endpoints: endpoints}, req.query));
 		}).catch(function (error) {
