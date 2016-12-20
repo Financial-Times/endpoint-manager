@@ -29,6 +29,12 @@ var cmdb = new CMDB({
 	apikey: process.env.CMDB_APIKEY,
 });
 
+var systemTool = process.env.SYSTEMREGISTRY || 'https://systemregistry.in.ft.com/manage/';
+var endpointTool = process.env.ENDPOINTMANAGER || 'https://endpointmanager.in.ft.com/manage/';
+var contactTool = process.env.CONTACTORGANISER || 'https://contactorganiser.in.ft.com/manage/';
+var reservedRelTypes = process.env.RESERVEDRELTYPES || 'isHealthcheckFor';
+reservedRelTypes = "," + reservedRelTypes + ","  // to force every value to be enclosed in commas
+
 var path = require('path');
 var ftwebservice = require('express-ftwebservice');
 ftwebservice(app, {
@@ -78,25 +84,31 @@ app.use(authS3O);
  */
 app.get('/', function (req, res) {
     res.setHeader('Cache-Control', 'no-cache');
-	endpointsurl = process.env.CMDB_API + "items/endpoint";
-	params = req.query;
-	console.log("params:",params);
-	sortby = params.sortby
-	delete params.sortby // to avoid it being added to cmdb params
-	params['outputfields'] = "isHealthcheckFor,isLive,protocol,healthSuffix,aboutSuffix";
-	remove_blank_values(params);
-	endpointsurl = endpointsurl + '?' +querystring.stringify(params);
-	console.log("url:",endpointsurl)
-	cmdb._fetchAll(res.locals, endpointsurl).then(function (endpoints) {
+    console.time('CMDB api call for all endpoints')
+    sortby = req.query.sortby
+	cmdb._fetchAll(res.locals, endpointsURL(req)).then(function (endpoints) {
 		endpoints.forEach(indexController);
 		endpoints.sort(CompareOnKey(sortby));
-		res.render('index', {endpoints: endpoints});
+        console.timeEnd('CMDB api call for all endpoints')
+        // render the index and the filter parameters
+		res.render('index', Object.assign({endpoints: endpoints}, req.query));
 	}).catch(function (error) {
 		res.status(502);
 		res.render("error", {message: "Problem obtaining list of endpoints from CMDB ("+error+")"});
 	});
 });
 
+function endpointsURL(req) {
+	endpointsurl = process.env.CMDB_API + "items/endpoint";
+	cmdbparams = req.query;
+	console.log("cmdbparams:",cmdbparams);
+    delete cmdbparams.sortby // to avoid it being added to cmdb params
+	cmdbparams['outputfields'] = "isHealthcheckFor,isLive,protocol,healthSuffix,aboutSuffix";
+	remove_blank_values(cmdbparams);
+	endpointsurl = endpointsurl + '?' +querystring.stringify(cmdbparams);
+	console.log("url:",endpointsurl)
+    return endpointsurl
+}
 
 function CompareOnKey(key) {
 	return function(a,b) {
@@ -112,7 +124,7 @@ function CompareOnKey(key) {
 }
 
 /**
- * Gets info about a given Contact from the CMDB and provides a form for editing it
+ * Gets info about a given Endpoint from the CMDB and provides a form for editing it
  */
 app.get('/manage/:endpointid', function (req, res) {
     res.setHeader('Cache-Control', 'no-cache');
@@ -165,8 +177,20 @@ app.post('/manage/:endpointid/delete', function (req, res) {
 		// TODO: show messaging to indicate the delete was successful
 		res.redirect(303, '/');
 	}).catch(function (error) {
-		res.status(502);
-		res.render("error", {message: "Problem deleting "+req.params.endpointid+" from CMDB ("+error+")"});
+	    if (error.toString().includes(" 409 ")) {
+            // get endpoint details ready to display error in context
+			cmdb.getItem(res.locals, 'endpoint', req.params.endpointid).then(function (endpoint) {
+				result = endpointController(endpoint)
+                result.dependerror = 'Unable to delete this endpoint, dependencies exist - see below. Please reassign the related items before retrying'
+				res.render('endpoint', result);
+			}).catch(function (error) {
+				res.status(502);
+				res.render("error", {message: "Problem obtaining details for "+req.params.endpointid+" from CMDB ("+error+")"});
+			})
+		} else {
+			res.status(502);
+			res.render("error", {message: "Problem deleting "+req.params.endpointid+" from CMDB ("+error+")"});
+		}
 	});
 });
 
@@ -231,6 +255,36 @@ app.listen(port, function () {
  */
 function indexController(endpoint) {
 	endpoint.id = endpoint.dataItemID;
+
+    // look for relationships  endpoint.xxx.[..,..,..]
+    relationships = []
+    for (var reltype in endpoint) {
+        // ignore/exclude relationships reserved for use by this app
+        if (reservedRelTypes.indexOf(","+reltype+",") == -1) {
+            for (var itemtype in endpoint[reltype]) {
+                if (typeof endpoint[reltype][itemtype] === 'object') {
+                    for (relationship in endpoint[reltype][itemtype]) {
+                        relitemlink = ""
+                        relitem = itemtype + ": " + endpoint[reltype][itemtype][relationship].dataItemID
+                        if (itemtype == 'system') {
+                            relitemlink = systemTool + endpoint[reltype][itemtype][relationship].dataItemID
+                        }
+                        if (itemtype == 'endpoint') {
+                            relitemlink = endpointTool + endpoint-manager[reltype][itemtype][relationship].dataItemID
+                        }
+                        if (itemtype == 'contact') {
+                            relitemlink = contactTool + endpoint[reltype][itemtype][relationship].dataItemID
+                        }
+                        relationships.push({'reltype': reltype, 'relitem': relitem, 'relitemlink': relitemlink})
+                    }
+                }
+            }
+        }
+    }
+    if (relationships) {
+        endpoint.relationships = relationships
+    }
+
 	endpoint.localpath = "/manage/"+encodeURIComponent(encodeURIComponent(endpoint.id));
 	if (endpoint.isHealthcheckFor && endpoint.isHealthcheckFor.system && endpoint.isHealthcheckFor.system[0].dataItemID) {
 		endpoint.systemCode = endpoint.isHealthcheckFor.system[0].dataItemID;
