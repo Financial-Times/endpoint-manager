@@ -86,30 +86,29 @@ app.use(authS3O);
  */
 app.get('/', function (req, res) {
     res.setHeader('Cache-Control', 'no-cache');
-	cmdb.getItemCount(res.locals, 'endpoint').then(function (endpointCount) {
-		console.log(endpointcount)
+	cmdb.getItemCount(res.locals, 'endpoint').then(function (counters) {
+		console.log(counters)
+	    console.time('CMDB api call for all endpoints')
+    	sortby = req.query.sortby
+    	if (req.query.page) {
+    		page = req.query.page
+    	} else {
+    		page = 1
+    	}
+		cmdb._fetch(res.locals, endpointsURL(req, page)).then(function (endpoints) {
+			endpoints.forEach(indexController);
+			endpoints.sort(CompareOnKey(sortby));
+        	console.timeEnd('CMDB api call for all endpoints')
+        	// render the index and the filter parameters
+			res.render('index', Object.assign({'pages':[{'number':'01'},{'number':'02'},{'number':'03'},{'number':'04'},{'number':'05'}]}, {endpoints: endpoints}, req.query));
+		}).catch(function (error) {
+			res.status(502);
+			res.render("error", {message: "Problem obtaining list of endpoints from CMDB ("+error+")"});
+		});
 	}).catch(function (error) {
 		res.status(502);
 		res.render("error", {message: "Problem obtaining list of endpoints from CMDB ("+error+")"});
 	});		
-
-    console.time('CMDB api call for all endpoints')
-    sortby = req.query.sortby
-    if (req.query.page) {
-    	page = req.query.page
-    } else {
-    	page = 1
-    }
-	cmdb._fetch(res.locals, endpointsURL(req, page)).then(function (endpoints) {
-		endpoints.forEach(indexController);
-		endpoints.sort(CompareOnKey(sortby));
-        console.timeEnd('CMDB api call for all endpoints')
-        // render the index and the filter parameters
-		res.render('index', Object.assign({'pages':[{'number':'01'},{'number':'02'},{'number':'03'},{'number':'04'},{'number':'05'}]}, {endpoints: endpoints}, req.query));
-	}).catch(function (error) {
-		res.status(502);
-		res.render("error", {message: "Problem obtaining list of endpoints from CMDB ("+error+")"});
-	});
 });
 
 function endpointsURL(req, page) {
