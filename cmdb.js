@@ -265,7 +265,7 @@ cmdb.prototype.getAllItemFields = function getAllItemFields(locals, type, fields
  * @returns {Promise<Object>} The data about the count of items held in the CMDB
  */
 cmdb.prototype.getItemCount = function getItemCount(locals, type, criteria = "None", timeout = 6000){
-	var path = 'items/' + encodeURIComponent(type) + '/' + encodeURIComponent(key);
+	var path = 'items/' + encodeURIComponent(type);
 	if (criteria && criteria != 'None') {
 		path = path + "&" + criteria
 	}
@@ -282,7 +282,7 @@ cmdb.prototype.getItemCount = function getItemCount(locals, type, criteria = "No
  * @returns {Promise<Object>} The data about the item held in the CMDB
  */
 cmdb.prototype.getItemPage = function getItemPage(locals, type, page = 1, criteria = "None", timeout = 6000){
-	var path = 'items/' + encodeURIComponent(type) + '/' + encodeURIComponent(key);
+	var path = 'items/' + encodeURIComponent(type);
 	if (criteria && criteria != 'None') {
 		path = path + "&" + criteria
 	}
