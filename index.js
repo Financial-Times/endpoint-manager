@@ -209,7 +209,7 @@ app.post('/manage/:endpointid', function (req, res) {
 			json: JSON.stringify(endpoint).replace(/,/g, ",\n\t").replace(/}/g, "\n}").replace(/{/g, "{\n\t"),
 			
 			// TODO: get actual url from cmdb.js
-			url: 'https://cmdb.ft.com/v2/items/endpoint/'+encodeURIComponent(req.params.endpointid),
+			url: 'https://cmdb.ft.com/v2/items/endpoint/'+encodeURIComponent(encodeURIComponent(req.params.endpointid)),
 		}
 		res.render('endpoint', endpointController(result));
 	}).catch(function (error) {
