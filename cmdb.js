@@ -273,10 +273,13 @@ cmdb.prototype.getAllItemFields = function getAllItemFields(locals, type, fields
  * @returns {Promise<Object>} The data about the count of items held in the CMDB
  */
 cmdb.prototype.getItemCount = function getItemCount(locals, type, criteria, timeout = 6000) {
-	var path = this.api + 'items/' + encodeURIComponent(type) + '?page=1&outputfields=';
+	var path = this.api + 'items/' + encodeURIComponent(type)
+	query['page'] = 1
+	query['outputfields'] = ''
 	if (criteria) {
-		path = path + "?" + querystring.stringify(criteria)
+		query = Object.assign(query, criteria)
 	}
+	path = path + "?" + querystring.stringify(query)
 	return this._fetchCount(locals, path, timeout);
 };
 
