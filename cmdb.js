@@ -234,7 +234,7 @@ cmdb.prototype.deleteItem = function deleteItem(locals, type, key, timeout = 600
 cmdb.prototype.getAllItems = function getAllItems(locals, type, criteria, timeout = 6000) {
 	var path = this.api + 'items/' + encodeURIComponent(type);
 	if (criteria) {
-		path = path + "&" + criteria
+		path = path + "?" + querystring.stringify(criteria)
 	}
 	return this._fetchAll(locals, path, timeout);
 }
@@ -250,11 +250,15 @@ cmdb.prototype.getAllItems = function getAllItems(locals, type, criteria, timeou
  */
 cmdb.prototype.getAllItemFields = function getAllItemFields(locals, type, fields, criteria, timeout = 6000) {
 	var path = this.api + 'items/' + encodeURIComponent(type);
+	query = {}
 	if (fields) {
-		path = path + "&outputfields=" + fields
+		query['outputfields'] = fields.join(",")
 	}
 	if (criteria) {
-		path = path + "&" + criteria
+		query = Object.assign(query, criteria)
+	}
+	if (query) {
+		path = path + "?" + querystring.stringify(query)
 	}
 	return this._fetchAll(locals, path, timeout);
 }
@@ -271,7 +275,7 @@ cmdb.prototype.getAllItemFields = function getAllItemFields(locals, type, fields
 cmdb.prototype.getItemCount = function getItemCount(locals, type, criteria, timeout = 6000) {
 	var path = this.api + 'items/' + encodeURIComponent(type) + '?page=1&outputfields=';
 	if (criteria) {
-		path = path + "&" + criteria
+		path = path + "?" + querystring.stringify(criteria)
 	}
 	return this._fetchCount(locals, path, timeout);
 };
@@ -289,10 +293,10 @@ cmdb.prototype.getItemPage = function getItemPage(locals, type, page = 1, criter
 	var path = 'items/' + encodeURIComponent(type);
 	query['page'] = page;
 	if (criteria) {
-		query = query + "&" + criteria
+		query = Object.assign(query, criteria)
 	}
 
-	return this._fetch(locals, path, query, undefined, undefined, timeout);
+	return this._fetch(locals, path, querystring.stringify(query), undefined, undefined, timeout);
 };
 
 /**
@@ -309,7 +313,7 @@ cmdb.prototype.getItemPageFields = function getItemPageFields(locals, type, page
 	var query = {}
 	query['page'] = page;
 	if (fields) {
-		query['outputFields'] = fields.join(",")
+		query['outputfields'] = fields.join(",")
 	}
 	if (criteria) {
 		query = Object.assign(query, criteria)
