@@ -228,9 +228,9 @@ cmdb.prototype.deleteItem = function deleteItem(locals, type, key, timeout = 600
  * @param {number} timeout - The timeout limit (optional)
  * @returns {Promise<Array>} A list of objects which have the type specified (NB: This refers to CMDB types, not native javascript types)
  */
-cmdb.prototype.getAllItems = function getAllItems(locals, type, criteria = "None", timeout = 6000) {
+cmdb.prototype.getAllItems = function getAllItems(locals, type, criteria, timeout = 6000) {
 	var path = this.api + 'items/' + encodeURIComponent(type);
-	if (criteria && criteria != 'None') {
+	if (criteria) {
 		path = path + "&" + criteria
 	}
 	return this._fetchAll(locals, path, timeout);
@@ -245,12 +245,12 @@ cmdb.prototype.getAllItems = function getAllItems(locals, type, criteria = "None
  * @param {number} timeout - The timeout limit (optional)
  * @returns {Promise<Array>} A list of objects which have the type specified (NB: This refers to CMDB types, not native javascript types)
  */
-cmdb.prototype.getAllItemFields = function getAllItemFields(locals, type, fields = "ALL", criteria = "None", timeout = 6000) {
+cmdb.prototype.getAllItemFields = function getAllItemFields(locals, type, fields, criteria, timeout = 6000) {
 	var path = this.api + 'items/' + encodeURIComponent(type);
-	if (fields && fields != 'ALL') {
+	if (fields) {
 		path = path + "&outputfields=" + fields
 	}
-	if (criteria && criteria != 'None') {
+	if (criteria) {
 		path = path + "&" + criteria
 	}
 	return this._fetchAll(locals, path, timeout);
@@ -282,7 +282,25 @@ cmdb.prototype.getItemCount = function getItemCount(locals, type, criteria, time
  * @param {number} timeout - The timeout limit (optional)
  * @returns {Promise<Object>} The data about the item held in the CMDB
  */
-cmdb.prototype.getItemPage = function getItemPage(locals, type, page = 1, fields, criteria, timeout = 6000) {
+cmdb.prototype.getItemPage = function getItemPage(locals, type, page = 1, criteria, timeout = 6000) {
+	var path = 'items/' + encodeURIComponent(type) + '?page=' + page;
+	if (criteria) {
+		path = path + "&" + criteria
+	}
+
+	return this._fetch(locals, path, undefined, undefined, timeout);
+};
+
+/**
+ * Gets data about a specific item in CMDB
+ * @param {Object} [locals] - The res.locals value from a request in express
+ * @param {string} type - The type of item being requested
+ * @param {number} page - The number of the page to return
+ * @param {string} criteria - The query parameter(s) to restrict items (optional)
+ * @param {number} timeout - The timeout limit (optional)
+ * @returns {Promise<Object>} The data about the item held in the CMDB
+ */
+cmdb.prototype.getItemPageFields = function getItemPageFields(locals, type, page = 1, fields, criteria, timeout = 6000) {
 	var path = 'items/' + encodeURIComponent(type) + '?page=' + page;
 	if (criteria) {
 		path = path + "&" + criteria

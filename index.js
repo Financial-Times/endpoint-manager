@@ -78,14 +78,18 @@ ftwebservice(app, {
 });
 
 // Add authentication to everything which isn't one of the standard ftwebservice paths
+// and ensure cache control matched akamai expectation
 var authS3O = require('s3o-middleware');
 app.use(authS3O);
+app.use(function(req, res, next) {
+  res.setHeader('Cache-Control', 'no-cache');
+  next();
+});
 
 /**
  * Gets a list of Endpoints from the CMDB and renders them
  */
 app.get('/', function (req, res) {
-    res.setHeader('Cache-Control', 'no-cache');
     console.time('CMDB api call for endpoint count')
 	cmdb.getItemCount(res.locals, 'endpoint', endpointFilter(req)).then(function (counters) {
       	console.timeEnd('CMDB api call for endpoint count')
@@ -96,7 +100,7 @@ app.get('/', function (req, res) {
         // prepare pagination links
         pagebuttons = pagination(page, counters['pages'])
         // read one page of endpoints
-		cmdb.getItemPage(res.locals, 'endpoint', page, endpointFields(req), endpointFilter(req)).then(function (endpoints) {
+		cmdb.getItemPageFields(res.locals, 'endpoint', page, endpointFields(req), endpointFilter(req)).then(function (endpoints) {
 			endpoints.forEach(indexController);
 			endpoints.sort(CompareOnKey(sortby));
         	console.timeEnd('CMDB api call for all endpoints')
@@ -176,7 +180,6 @@ function CompareOnKey(key) {
  * Gets info about a given Endpoint from the CMDB and provides a form for editing it
  */
 app.get('/manage/:endpointid', function (req, res) {
-    res.setHeader('Cache-Control', 'no-cache');
 	cmdb.getItem(res.locals, 'endpoint', req.params.endpointid).then(function (endpoint) {
 		res.render('endpoint', endpointController(endpoint));
 	}).catch(function (error) {
@@ -189,7 +192,6 @@ app.get('/manage/:endpointid', function (req, res) {
  * Updates an Endpoint
  */
 app.post('/manage/:endpointid', function (req, res) {
-    res.setHeader('Cache-Control', 'no-cache');
 	var endpoint = {
 		base: req.body.base,
 		protocol: req.body.protocol,
@@ -220,7 +222,6 @@ app.post('/manage/:endpointid', function (req, res) {
  * Deletes an Endpoint
  */
 app.post('/manage/:endpointid/delete', function (req, res) {
-    res.setHeader('Cache-Control', 'no-cache');
 	cmdb.deleteItem(res.locals, 'endpoint', req.params.endpointid).then(function (endpoint) {
 
 		// TODO: show messaging to indicate the delete was successful
@@ -247,7 +248,6 @@ app.post('/manage/:endpointid/delete', function (req, res) {
  * Displays blank endpoint form for adding new endpoints
  */
 app.get('/new', function (req, res) {
-    res.setHeader('Cache-Control', 'no-cache');
 	var defaultdata = {
 		base: "",
 		endpointid: "",
@@ -264,7 +264,6 @@ app.get('/new', function (req, res) {
  * Redirect to the approprate path and treat like a save.
  */
 app.post('/new', function (req, res) {
-    res.setHeader('Cache-Control', 'no-cache');
 	endpointid = req.body.id
 	if (!endpointid.trim()) {
 		endpointid = req.body.base
@@ -283,7 +282,6 @@ app.use(function(req, res, next) {
 });
 
 app.use(function(err, req, res, next) {
-//    res.setHeader('Cache-Control', 'no-cache');
 	console.error(err.stack);
 	res.status(500);
 	if (res.get('Content-Type') && res.get('Content-Type').indexOf("json") != -1) {
