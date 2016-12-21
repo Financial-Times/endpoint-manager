@@ -113,7 +113,7 @@ app.get('/', function (req, res) {
 	       		pagination.push({'faux':true})
    		   	}
    		   	// main set of page links centerde around the current page
-        	while (pageno <= counters['pages'] && pagination.length < 8) {
+        	while (pageno <= counters['pages'] && pagination.length < 7) {
         		if (pageno == page) {
 	        		pagination.push({'number':pageno, 'selected':true })
         		} else {

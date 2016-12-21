@@ -60,7 +60,7 @@
 					<div data-o-grid-colspan="4">
 						<h2>Existing Endpoints ({{endpoints.length}})</h2>
 					</div>
-					<div data-o-grid-colspan="4">
+					<div data-o-grid-colspan="6">
 						<div class="o-buttons__pagination">
 						{{#pages}}
 							{{#faux}}<div class="faux-inline-block">...</div>{{/faux}}
