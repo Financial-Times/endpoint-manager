@@ -287,7 +287,7 @@ cmdb.prototype.getItemCount = function getItemCount(locals, type, criteria, time
  */
 cmdb.prototype.getItemPage = function getItemPage(locals, type, page = 1, criteria, timeout = 6000) {
 	var path = 'items/' + encodeURIComponent(type);
-	query = + '?page=' + page;
+	query['page'] = page;
 	if (criteria) {
 		query = query + "&" + criteria
 	}
@@ -306,14 +306,16 @@ cmdb.prototype.getItemPage = function getItemPage(locals, type, page = 1, criter
  */
 cmdb.prototype.getItemPageFields = function getItemPageFields(locals, type, page = 1, fields, criteria, timeout = 6000) {
 	var path = 'items/' + encodeURIComponent(type)
-	var query = 'page=' + page;
-	if (criteria) {
-		query = query + "&" + criteria
-	}
+	var query = {}
+	query['page'] = page;
 	if (fields) {
-		query = query + '&outputfields=' + fields
+		query['outputFields'] = fields.join(",")
 	}
-	return this._fetch(locals, path, query, undefined, undefined, timeout);
+	if (criteria) {
+		query.append(criteria)
+	}
+	console.log("getItemPageFields:", querystring.stringify(query))
+	return this._fetch(locals, path, querystring.stringify(query), undefined, undefined, timeout);
 };
 
 module.exports = cmdb;

@@ -153,14 +153,14 @@ function endpointFilter(req) {
 	cmdbparams = req.query;
 	console.log("cmdbparams:",cmdbparams);
     delete cmdbparams.sortby // to avoid it being added to cmdb params
-	remove_blank_values(cmdbparams);
-	endpointfilter = querystring.stringify(cmdbparams);
-	console.log("filter:",endpointfilter)
-    return endpointfilter
+//	remove_blank_values(cmdbparams);
+//	endpointfilter = querystring.stringify(cmdbparams);
+	console.log("filter:",cmdbparams)
+    return cmbdparams
 }
 
 function endpointFields(req) {
-	return "isHealthcheckFor,isLive,protocol,healthSuffix,aboutSuffix";
+	return ["isHealthcheckFor","isLive","protocol","healthSuffix","aboutSuffix"];
 }
 
 function CompareOnKey(key) {
