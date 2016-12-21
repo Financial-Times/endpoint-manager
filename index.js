@@ -156,7 +156,7 @@ function endpointFilter(req) {
 //	remove_blank_values(cmdbparams);
 //	endpointfilter = querystring.stringify(cmdbparams);
 	console.log("filter:",cmdbparams)
-    return cmbdparams
+    return cmdbparams
 }
 
 function endpointFields(req) {
