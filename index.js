@@ -98,7 +98,7 @@ app.get('/', function (req, res) {
     	sortby = req.query.sortby
     	page = req.query.page
         // prepare pagination links
-        pagebuttons = pagination(page, counters['pages'])
+        pagebuttons = getPageButtons(page, counters['pages'])
         // read one page of endpoints
 		cmdb.getItemPageFields(res.locals, 'endpoint', page, endpointFields(req), endpointFilter(req)).then(function (endpoints) {
 			endpoints.forEach(indexController);
@@ -116,7 +116,7 @@ app.get('/', function (req, res) {
 	});		
 });
 
-function pagination(page, maxpages) {
+function getPageButtons(page, maxpages) {
 	// which page are we on
 	if (!page) {
  		page = 1
