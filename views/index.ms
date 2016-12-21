@@ -60,10 +60,10 @@
 					<div data-o-grid-colspan="4">
 						<h2>Existing Endpoints ({{endpoints.length}})</h2>
 					</div>
-					<div data-o-grid-colspan="6">
+					<div data-o-grid-colspan="4">
 						<div class="o-buttons__pagination">
 						{{#pages}}
-							{{#faux}}<div class="faux-inline-block">...</div>{{/faux}}
+							{{#faux}}...{{/faux}}
 							{{^faux}}
 								<a class="o-buttons" aria-selected="{{selected}}" href="?dataItemID={{dataItemID}}&amp;base={{base}}&amp;isLive={{isLive}}&amp;protocol={{protocol}}&amp;healthSuffix={{healthSuffix}}&amp;aboutSuffix={{aboutSuffix}}&amp;sortby=dataItemID&amp;page={{number}}">{{number}}</a>
 							{{/faux}}
