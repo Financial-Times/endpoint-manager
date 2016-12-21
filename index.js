@@ -92,42 +92,16 @@ app.get('/', function (req, res) {
 		console.log(counters)
 	    console.time('CMDB api call for all endpoints')
     	sortby = req.query.sortby
-    	if (req.query.page) {
-    		page = req.query.page
-    	} else {
-    		page = 1
-    	}
+    	page = req.query.page
+        // prepare pagination links
+        pagebuttons = pagination(page, counters['pages'])
+        // read one page of endpoints
 		cmdb.getItemPage(res.locals, 'endpoint', page, endpointFields(req), endpointFilter(req)).then(function (endpoints) {
 			endpoints.forEach(indexController);
 			endpoints.sort(CompareOnKey(sortby));
         	console.timeEnd('CMDB api call for all endpoints')
-        	// prepare pagination links
-        	pagination = []
-        	var pageno = page - 4
-        	if (pageno < 1) {
-        		pageno = 1
-        	}
-        	// prefix for page 1
-        	if (pageno != 1 ) {
-	       		pagination.push({'number':1, 'selected':false })
-	       		pagination.push({'faux':true})
-   		   	}
-   		   	// main set of page links centerde around the current page
-        	while (pageno <= counters['pages'] && pagination.length < 10) {
-        		if (pageno == page) {
-	        		pagination.push({'number':pageno, 'selected':true })
-        		} else {
-	        		pagination.push({'number':pageno, 'selected':false })
-	        	}
-	        	pageno = pageno + 1
-        	}
-        	// suffix for last page
-        	if (pageno < counters['pages'] ) {
-	       		pagination.push({'faux':true})
-	       		pagination.push({'number':counters['pages'], 'selected':false })
-   		   	}
         	// render the index and the filter parameters
-			res.render('index', Object.assign({'pages':pagination}, {endpoints: endpoints}, req.query));
+			res.render('index', Object.assign({'pages':pagebuttons}, {endpoints: endpoints}, req.query));
 		}).catch(function (error) {
 			res.status(502);
 			res.render("error", {message: "Problem obtaining list of endpoints from CMDB ("+error+")"});
@@ -137,6 +111,39 @@ app.get('/', function (req, res) {
 		res.render("error", {message: "Problem obtaining list of endpoints from CMDB ("+error+")"});
 	});		
 });
+
+function pagination(page, maxpages) {
+	// which page are we on
+	if (!page) {
+ 		page = 1
+ 	}
+    // prepare pagination links
+    pagination = []
+    var pageno = page - 3
+    if (pageno < 1) {
+    	pageno = 1
+    }
+    // prefix for page 1
+    if (pageno != 1 ) {
+		pagination.push({'number':1, 'selected':false })
+		pagination.push({'faux':true})
+   	}
+   	// main set of page links centerde around the current page
+    while (pageno <= maxpages && pagination.length < 9) {
+     	if (pageno == page) {
+	   		pagination.push({'number':pageno, 'selected':true })
+     	} else {
+	    	pagination.push({'number':pageno, 'selected':false })
+	    }
+	   	pageno = pageno + 1
+    }
+    // suffix for last page
+    if (pageno < maxpages ) {
+		pagination.push({'faux':true})
+		pagination.push({'number':maxpages, 'selected':false })
+   	}
+   	return pagination
+}
 
 function endpointFilter(req) {
 	cmdbparams = req.query;
