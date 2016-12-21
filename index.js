@@ -153,8 +153,7 @@ function endpointFilter(req) {
 	cmdbparams = req.query;
 	console.log("cmdbparams:",cmdbparams);
     delete cmdbparams.sortby // to avoid it being added to cmdb params
-//	remove_blank_values(cmdbparams);
-//	endpointfilter = querystring.stringify(cmdbparams);
+	remove_blank_values(cmdbparams);
 	console.log("filter:",cmdbparams)
     return cmdbparams
 }

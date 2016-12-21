@@ -312,7 +312,7 @@ cmdb.prototype.getItemPageFields = function getItemPageFields(locals, type, page
 		query['outputFields'] = fields.join(",")
 	}
 	if (criteria) {
-		query.append(criteria)
+		query = Object.assign(query, criteria)
 	}
 	console.log("getItemPageFields:", querystring.stringify(query))
 	return this._fetch(locals, path, querystring.stringify(query), undefined, undefined, timeout);
