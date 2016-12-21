@@ -274,6 +274,7 @@ cmdb.prototype.getAllItemFields = function getAllItemFields(locals, type, fields
  */
 cmdb.prototype.getItemCount = function getItemCount(locals, type, criteria, timeout = 6000) {
 	var path = this.api + 'items/' + encodeURIComponent(type)
+	query = {}
 	query['page'] = 1
 	query['outputfields'] = ''
 	if (criteria) {
