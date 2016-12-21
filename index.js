@@ -209,7 +209,7 @@ app.post('/manage/:endpointid', function (req, res) {
 			json: JSON.stringify(endpoint).replace(/,/g, ",\n\t").replace(/}/g, "\n}").replace(/{/g, "{\n\t"),
 			
 			// TODO: get actual url from cmdb.js
-			url: 'https://cmdb.ft.com/v2/items/endpoint/'+encodeURIComponent(encodeURIComponent(req.params.endpointid)),
+			url: 'https://cmdb.ft.com/v2/items/endpoint/'+encodeURIComponent(req.params.endpointid),
 		}
 		res.render('endpoint', endpointController(result));
 	}).catch(function (error) {
@@ -272,7 +272,7 @@ app.post('/new', function (req, res) {
 		req.body.iderror = "ID already in use, please re-enter"
 		res.render('endpoint', req.body);
 	}).catch(function (error) {
-		res.redirect(307, '/manage/' + encodeURIComponent(encodeURIComponent(endpointid)));
+		res.redirect(307, '/manage/' + encodeURIComponent(endpointid));
 	});
 
 });
@@ -332,7 +332,7 @@ function indexController(endpoint) {
         endpoint.relationships = relationships
     }
 
-	endpoint.localpath = "/manage/"+encodeURIComponent(encodeURIComponent(endpoint.id));
+	endpoint.localpath = "/manage/"+encodeURIComponent(endpoint.id);
 	if (endpoint.isHealthcheckFor && endpoint.isHealthcheckFor.system && endpoint.isHealthcheckFor.system[0].dataItemID) {
 		endpoint.systemCode = endpoint.isHealthcheckFor.system[0].dataItemID;
 	}
@@ -350,7 +350,7 @@ function endpointController(endpoint) {
 	if (!endpoint.hasOwnProperty('base')) {
 		endpoint.base = endpoint.id;
 	};
-	endpoint.localpath = "/manage/"+encodeURIComponent(encodeURIComponent(endpoint.id));
+	endpoint.localpath = "/manage/"+encodeURIComponent(endpoint.id);
 	endpoint.protocollist = getProtocolList(endpoint.protocol);
 	endpoint.urls = [];
 	var protocols = [];
