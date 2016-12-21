@@ -303,13 +303,14 @@ cmdb.prototype.getItemPage = function getItemPage(locals, type, page = 1, criter
  * @returns {Promise<Object>} The data about the item held in the CMDB
  */
 cmdb.prototype.getItemPageFields = function getItemPageFields(locals, type, page = 1, fields, criteria, timeout = 6000) {
-	var path = 'items/' + encodeURIComponent(type) + '?page=' + page;
+	var query = 'page=' + page;
 	if (criteria) {
-		path = path + "&" + criteria
+		query = query + "&" + criteria
 	}
 	if (fields) {
-		path = path + '&outputfields=' + fields
+		query = query + '&outputfields=' + fields
 	}
+	var path = 'items/' + encodeURIComponent(type) + '?' + encodeURIComponent(query)
 	console.log("getItemOageFields:",path)
 	return this._fetch(locals, path, undefined, undefined, timeout);
 };
