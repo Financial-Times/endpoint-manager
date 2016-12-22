@@ -154,6 +154,7 @@ function getPageButtons(page, maxpages) {
 }
 
 function endpointFilter(req) {
+	var cmdbparams = {}
 	Object.assign(cmdbparams, req.query);
 	console.log("cmdbparams:",cmdbparams);
     delete cmdbparams.sortby // to avoid it being added to cmdb params
