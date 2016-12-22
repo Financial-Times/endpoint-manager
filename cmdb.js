@@ -75,9 +75,11 @@ cmdb.prototype._fetchCount = function fetchCount(locals, url, timeout = 6000) {
 		// CMDB returns entirely different output when there are zero contacts
 		// Just return an empty array in this case.
 		if (response.status == 404) {
+			console.log("404 from _fetchCount")
 			return {};
 		}
 		if (response.status != 200) {
+			console.log("!=200 from _fetchCount")
             throw new Error("Received "+response.status+" response from CMDB");
         }
         // default page and items count based on a single page containing array of items
