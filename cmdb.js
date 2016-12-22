@@ -190,10 +190,11 @@ cmdb.prototype.getItem = function getItem(locals, type, key, timeout = 6000){
  */
 cmdb.prototype.getItemFields = function getItemFields(locals, type, key, fields, timeout = 6000){
 	var path = 'items/' + encodeURIComponent(type) + '/' + encodeURIComponent(key);
-	if (fields && fields != 'ALL') {
-		query = "outputfields=" + fields
+	query = {}
+	if (fields) {
+		query['outputfields'] = fields.join(",")
 	}
-	return this._fetch(locals, path, query, undefined, undefined, timeout);
+	return this._fetch(locals, path, querystring.stringify(query), undefined, undefined, timeout);
 };
 
 /**

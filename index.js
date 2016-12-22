@@ -19,7 +19,11 @@ app.use(express.static('public'));
 
 // var CMDB = require("./cmdb.js");
 var path = require('path');
-var CMDB = require( path.resolve( __dirname, "./cmdb.js" ) );
+if (process.env.LOCALCMDBJS) {
+	var CMDB = require( path.resolve( __dirname, "./cmdb.js" ) );
+} else {
+	var CMDB = require( "cmdb.js" );
+}
 
 /** Environment variables **/
 var port = process.env.PORT || 3001;
