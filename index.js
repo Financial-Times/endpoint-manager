@@ -37,7 +37,7 @@ var cmdb = new CMDB({
 
 var systemTool = process.env.SYSTEMREGISTRY || 'https://systemregistry.in.ft.com/manage/';
 var endpointTool = process.env.ENDPOINTMANAGER || 'https://endpointmanager.in.ft.com/manage/';
-var contactTool = process.env.CONTACTORGANISER || 'https://contactorganiser.in.ft.com/manage/';
+var contactTool = process.env.CONTACTORGANISER || 'https://contactorganiser.in.ft.com/contacts/';
 var reservedRelTypes = process.env.RESERVEDRELTYPES || 'isHealthcheckFor';
 reservedRelTypes = "," + reservedRelTypes + ","  // to force every value to be enclosed in commas
 
