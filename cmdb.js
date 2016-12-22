@@ -75,11 +75,9 @@ cmdb.prototype._fetchCount = function fetchCount(locals, url, timeout = 6000) {
 		// CMDB returns entirely different output when there are zero contacts
 		// Just return an empty array in this case.
 		if (response.status == 404) {
-			console.log("404 from _fetchCount")
 			return {};
 		}
 		if (response.status != 200) {
-			console.log("!=200 from _fetchCount")
             throw new Error("Received "+response.status+" response from CMDB");
         }
         // default page and items count based on a single page containing array of items
@@ -303,7 +301,14 @@ cmdb.prototype.getItemPage = function getItemPage(locals, type, page = 1, criter
 		query = Object.assign(query, criteria)
 	}
 
-	return this._fetch(locals, path, querystring.stringify(query), undefined, undefined, timeout);
+	return this._fetch(locals, path, querystring.stringify(query), undefined, undefined, timeout).then(function(response) {
+		return response
+	}).catch(function (error) {
+	    if (error.toString().includes(" 404 ")) {
+            // no details available but thats not a surprise
+            return []
+        }
+	});
 };
 
 /**
@@ -326,7 +331,14 @@ cmdb.prototype.getItemPageFields = function getItemPageFields(locals, type, page
 		query = Object.assign(query, criteria)
 	}
 	console.log("getItemPageFields:", querystring.stringify(query))
-	return this._fetch(locals, path, querystring.stringify(query), undefined, undefined, timeout);
+	return this._fetch(locals, path, querystring.stringify(query), undefined, undefined, timeout).then(function(response) {
+		return response
+	}).catch(function (error) {
+	    if (error.toString().includes(" 404 ")) {
+            // no details available but thats not a surprise
+            return []
+        }
+	});
 };
 
 module.exports = cmdb;
