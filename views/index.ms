@@ -65,7 +65,7 @@
 						{{#pages}}
 							{{#faux}}...{{/faux}}
 							{{^faux}}
-								<a class="o-buttons" aria-selected="{{selected}}" href="?dataItemID={{dataItemID}}&amp;base={{base}}&amp;isLive={{isLive}}&amp;protocol={{protocol}}&amp;healthSuffix={{healthSuffix}}&amp;aboutSuffix={{aboutSuffix}}&amp;sortby=dataItemID&amp;page={{number}}">{{number}}</a>
+								<a class="o-buttons" aria-selected="{{selected}}" href="?dataItemID={{dataItemID}}&amp;base={{base}}&amp;isLive={{isLive}}&amp;protocol={{protocol}}&amp;healthSuffix={{healthSuffix}}&amp;aboutSuffix={{aboutSuffix}}&amp;sortby={{sortby}}&amp;page={{number}}">{{number}}</a>
 							{{/faux}}
 						{{/pages}}
 						</div>
@@ -79,7 +79,7 @@
 			</div>
 
 			<div class="o-grid-row">
-				<div data-o-grid-colspan="9">
+				<div data-o-grid-colspan="12">
 					<table class="o-table o-table--row-stripes" data-o-component="o-table">
 						<thead>
 							<th><a href="/?dataItemID={{dataItemID}}&amp;base={{base}}&amp;isLive={{isLive}}&amp;protocol={{protocol}}&amp;healthSuffix={{healthSuffix}}&amp;aboutSuffix={{aboutSuffix}}&amp;sortby=dataItemID">url</a></th>
