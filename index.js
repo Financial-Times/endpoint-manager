@@ -121,6 +121,10 @@ app.get('/', function (req, res) {
 });
 
 function getPageButtons(page, maxpages) {
+	// are there any pages?
+	if (!maxpages) {
+		return
+	}
 	// which page are we on
 	if (!page) {
  		page = 1
