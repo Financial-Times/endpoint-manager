@@ -130,6 +130,7 @@ function getPageButtons(page, maxpages) {
     var startpageno = page - 3
     if (startpageno < 1) {
     	startpageno = 1;
+    }
     var endpageno = page + 3
     if (endpageno > maxpages) {
     	endpageno = maxpages;
