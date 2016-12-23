@@ -41,6 +41,7 @@
 									<small class="o-forms__additional-info">Wildcards (* and ?) can be used.</small>
 									<input name="aboutSuffix" value="{{aboutSuffix}}" class="o-forms__text" id="aboutSuffix"></input>
 								</div>
+								<input type="hidden" name="sortby" value="{{sortby}}" id=sortby />
 							</div>
 							<div class="o-grid-row">
 								<div data-o-grid-colspan="3">
@@ -60,7 +61,15 @@
 					<div data-o-grid-colspan="4">
 						<h2>Existing Endpoints ({{endpoints.length}})</h2>
 					</div>
-					<div data-o-grid-colspan="2">
+					<div data-o-grid-colspan="4">
+						<div class="o-buttons__pagination">
+						{{#pages}}
+							{{#faux}}...{{/faux}}
+							{{^faux}}
+								<a class="o-buttons" aria-selected="{{selected}}" href="?dataItemID={{dataItemID}}&amp;base={{base}}&amp;isLive={{isLive}}&amp;protocol={{protocol}}&amp;healthSuffix={{healthSuffix}}&amp;aboutSuffix={{aboutSuffix}}&amp;sortby={{sortby}}&amp;page={{number}}">{{number}}</a>
+							{{/faux}}
+						{{/pages}}
+						</div>
 					</div>
 					<div data-o-grid-colspan="3">
 						<form id="new" action="/new" method="get">
@@ -71,15 +80,17 @@
 			</div>
 
 			<div class="o-grid-row">
-				<div data-o-grid-colspan="9">
+				<div data-o-grid-colspan="12">
 					<table class="o-table o-table--row-stripes" data-o-component="o-table">
 						<thead>
+							{{#endpoints.length}}
 							<th><a href="/?dataItemID={{dataItemID}}&amp;base={{base}}&amp;isLive={{isLive}}&amp;protocol={{protocol}}&amp;healthSuffix={{healthSuffix}}&amp;aboutSuffix={{aboutSuffix}}&amp;sortby=dataItemID">url</a></th>
-							<th><a href="/?dataItemID={{dataItemID}}&amp;base={{base}}&amp;isLive={{isLive}}&amp;protocol={{protocol}}&amp;healthSuffix={{healthSuffix}}&amp;aboutSuffix={{aboutSuffix}}&amp;sortby=SystemCode">systemCode</a></th>
+							<th><a href="/?dataItemID={{dataItemID}}&amp;base={{base}}&amp;isLive={{isLive}}&amp;protocol={{protocol}}&amp;healthSuffix={{healthSuffix}}&amp;aboutSuffix={{aboutSuffix}}&amp;sortby=systemCode">systemCode</a></th>
 							<th><a href="/?dataItemID={{dataItemID}}&amp;base={{base}}&amp;isLive={{isLive}}&amp;protocol={{protocol}}&amp;healthSuffix={{healthSuffix}}&amp;aboutSuffix={{aboutSuffix}}&amp;sortby=isLive">live?</a></th>
 							<th><a href="/?dataItemID={{dataItemID}}&amp;base={{base}}&amp;isLive={{isLive}}&amp;protocol={{protocol}}&amp;healthSuffix={{healthSuffix}}&amp;aboutSuffix={{aboutSuffix}}&amp;sortby=protocol">protocol</a></th>
-							<th><a href="/?dataItemID={{dataItemID}}&amp;base={{base}}&amp;isLive={{isLive}}&amp;protocol={{protocol}}&amp;healthSuffix={{healthSuffix}}&amp;aboutSuffix={{aboutSuffix}}&amp;sortby=health">health</a></th>
-							<th><a href="/?dataItemID={{dataItemID}}&amp;base={{base}}&amp;isLive={{isLive}}&amp;protocol={{protocol}}&amp;healthSuffix={{healthSuffix}}&amp;aboutSuffix={{aboutSuffix}}&amp;sortby=about">about</a></th>
+							<th><a href="/?dataItemID={{dataItemID}}&amp;base={{base}}&amp;isLive={{isLive}}&amp;protocol={{protocol}}&amp;healthSuffix={{healthSuffix}}&amp;aboutSuffix={{aboutSuffix}}&amp;sortby=healthSuffix">health</a></th>
+							<th><a href="/?dataItemID={{dataItemID}}&amp;base={{base}}&amp;isLive={{isLive}}&amp;protocol={{protocol}}&amp;healthSuffix={{healthSuffix}}&amp;aboutSuffix={{aboutSuffix}}&amp;sortby=aboutSuffix">about</a></th>
+							{{/endpoints.length}}
 						</thead>
 						<tbody>
 							{{#endpoints}}
@@ -91,6 +102,9 @@
 									<td>{{healthSuffix}}</td>
 									<td>{{aboutSuffix}}</td>
 								</tr>
+							{{/endpoints}}
+							{{^endpoints}}
+							<div id='emptylist'>Sorry, no records are available. Please adjust your filter</div>
 							{{/endpoints}}
 						</tbody>
 					</table>
