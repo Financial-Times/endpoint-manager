@@ -235,7 +235,7 @@ app.post('/manage/:endpointid/delete', function (req, res) {
 	}).catch(function (error) {
 	    if (error.toString().includes(" 409 ")) {
             // get endpoint details ready to display error in context
-			cmdb.getItem(res.locals, 'endpoint', req.params.endpointid).then(function (result) {
+			cmdb.getItem(res.locals, 'endpoint', req.params.endpointid).then(function (endpoint) {
 				result = endpointController(endpoint)
                 result.dependerror = 'Unable to delete this endpoint, dependencies exist - see below. Please reassign the related items before retrying'
 				res.render('endpoint', result);
