@@ -123,7 +123,7 @@ app.get('/', function (req, res) {
 function getPageButtons(page, maxpages) {
 	// which page are we on
 	if (!page) {
- 		page = 1;
+ 		page = 1
  	}
     // prepare pagination links
     var pagination = [];
@@ -131,7 +131,7 @@ function getPageButtons(page, maxpages) {
     if (startpageno < 1) {
     	startpageno = 1;
     }
-    var endpageno = page + 3
+    var endpageno = startpageno + 6
     if (endpageno > maxpages) {
     	endpageno = maxpages;
     }
@@ -155,6 +155,7 @@ function getPageButtons(page, maxpages) {
 		pagination.push({'faux':true})
 		pagination.push({'number':maxpages, 'selected':false })
    	}
+
    	return pagination
 }
 
