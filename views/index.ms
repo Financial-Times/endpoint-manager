@@ -101,6 +101,9 @@
 									<td>{{aboutSuffix}}</td>
 								</tr>
 							{{/endpoints}}
+							{{^endpoints}}
+							<div id='emptylist'>Sorry, no records are available. Please adjust your filter</div>
+							{{/endpoints}}
 						</tbody>
 					</table>
 				</div>

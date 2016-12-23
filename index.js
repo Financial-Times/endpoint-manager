@@ -168,7 +168,6 @@ function endpointFields(req) {
 }
 
 function CompareOnKey(key) {
-	console.log("sorting by", key)
 	return function(a,b) {
 		if (!key) {  // default to url sort
 			key = 'dataItemID';
@@ -177,7 +176,6 @@ function CompareOnKey(key) {
 		bvalue = b[key];
 		if (!avalue) return -1;
 		if (!bvalue) return 1;
-		console.log("sort compare:",avalue, bvalue)
 		return avalue.toLowerCase() > bvalue.toLowerCase() ? 1 : -1;
 	};
 }
