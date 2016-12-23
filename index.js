@@ -123,21 +123,25 @@ app.get('/', function (req, res) {
 function getPageButtons(page, maxpages) {
 	// which page are we on
 	if (!page) {
- 		page = 1
+ 		page = 1;
  	}
     // prepare pagination links
-    pagination = []
-    var pageno = page - 3
-    if (pageno < 1) {
-    	pageno = 1
+    var pagination = [];
+    var startpageno = page - 3
+    if (startpageno < 1) {
+    	startpageno = 1;
+    var endpageno = page + 3
+    if (endpageno > maxpages) {
+    	endpageno = maxpages;
     }
     // prefix for page 1
-    if (pageno != 1 ) {
+    if (startpageno != 1 ) {
 		pagination.push({'number':1, 'selected':false })
 		pagination.push({'faux':true})
    	}
    	// main set of page links centerde around the current page
-    while (pageno <= maxpages && pagination.length < 9) {
+    var pageno = startpageno;
+    while (pageno <= endpageno && pagination.length < 9) {
      	if (pageno == page) {
 	   		pagination.push({'number':pageno, 'selected':true })
      	} else {
@@ -146,7 +150,7 @@ function getPageButtons(page, maxpages) {
 	   	pageno = pageno + 1
     }
     // suffix for last page
-    if (pageno < maxpages ) {
+    if (endpageno < maxpages ) {
 		pagination.push({'faux':true})
 		pagination.push({'number':maxpages, 'selected':false })
    	}
