@@ -41,7 +41,6 @@
 									<small class="o-forms__additional-info">Wildcards (* and ?) can be used.</small>
 									<input name="aboutSuffix" value="{{aboutSuffix}}" class="o-forms__text" id="aboutSuffix"></input>
 								</div>
-								<input type="hidden" name="sortby" value="{{sortby}}" id=sortby />
 							</div>
 							<div class="o-grid-row">
 								<div data-o-grid-colspan="3">
@@ -66,7 +65,7 @@
 						{{#pages}}
 							{{#faux}}...{{/faux}}
 							{{^faux}}
-								<a class="o-buttons" aria-selected="{{selected}}" href="?dataItemID={{dataItemID}}&amp;base={{base}}&amp;isLive={{isLive}}&amp;protocol={{protocol}}&amp;healthSuffix={{healthSuffix}}&amp;aboutSuffix={{aboutSuffix}}&amp;sortby={{sortby}}&amp;page={{number}}">{{number}}</a>
+								<a class="o-buttons" aria-selected="{{selected}}" href="?dataItemID={{dataItemID}}&amp;base={{base}}&amp;isLive={{isLive}}&amp;protocol={{protocol}}&amp;healthSuffix={{healthSuffix}}&amp;aboutSuffix={{aboutSuffix}}&amp;page={{number}}">{{number}}</a>
 							{{/faux}}
 						{{/pages}}
 						</div>
