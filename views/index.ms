@@ -84,12 +84,12 @@
 					<table class="o-table o-table--row-stripes" data-o-component="o-table">
 						<thead>
 							{{#endpoints.length}}
-							<th><a href="/?dataItemID={{dataItemID}}&amp;base={{base}}&amp;isLive={{isLive}}&amp;protocol={{protocol}}&amp;healthSuffix={{healthSuffix}}&amp;aboutSuffix={{aboutSuffix}}&amp;sortby=dataItemID">url</a></th>
-							<th><a href="/?dataItemID={{dataItemID}}&amp;base={{base}}&amp;isLive={{isLive}}&amp;protocol={{protocol}}&amp;healthSuffix={{healthSuffix}}&amp;aboutSuffix={{aboutSuffix}}&amp;sortby=systemCode">systemCode</a></th>
-							<th><a href="/?dataItemID={{dataItemID}}&amp;base={{base}}&amp;isLive={{isLive}}&amp;protocol={{protocol}}&amp;healthSuffix={{healthSuffix}}&amp;aboutSuffix={{aboutSuffix}}&amp;sortby=isLive">live?</a></th>
-							<th><a href="/?dataItemID={{dataItemID}}&amp;base={{base}}&amp;isLive={{isLive}}&amp;protocol={{protocol}}&amp;healthSuffix={{healthSuffix}}&amp;aboutSuffix={{aboutSuffix}}&amp;sortby=protocol">protocol</a></th>
-							<th><a href="/?dataItemID={{dataItemID}}&amp;base={{base}}&amp;isLive={{isLive}}&amp;protocol={{protocol}}&amp;healthSuffix={{healthSuffix}}&amp;aboutSuffix={{aboutSuffix}}&amp;sortby=healthSuffix">health</a></th>
-							<th><a href="/?dataItemID={{dataItemID}}&amp;base={{base}}&amp;isLive={{isLive}}&amp;protocol={{protocol}}&amp;healthSuffix={{healthSuffix}}&amp;aboutSuffix={{aboutSuffix}}&amp;sortby=aboutSuffix">about</a></th>
+							<th>url</th>
+							<th>systemCode</th>
+							<th>live?</th>
+							<th>protocol</th>
+							<th>health</th>
+							<th>about</th>
 							{{/endpoints.length}}
 						</thead>
 						<tbody>
