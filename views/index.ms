@@ -32,6 +32,11 @@
 									<input name="protocol" value="{{protocol}}" class="o-forms__text" id="protocol"></input>
 								</div>
 								<div data-o-grid-colspan="3">
+									<label class="o-forms__label" for="systemCode">System Code</label>
+									<small class="o-forms__additional-info">Wildcards (* and ?) can be used.</small>
+									<input name="systemCode.dataItemID" value="{{systemCode_dataItemID}}" class="o-forms__text" id="systemCode.dataItemID"></input>
+								</div>
+								<div data-o-grid-colspan="3">
 									<label class="o-forms__label" for="healthSuffix">Health</label>
 									<small class="o-forms__additional-info">Wildcards (* and ?) can be used.</small>
 									<input name="healthSuffix" value="{{healthSuffix}}" class="o-forms__text" id="healthSuffix"></input>
