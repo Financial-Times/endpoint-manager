@@ -13,7 +13,7 @@
 							<div class="o-grid-row">
 								<div data-o-grid-colspan="3">
 									<label class="o-forms__label" for="dataItemID">ID</label>
-									<small class="o-forms__additional-info">Please be exact.</small>
+									<small class="o-forms__additional-info">Wildcards (* and ?) can be used.</small>
 									<input name="dataItemID" value="{{dataItemID}}" class="o-forms__text" id="dataItemID"></input>
 								</div>
 								<div data-o-grid-colspan="3">
@@ -30,6 +30,11 @@
 									<label class="o-forms__label" for="protocol">Protocol</label>
 									<small class="o-forms__additional-info">Wildcards (* and ?) can be used.</small>
 									<input name="protocol" value="{{protocol}}" class="o-forms__text" id="protocol"></input>
+								</div>
+								<div data-o-grid-colspan="3">
+									<label class="o-forms__label" for="systemCode">System Code</label>
+									<small class="o-forms__additional-info">Wildcards (* and ?) can be used.</small>
+									<input name="healthcheck..dataItemID" value="{{systemCode_dataItemID}}" class="o-forms__text" id="healthcheck..dataItemID"></input>
 								</div>
 								<div data-o-grid-colspan="3">
 									<label class="o-forms__label" for="healthSuffix">Health</label>
