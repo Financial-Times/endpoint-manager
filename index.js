@@ -109,7 +109,7 @@ app.get('/', function (req, res) {
 			endpoints.sort(CompareOnKey(sortby));
         	console.timeEnd('CMDB api call for all endpoints')
         	// render the index and the filter parameters
-			res.render('index', Object.assign({'pages':pagebuttons}, {endpoints: endpoints}, req.query, {'systemCode_dataItemID':req.query["systemCode..dataItemID"]}));
+			res.render('index', Object.assign({'pages':pagebuttons}, {endpoints: endpoints}, req.query, {'systemCode_dataItemID':req.query["healthcheck..dataItemID"]}));
 		}).catch(function (error) {
 			res.status(502);
 			res.render("error", {message: "Problem obtaining list of endpoints from CMDB ("+error+")"});

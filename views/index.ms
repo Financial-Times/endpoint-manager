@@ -34,7 +34,7 @@
 								<div data-o-grid-colspan="3">
 									<label class="o-forms__label" for="systemCode">System Code</label>
 									<small class="o-forms__additional-info">Wildcards (* and ?) can be used.</small>
-									<input name="systemCode..dataItemID" value="{{systemCode_dataItemID}}" class="o-forms__text" id="systemCode..dataItemID"></input>
+									<input name="healthcheck..dataItemID" value="{{systemCode_dataItemID}}" class="o-forms__text" id="healthcheck..dataItemID"></input>
 								</div>
 								<div data-o-grid-colspan="3">
 									<label class="o-forms__label" for="healthSuffix">Health</label>
