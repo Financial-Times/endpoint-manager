@@ -13,7 +13,7 @@
 							<div class="o-grid-row">
 								<div data-o-grid-colspan="3">
 									<label class="o-forms__label" for="dataItemID">ID</label>
-									<small class="o-forms__additional-info">Please be exact.</small>
+									<small class="o-forms__additional-info">Wildcards (* and ?) can be used.</small>
 									<input name="dataItemID" value="{{dataItemID}}" class="o-forms__text" id="dataItemID"></input>
 								</div>
 								<div data-o-grid-colspan="3">
@@ -30,6 +30,11 @@
 									<label class="o-forms__label" for="protocol">Protocol</label>
 									<small class="o-forms__additional-info">Wildcards (* and ?) can be used.</small>
 									<input name="protocol" value="{{protocol}}" class="o-forms__text" id="protocol"></input>
+								</div>
+								<div data-o-grid-colspan="3">
+									<label class="o-forms__label" for="systemCode">System Code</label>
+									<small class="o-forms__additional-info">Wildcards (* and ?) can be used.</small>
+									<input name="isHealthcheckFor.dataItemID" value="{{systemCode_dataItemID}}" class="o-forms__text" id="isHealthcheckFor.dataItemID"></input>
 								</div>
 								<div data-o-grid-colspan="3">
 									<label class="o-forms__label" for="healthSuffix">Health</label>
@@ -60,7 +65,15 @@
 					<div data-o-grid-colspan="4">
 						<h2>Existing Endpoints ({{endpoints.length}})</h2>
 					</div>
-					<div data-o-grid-colspan="2">
+					<div data-o-grid-colspan="4">
+						<div class="o-buttons__pagination">
+						{{#pages}}
+							{{#faux}}...{{/faux}}
+							{{^faux}}
+								<a class="o-buttons" aria-selected="{{selected}}" href="?dataItemID={{dataItemID}}&amp;base={{base}}&amp;isLive={{isLive}}&amp;protocol={{protocol}}&amp;healthSuffix={{healthSuffix}}&amp;aboutSuffix={{aboutSuffix}}&amp;page={{number}}">{{number}}</a>
+							{{/faux}}
+						{{/pages}}
+						</div>
 					</div>
 					<div data-o-grid-colspan="3">
 						<form id="new" action="/new" method="get">
@@ -71,15 +84,17 @@
 			</div>
 
 			<div class="o-grid-row">
-				<div data-o-grid-colspan="9">
+				<div data-o-grid-colspan="12">
 					<table class="o-table o-table--row-stripes" data-o-component="o-table">
 						<thead>
-							<th><a href="/?dataItemID={{dataItemID}}&amp;base={{base}}&amp;isLive={{isLive}}&amp;protocol={{protocol}}&amp;healthSuffix={{healthSuffix}}&amp;aboutSuffix={{aboutSuffix}}&amp;sortby=dataItemID">url</a></th>
-							<th><a href="/?dataItemID={{dataItemID}}&amp;base={{base}}&amp;isLive={{isLive}}&amp;protocol={{protocol}}&amp;healthSuffix={{healthSuffix}}&amp;aboutSuffix={{aboutSuffix}}&amp;sortby=SystemCode">systemCode</a></th>
-							<th><a href="/?dataItemID={{dataItemID}}&amp;base={{base}}&amp;isLive={{isLive}}&amp;protocol={{protocol}}&amp;healthSuffix={{healthSuffix}}&amp;aboutSuffix={{aboutSuffix}}&amp;sortby=isLive">live?</a></th>
-							<th><a href="/?dataItemID={{dataItemID}}&amp;base={{base}}&amp;isLive={{isLive}}&amp;protocol={{protocol}}&amp;healthSuffix={{healthSuffix}}&amp;aboutSuffix={{aboutSuffix}}&amp;sortby=protocol">protocol</a></th>
-							<th><a href="/?dataItemID={{dataItemID}}&amp;base={{base}}&amp;isLive={{isLive}}&amp;protocol={{protocol}}&amp;healthSuffix={{healthSuffix}}&amp;aboutSuffix={{aboutSuffix}}&amp;sortby=health">health</a></th>
-							<th><a href="/?dataItemID={{dataItemID}}&amp;base={{base}}&amp;isLive={{isLive}}&amp;protocol={{protocol}}&amp;healthSuffix={{healthSuffix}}&amp;aboutSuffix={{aboutSuffix}}&amp;sortby=about">about</a></th>
+							{{#endpoints.length}}
+							<th>url</th>
+							<th>systemCode</th>
+							<th>live?</th>
+							<th>protocol</th>
+							<th>health</th>
+							<th>about</th>
+							{{/endpoints.length}}
 						</thead>
 						<tbody>
 							{{#endpoints}}
@@ -91,6 +106,9 @@
 									<td>{{healthSuffix}}</td>
 									<td>{{aboutSuffix}}</td>
 								</tr>
+							{{/endpoints}}
+							{{^endpoints}}
+							<div id='emptylist'>Sorry, no records are available. Please adjust your filter</div>
 							{{/endpoints}}
 						</tbody>
 					</table>

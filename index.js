@@ -17,7 +17,13 @@ app.set('views', __dirname + '/views');
 // Set the public directory as public for serving assets
 app.use(express.static('public'));
 
-var CMDB = require("cmdb.js");
+// var CMDB = require("./cmdb.js");
+var path = require('path');
+if (process.env.LOCALCMDBJS) {
+	var CMDB = require( path.resolve( __dirname, "./cmdb.js" ) );
+} else {
+	var CMDB = require( "cmdb.js" );
+}
 
 /** Environment variables **/
 var port = process.env.PORT || 3001;
@@ -31,7 +37,7 @@ var cmdb = new CMDB({
 
 var systemTool = process.env.SYSTEMREGISTRY || 'https://systemregistry.in.ft.com/manage/';
 var endpointTool = process.env.ENDPOINTMANAGER || 'https://endpointmanager.in.ft.com/manage/';
-var contactTool = process.env.CONTACTORGANISER || 'https://contactorganiser.in.ft.com/manage/';
+var contactTool = process.env.CONTACTORGANISER || 'https://contactorganiser.in.ft.com/contacts/';
 var reservedRelTypes = process.env.RESERVEDRELTYPES || 'isHealthcheckFor';
 reservedRelTypes = "," + reservedRelTypes + ","  // to force every value to be enclosed in commas
 
@@ -76,38 +82,99 @@ ftwebservice(app, {
 });
 
 // Add authentication to everything which isn't one of the standard ftwebservice paths
+// and ensure cache control matched akamai expectation
 var authS3O = require('s3o-middleware');
 app.use(authS3O);
+app.use(function(req, res, next) {
+  res.setHeader('Cache-Control', 'no-cache');
+  next();
+});
 
 /**
  * Gets a list of Endpoints from the CMDB and renders them
  */
 app.get('/', function (req, res) {
-    res.setHeader('Cache-Control', 'no-cache');
-    console.time('CMDB api call for all endpoints')
-    sortby = req.query.sortby
-	cmdb._fetchAll(res.locals, endpointsURL(req)).then(function (endpoints) {
-		endpoints.forEach(indexController);
-		endpoints.sort(CompareOnKey(sortby));
-        console.timeEnd('CMDB api call for all endpoints')
-        // render the index and the filter parameters
-		res.render('index', Object.assign({endpoints: endpoints}, req.query));
+    console.time('CMDB api call for endpoint count')
+	cmdb.getItemCount(res.locals, 'endpoint', endpointFilter(req)).then(function (counters) {
+      	console.timeEnd('CMDB api call for endpoint count')
+		console.log(counters)
+	    console.time('CMDB api call for all endpoints')
+    	sortby = req.query.sortby
+    	page = req.query.page
+        // prepare pagination links
+        pagebuttons = getPageButtons(page, counters['pages'])
+        // read one page of endpoints
+		cmdb.getItemPageFields(res.locals, 'endpoint', page, endpointFields(req), endpointFilter(req)).then(function (endpoints) {
+			endpoints.forEach(indexController);
+			endpoints.sort(CompareOnKey(sortby));
+        	console.timeEnd('CMDB api call for all endpoints')
+        	// render the index and the filter parameters
+			res.render('index', Object.assign({'pages':pagebuttons}, {endpoints: endpoints}, req.query, {'systemCode_dataItemID':req.query["isHealthcheckFor.dataItemID"]}));
+		}).catch(function (error) {
+			res.status(502);
+			res.render("error", {message: "Problem obtaining list of endpoints from CMDB ("+error+")"});
+		});
 	}).catch(function (error) {
 		res.status(502);
-		res.render("error", {message: "Problem obtaining list of endpoints from CMDB ("+error+")"});
-	});
+		res.render("error", {message: "Problem obtaining count of endpoints from CMDB ("+error+")"});
+	});		
 });
 
-function endpointsURL(req) {
-	endpointsurl = process.env.CMDB_API + "items/endpoint";
-	cmdbparams = req.query;
+function getPageButtons(page, maxpages) {
+	// are there any pages?
+	if (!maxpages) {
+		return
+	}
+	// which page are we on
+	if (!page) {
+ 		page = 1
+ 	}
+    // prepare pagination links
+    var pagination = [];
+    var startpageno = page - 3
+    if (startpageno < 1) {
+    	startpageno = 1;
+    }
+    var endpageno = startpageno + 6
+    if (endpageno > maxpages) {
+    	endpageno = maxpages;
+    }
+    // prefix for page 1
+    if (startpageno != 1 ) {
+		pagination.push({'number':1, 'selected':false })
+		pagination.push({'faux':true})
+   	}
+   	// main set of page links centerde around the current page
+    var pageno = startpageno;
+    while (pageno <= endpageno && pagination.length < 9) {
+     	if (pageno == page) {
+	   		pagination.push({'number':pageno, 'selected':true })
+     	} else {
+	    	pagination.push({'number':pageno, 'selected':false })
+	    }
+	   	pageno = pageno + 1
+    }
+    // suffix for last page
+    if (endpageno < maxpages ) {
+		pagination.push({'faux':true})
+		pagination.push({'number':maxpages, 'selected':false })
+   	}
+
+   	return pagination
+}
+
+function endpointFilter(req) {
+	var cmdbparams = {}
+	Object.assign(cmdbparams, req.query);
 	console.log("cmdbparams:",cmdbparams);
     delete cmdbparams.sortby // to avoid it being added to cmdb params
-	cmdbparams['outputfields'] = "isHealthcheckFor,isLive,protocol,healthSuffix,aboutSuffix";
 	remove_blank_values(cmdbparams);
-	endpointsurl = endpointsurl + '?' +querystring.stringify(cmdbparams);
-	console.log("url:",endpointsurl)
-    return endpointsurl
+	console.log("filter:",cmdbparams)
+    return cmdbparams
+}
+
+function endpointFields(req) {
+	return ["isHealthcheckFor","isLive","protocol","healthSuffix","aboutSuffix"];
 }
 
 function CompareOnKey(key) {
@@ -127,7 +194,6 @@ function CompareOnKey(key) {
  * Gets info about a given Endpoint from the CMDB and provides a form for editing it
  */
 app.get('/manage/:endpointid', function (req, res) {
-    res.setHeader('Cache-Control', 'no-cache');
 	cmdb.getItem(res.locals, 'endpoint', req.params.endpointid).then(function (endpoint) {
 		res.render('endpoint', endpointController(endpoint));
 	}).catch(function (error) {
@@ -140,7 +206,6 @@ app.get('/manage/:endpointid', function (req, res) {
  * Updates an Endpoint
  */
 app.post('/manage/:endpointid', function (req, res) {
-    res.setHeader('Cache-Control', 'no-cache');
 	var endpoint = {
 		base: req.body.base,
 		protocol: req.body.protocol,
@@ -171,7 +236,6 @@ app.post('/manage/:endpointid', function (req, res) {
  * Deletes an Endpoint
  */
 app.post('/manage/:endpointid/delete', function (req, res) {
-    res.setHeader('Cache-Control', 'no-cache');
 	cmdb.deleteItem(res.locals, 'endpoint', req.params.endpointid).then(function (endpoint) {
 
 		// TODO: show messaging to indicate the delete was successful
@@ -198,7 +262,6 @@ app.post('/manage/:endpointid/delete', function (req, res) {
  * Displays blank endpoint form for adding new endpoints
  */
 app.get('/new', function (req, res) {
-    res.setHeader('Cache-Control', 'no-cache');
 	var defaultdata = {
 		base: "",
 		endpointid: "",
@@ -215,7 +278,6 @@ app.get('/new', function (req, res) {
  * Redirect to the approprate path and treat like a save.
  */
 app.post('/new', function (req, res) {
-    res.setHeader('Cache-Control', 'no-cache');
 	endpointid = req.body.id
 	if (!endpointid.trim()) {
 		endpointid = req.body.base
@@ -224,7 +286,7 @@ app.post('/new', function (req, res) {
 		req.body.iderror = "ID already in use, please re-enter"
 		res.render('endpoint', req.body);
 	}).catch(function (error) {
-		res.redirect(307, '/manage/' + encodeURIComponent(encodeURIComponent(endpointid)));
+		res.redirect(307, '/manage/' + encodeURIComponent(endpointid));
 	});
 
 });
@@ -234,7 +296,6 @@ app.use(function(req, res, next) {
 });
 
 app.use(function(err, req, res, next) {
-    res.setHeader('Cache-Control', 'no-cache');
 	console.error(err.stack);
 	res.status(500);
 	if (res.get('Content-Type') && res.get('Content-Type').indexOf("json") != -1) {
@@ -285,7 +346,7 @@ function indexController(endpoint) {
         endpoint.relationships = relationships
     }
 
-	endpoint.localpath = "/manage/"+encodeURIComponent(encodeURIComponent(endpoint.id));
+	endpoint.localpath = "/manage/"+encodeURIComponent(endpoint.id);
 	if (endpoint.isHealthcheckFor && endpoint.isHealthcheckFor.system && endpoint.isHealthcheckFor.system[0].dataItemID) {
 		endpoint.systemCode = endpoint.isHealthcheckFor.system[0].dataItemID;
 	}
@@ -303,7 +364,7 @@ function endpointController(endpoint) {
 	if (!endpoint.hasOwnProperty('base')) {
 		endpoint.base = endpoint.id;
 	};
-	endpoint.localpath = "/manage/"+encodeURIComponent(encodeURIComponent(endpoint.id));
+	endpoint.localpath = "/manage/"+encodeURIComponent(endpoint.id);
 	endpoint.protocollist = getProtocolList(endpoint.protocol);
 	endpoint.urls = [];
 	var protocols = [];
