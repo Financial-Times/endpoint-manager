@@ -88,6 +88,7 @@
 					<table class="o-table o-table--row-stripes" data-o-component="o-table">
 						<thead>
 							{{#endpoints.length}}
+							<th>ID</th>
 							<th>url</th>
 							<th>systemCode</th>
 							<th>live?</th>
@@ -100,6 +101,7 @@
 							{{#endpoints}}
 								<tr>
 									<td><a href="{{localpath}}">{{id}}</a></td>
+									<td>{{base}}</td>
 									<td>{{systemCode}}</td>
 									<td>{{isLive}}</td>
 									<td>{{protocol}}</td>
