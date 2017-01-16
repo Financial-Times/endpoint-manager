@@ -34,8 +34,8 @@
 						<div class="o-forms o-forms--wide {{#iderror}}o-forms--error{{/iderror}}">
 							<label class="o-forms__label" for="id">ID</label>
 							<small class="o-forms__additional-info">A unique identification for a endpoint with a SINGLE healthcheck or about (defaults to base URL). If you have mulitple healthchecks for an endpoint then you must define unique identifications for each one.</small>
-							{{#id}}<small class="o-forms__additional-info">Can't be edited after creation.  If incorrect, create a new endpoint and delete the old one.</small>{{/id}}
-							<input type="text" name="id" value="{{id}}" placeholder="{{base}}" default="{{base}}" class="o-forms__text" id="id" {{^iderror}}{{#id}}disabled{{/id}}{{/iderror}}></input>
+							{{#id}}{{^iderror}}<small class="o-forms__additional-info">Can't be edited after creation.  If incorrect, create a new endpoint and delete the old one.</small>{{/iderror}}{{/id}}
+							<input type="text" name="id" value="{{id}}" placeholder="{{base}}" default="{{base}}" class="o-forms__text" id="id" {{#id}}{{^iderror}}disabled{{/iderror}}{{/id}}></input>
 							{{#iderror}}<div class="o-forms__errortext">{{iderror}}</div>{{/iderror}}
 						</div>
 					</div>
