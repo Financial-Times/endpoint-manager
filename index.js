@@ -284,12 +284,18 @@ app.post('/new', function (req, res) {
 	};
 	cmdb.getItem(res.locals, 'endpoint', endpointid).then(function (endpoint) {
 		req.body.iderror = "ID already in use, please re-enter"
-		res.render('endpoint', req.body);
+		res.render('endpoint', formattedRequest(req));
 	}).catch(function (error) {
 		res.redirect(307, '/manage/' + encodeURIComponent(endpointid));
 	});
-
 });
+
+function formattedRequest(req) {
+	var request = req.body
+	request.protocollist = getProtocolList(request.protocol);
+
+	return request
+}
 
 app.use(function(req, res, next) {
 	res.status(404).render('error', {message:"Page not found."});
