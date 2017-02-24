@@ -4,7 +4,7 @@ machine:
 
 deployment:
   dev:
-    branch: exclude_related
+    branch: DET-153
     commands:
       - heroku maintenance:on --app oi-endpoint-manager-dev
       - git fetch origin --unshallow
