@@ -404,7 +404,7 @@ function endpointController(endpoint) {
 	if (endpoint.isHealthcheckFor && endpoint.isHealthcheckFor.system && endpoint.isHealthcheckFor.system[0].dataItemID) {
 		endpoint.systemCode = endpoint.isHealthcheckFor.system[0].dataItemID;
 	}
-	endpoint.isLive = (endpoint.isLive === "True");
+	endpoint.isLive = (endpoint.isLive === true);
 	return endpoint;
 }
 
