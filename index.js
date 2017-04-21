@@ -206,13 +206,23 @@ app.get('/manage/:endpointid', function (req, res) {
  * Updates an Endpoint
  */
 app.post('/manage/:endpointid', function (req, res) {
+	console.log("isLive:",req.body.isLive)
+	var isLive = !!req.body.isLive
+	console.log("!!isLive:",isLive)
 	var endpoint = {
 		base: req.body.base,
 		protocol: req.body.protocol,
 		healthSuffix: req.body.healthSuffix,
 		aboutSuffix: req.body.aboutSuffix,
-		isLive: !!req.body.isLive,
 	}
+	// ensure camelcase on output to screen and database
+	if (isLive === true) {
+		endpoint.isLive = "True"
+	} else {
+		endpoint.isLive = "False"
+	}
+	console.log("isLive string:",endpoint.isLive)
+
 	if (req.body.systemCode) endpoint.isHealthcheckFor = {system: [{'dataItemID':req.body.systemCode}]};
 	cmdb.putItem(res.locals, 'endpoint', req.params.endpointid, endpoint).then(function (result) {
 		result.saved = {
@@ -404,7 +414,7 @@ function endpointController(endpoint) {
 	if (endpoint.isHealthcheckFor && endpoint.isHealthcheckFor.system && endpoint.isHealthcheckFor.system[0].dataItemID) {
 		endpoint.systemCode = endpoint.isHealthcheckFor.system[0].dataItemID;
 	}
-	endpoint.isLive = (endpoint.isLive === true);
+	endpoint.isLive = (endpoint.isLive.toLowerCase() == "true"); // any case will trigger checkbox for true
 	return endpoint;
 }
 
