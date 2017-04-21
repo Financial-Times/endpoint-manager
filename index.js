@@ -1,3 +1,4 @@
+"use strict"
 var express = require('express');
 var app = express();
 var request = require("request");
@@ -28,7 +29,7 @@ if (process.env.LOCALCMDBJS) {
 /** Environment variables **/
 var port = process.env.PORT || 3001;
 var health_api = process.env.HEALTH_API || "http://healthcheck.ft.com/";
-if (health_api.slice(-1) != '/') health_api += '/';
+if (health_api.slice(-1) !== '/') health_api += '/';
 var health_apikey = process.env.HEALTH_APIKEY || "";
 var cmdb = new CMDB({
 	api: process.env.CMDB_API,
@@ -41,7 +42,6 @@ var contactTool = process.env.CONTACTORGANISER || 'https://contactorganiser.in.f
 var reservedRelTypes = process.env.RESERVEDRELTYPES || 'isHealthcheckFor';
 reservedRelTypes = "," + reservedRelTypes + ","  // to force every value to be enclosed in commas
 
-var path = require('path');
 var ftwebservice = require('express-ftwebservice');
 ftwebservice(app, {
 	manifestPath: path.join(__dirname, 'package.json'),
@@ -99,10 +99,10 @@ app.get('/', function (req, res) {
       	console.timeEnd('CMDB api call for endpoint count')
 		console.log(counters)
 	    console.time('CMDB api call for all endpoints')
-    	sortby = req.query.sortby
-    	page = req.query.page
+    	var sortby = req.query.sortby
+    	var page = req.query.page
         // prepare pagination links
-        pagebuttons = getPageButtons(page, counters['pages'])
+        var pagebuttons = getPageButtons(page, counters['pages'])
         // read one page of endpoints
 		cmdb.getItemPageFields(res.locals, 'endpoint', page, endpointFields(req), endpointFilter(req)).then(function (endpoints) {
 			endpoints.forEach(indexController);
@@ -140,14 +140,14 @@ function getPageButtons(page, maxpages) {
     	endpageno = maxpages;
     }
     // prefix for page 1
-    if (startpageno != 1 ) {
+    if (startpageno !== 1 ) {
 		pagination.push({'number':1, 'selected':false })
 		pagination.push({'faux':true})
    	}
    	// main set of page links centerde around the current page
     var pageno = startpageno;
     while (pageno <= endpageno && pagination.length < 9) {
-     	if (pageno == page) {
+     	if (pageno === page) {
 	   		pagination.push({'number':pageno, 'selected':true })
      	} else {
 	    	pagination.push({'number':pageno, 'selected':false })
@@ -182,8 +182,8 @@ function CompareOnKey(key) {
 		if (!key) {  // default to url sort
 			key = 'dataItemID';
 		}
-		avalue = a[key];
-		bvalue = b[key];
+		var avalue = a[key];
+		var bvalue = b[key];
 		if (!avalue) return -1;
 		if (!bvalue) return 1;
 		return avalue.toLowerCase() > bvalue.toLowerCase() ? 1 : -1;
@@ -278,7 +278,7 @@ app.get('/new', function (req, res) {
  * Redirect to the approprate path and treat like a save.
  */
 app.post('/new', function (req, res) {
-	endpointid = req.body.id
+	var endpointid = req.body.id
 	if (!endpointid.trim()) {
 		endpointid = req.body.base
 	};
@@ -304,7 +304,7 @@ app.use(function(req, res, next) {
 app.use(function(err, req, res, next) {
 	console.error(err.stack);
 	res.status(500);
-	if (res.get('Content-Type') && res.get('Content-Type').indexOf("json") != -1) {
+	if (res.get('Content-Type') && res.get('Content-Type').indexOf("json") !== -1) {
 		res.send({error: "Sorry, an unknown error occurred."});
 	} else {
 		res.render('error', {message:"Sorry, an unknown error occurred."});
@@ -324,30 +324,32 @@ function indexController(endpoint) {
 	endpoint.id = endpoint.dataItemID;
 
     // look for relationships  endpoint.xxx.[..,..,..]
-    relationships = []
-    for (var reltype in endpoint) {
-        // ignore/exclude relationships reserved for use by this app
-        if (reservedRelTypes.indexOf(","+reltype+",") == -1) {
-            for (var itemtype in endpoint[reltype]) {
+    var relationships = []
+    Object.keys(endpoint).forEach(function(reltype) {
+        // ignore/exclude test attributes and relationships reserved for use by this app
+        if (reservedRelTypes.indexOf(","+reltype+",") === -1 && typeof endpoint[reltype] === 'object') {
+            Object.keys(endpoint[reltype]).forEach(function(itemtype) {
                 if (typeof endpoint[reltype][itemtype] === 'object') {
-                    for (relationship in endpoint[reltype][itemtype]) {
-                        relitemlink = ""
-                        relitem = itemtype + ": " + endpoint[reltype][itemtype][relationship].dataItemID
-                        if (itemtype == 'system') {
-                            relitemlink = systemTool + endpoint[reltype][itemtype][relationship].dataItemID
+                    endpoint[reltype][itemtype].forEach(function(relationship) {
+                    	console.log("relationship:",relationship)
+                        var relitemlink = ""
+                        var relitem = itemtype + ": " + relationship.dataItemID
+                        if (itemtype === 'system') {
+                            relitemlink = systemTool + relationship.dataItemID
                         }
-                        if (itemtype == 'endpoint') {
-                            relitemlink = endpointTool + endpoint-manager[reltype][itemtype][relationship].dataItemID
+                        if (itemtype === 'endpoint') {
+                        	console.log(endpointTool + relationship.dataItemID)
+                            relitemlink = endpointTool + relationship.dataItemID
                         }
-                        if (itemtype == 'contact') {
-                            relitemlink = contactTool + endpoint[reltype][itemtype][relationship].dataItemID
+                        if (itemtype === 'contact') {
+                            relitemlink = contactTool + relationship.dataItemID
                         }
                         relationships.push({'reltype': reltype, 'relitem': relitem, 'relitemlink': relitemlink})
-                    }
+                    })
                 }
-            }
+            })
         }
-    }
+    })
     if (relationships) {
         endpoint.relationships = relationships
     }
@@ -369,15 +371,15 @@ function endpointController(endpoint) {
 	delete endpoint.dataTypeID;
 	if (!endpoint.hasOwnProperty('base')) {
 		endpoint.base = endpoint.id;
-	};
+	}
 	endpoint.localpath = "/manage/"+encodeURIComponent(endpoint.id);
 	endpoint.protocollist = getProtocolList(endpoint.protocol);
 	endpoint.urls = [];
 	var protocols = [];
-	if (['http', 'https'].indexOf(endpoint.protocol) != -1) {
+	if (['http', 'https'].indexOf(endpoint.protocol) !== -1) {
 		protocols.push(endpoint.protocol);
 		endpoint.baseurl = endpoint.protocol+"://"+endpoint.base+"/";
-	} else if (endpoint.protocol == "both") {
+	} else if (endpoint.protocol === "both") {
 		protocols = ['http', 'https'];
 
 		// In the form, just show http for the baseurl for simplicity
@@ -402,7 +404,7 @@ function endpointController(endpoint) {
 	if (endpoint.isHealthcheckFor && endpoint.isHealthcheckFor.system && endpoint.isHealthcheckFor.system[0].dataItemID) {
 		endpoint.systemCode = endpoint.isHealthcheckFor.system[0].dataItemID;
 	}
-	endpoint.isLive = (endpoint.isLive == "True");
+	endpoint.isLive = (endpoint.isLive === true);
 	return endpoint;
 }
 
@@ -413,7 +415,7 @@ function getProtocolList(selected) {
 		{name: "HTTP & HTTPS", value: "both"},
 	];
 	protocollist.forEach(function (protocol) {
-		if (protocol.value == selected) protocol.selected = true;
+		if (protocol.value === selected) protocol.selected = true;
 	});
 	return protocollist;
 }
