@@ -212,7 +212,7 @@ app.post('/manage/:endpointid', function (req, res) {
 		healthSuffix: req.body.healthSuffix,
 		aboutSuffix: req.body.aboutSuffix,
 	}
-	if (endpoint.isLive) {
+	if (endpoint.req.body.isLive) {
 		endpoint.isLive = "True"
 	} else {
 		endpoint.isLive = "False"
