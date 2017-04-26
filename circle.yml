@@ -4,7 +4,7 @@ machine:
 
 deployment:
   dev:
-    branch: cmdbv3
+    branch: mastercmdbjs
     commands:
       - heroku maintenance:on --app oi-endpoint-manager-dev
       - git fetch origin --unshallow
