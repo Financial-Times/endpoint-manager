@@ -61,7 +61,7 @@ ftwebservice(app, {
 
 	// Check that track can talk to CMDB
 	healthCheck: function() {
-		return cmdb.getItem(null, 'endpoint', 'endpoint-manager.ft.com').then(function (result) {
+		return cmdb.getItem(null, 'endpoint', 'endpointmanager.in.ft.com').then(function (result) {
 			return false;
 		}).catch(function (error) {
 			return error.message;
