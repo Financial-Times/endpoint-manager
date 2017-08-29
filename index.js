@@ -414,7 +414,12 @@ function endpointController(endpoint) {
 	if (endpoint.isHealthcheckFor && endpoint.isHealthcheckFor.system && endpoint.isHealthcheckFor.system[0].dataItemID) {
 		endpoint.systemCode = endpoint.isHealthcheckFor.system[0].dataItemID;
 	}
-	endpoint.isLive = (endpoint.isLive.toLowerCase() == "true"); // any case will trigger checkbox for true
+	if (endpoint.isLive && typeof endpoint.isLive === 'string') {
+		// any case will trigger checkbox for true
+		endpoint.isLive = (endpoint.isLive.toLowerCase() == "true");
+	} else {
+		endpoint.isLive = Boolean(endpoint.isLive);
+	}
 	return endpoint;
 }
 
