@@ -5,11 +5,24 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint --cache --fix .",
+    "precommit": "lint-staged",
+    "postcommit": "git diff --name-only HEAD^ | xargs git add",
     "start": "node index.js"
+  },
+  "lint-staged": {
+    "*.{js}": [
+      "eslint --cache --fix",
+      "git add"
+    ]
+  },
+  "engines": {
+    "node": ">= 6.11.1",
+    "npm": ">= 5.3.0"
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:Financial-Times/endpoint-manager.git"
+    "url": "https://github.com/Financial-Times/endpoint-manager"
   },
   "keywords": [
     "endpoints",
@@ -24,7 +37,15 @@
     "mustache-express": "^1.2.2",
     "s3o-middleware": "^1.8.0"
   },
-  "engines": {
-    "node": "6.11.1"
+  "devDependencies": {
+    "@financial-times/eslint-config-de-tooling": "^2.0.2",
+    "eslint": "^4.9.0",
+    "eslint-config-prettier": "^2.6.0",
+    "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-mocha": "^4.11.0",
+    "eslint-plugin-prettier": "^2.3.1",
+    "husky": "^0.14.3",
+    "lint-staged": "^4.3.0",
+    "prettier": "^1.7.4"
   }
 }

@@ -1,74 +1,91 @@
-document.addEventListener("DOMContentLoaded", function() {
-	var savedmessagetitle = document.querySelector('#saved h3');
-	if (savedmessagetitle) savedmessagetitle.addEventListener('click', function () {
-		savedmessagetitle.parentNode.dataset.collapse = savedmessagetitle.parentNode.dataset.collapse != "true";
-	});
+;(function(window, document) {
+    'use strict'
 
-	/**
-	 * Check the validity of a field on page load and each time the field changes 
-	 **/
-	function addChecks(input, group) {
-		function checkValidity() {
-			var classes = group.getAttribute("class") == null ? "" : group.getAttribute("class");
-			if(!input.value) {
-				group.setAttribute("class", classes);
-			} else if(input.checkValidity()){
-				group.setAttribute("class", classes + " o-forms--valid");
-			} else {
-				group.setAttribute("class", classes + " o-forms--error");
-			}
-		}
-		input.addEventListener('change', checkValidity);
-		checkValidity();
-	}
-	var systemcodeinput = document.querySelector('#systemCode');
-	addChecks(systemcodeinput, systemcodeinput.parentNode);
+    function checkValidity(urlnode) {
+        return fetch(urlnode.dataset.validateapi, {
+            headers: {
+                key: urlnode.dataset.apikey,
+            },
+        })
+            .then(response => {
+                return response.json()
+            })
+            .then(body => {
+                let msg
+                let classname
+                if (!body.isValid) {
+                    msg = 'This is healthcheck is invalid'
+                    classname = 'invalid'
+                } else if (body.needsUpgrade) {
+                    msg =
+                        "This healthcheck is valid, but isn't up-to-date with the latest standard"
+                    classname = 'upgrade'
+                } else {
+                    msg = 'This healthcheck is valid'
+                    classname = 'valid'
+                }
+                const savebutton = urlnode.querySelector('.save-button')
+                savebutton.firstChild.nodeValue = msg
+                savebutton.className += ` ${classname}`
+            })
+    }
 
-	var idinput = document.querySelector('#id');
-	// checks for duplicate IDs are done prior to this function, no need for AddChecks call
+    // Check the validity of a field on page load and each time the field changes
+    function addChecks(input, group) {
+        function checkInputValidity() {
+            const classes =
+                group.getAttribute('class') == null
+                    ? ''
+                    : group.getAttribute('class')
+            if (!input.value) {
+                group.setAttribute('class', classes)
+            } else if (input.checkValidity()) {
+                group.setAttribute('class', `${classes} o-forms--valid`)
+            } else {
+                group.setAttribute('class', `${classes} o-forms--error`)
+            }
+        }
+        input.addEventListener('change', checkInputValidity)
+        checkInputValidity()
+    }
 
-	var baseinput = document.querySelector('#base');
-	addChecks(baseinput, baseinput.parentNode);
+    document.addEventListener('DOMContentLoaded', () => {
+        const savedmessagetitle = document.getElementByID('saved h3')
+        if (savedmessagetitle)
+            savedmessagetitle.addEventListener('click', () => {
+                const { collapse } = savedmessagetitle.parentNode.dataset
+                savedmessagetitle.parentNode.dataset.collapse =
+                    collapse !== 'true'
+            })
 
-	var protocolinput = document.querySelector('#protocol');
+        const systemcodeinput = document.getElementByID('systemCode')
+        addChecks(systemcodeinput, systemcodeinput.parentNode)
 
-	function updateBaseURL() {
-		var baseurl = (protocolinput.value == "both") ? "http" : protocolinput.value;
-		baseurl += "://" + baseinput.value + "/";
-		var baseurlnodes = document.querySelectorAll(".baseurl"), i;
-		for (i = 0; i < baseurlnodes.length; i++) {
-			baseurlnodes[i].firstChild.nodeValue = baseurl;
-		}
-	}
-	idinput.addEventListener('change', updateBaseURL);
-	protocolinput.addEventListener('change', updateBaseURL);
-	baseinput.addEventListener('change', updateBaseURL);
+        const idinput = document.getElementByID('id')
+        // Checks for duplicate IDs are done prior to this function, no need for AddChecks call
 
-	var urlnodes = document.querySelectorAll(".url"), i;
-	for (i = 0; i < urlnodes.length; i++) {
-		checkValidity(urlnodes[i]);
-	}
-	function checkValidity(urlnode) {
-		fetch(urlnode.dataset.validateapi, {headers:{
-			key: urlnode.dataset.apikey,
-		}}).then(function (response) {
-			return response.json();
-		}).then(function (body) {
-			var msg, classname;
-			console.log(body);
-			if (!body.isValid) {
-				msg = "This is healthcheck is invalid";
-				classname = "invalid";
-			} else if(body.needsUpgrade) {
-				msg = "This healthcheck is valid, but isn't up-to-date with the latest standard";
-				classname = "upgrade";
-			} else {
-				msg = "This healthcheck is valid";
-				classname = "valid";
-			}
-			var savebutton = urlnode.querySelector(".save-button");
-			savebutton.firstChild.nodeValue = msg;
-			savebutton.className += " " + classname;
-		})
-	}
-});
+        const baseinput = document.getElementByID('base')
+        addChecks(baseinput, baseinput.parentNode)
+
+        const protocolinput = document.getElementByID('protocol')
+
+        function updateBaseURL() {
+            let baseurl =
+                protocolinput.value === 'both' ? 'http' : protocolinput.value
+            baseurl += `://${baseinput.value}/`
+            const baseurlnodes = Array.from(
+                document.querySelectorAll('.baseurl')
+            )
+            baseurlnodes.forEach(node => {
+                node.firstChild.nodeValue = baseurl
+            })
+        }
+
+        idinput.addEventListener('change', updateBaseURL)
+        protocolinput.addEventListener('change', updateBaseURL)
+        baseinput.addEventListener('change', updateBaseURL)
+
+        const urlnodes = Array.from(document.querySelectorAll('.url'))
+        urlnodes.forEach(checkValidity)
+    })
+})(window, document)
