@@ -86,7 +86,7 @@ ftwebservice(app, {
 var authS3O = require('s3o-middleware');
 app.use(authS3O);
 app.use(function(req, res, next) {
-  res.setHeader('Cache-Control', 'private, no-store, max-age=0');
+  res.setHeader('Cache-Control', 'private, no-cache, no-store, must-revalidate, max-age=0');
   next();
 });
 
@@ -224,6 +224,7 @@ app.post('/manage/:endpointid', function (req, res) {
 	console.log("isLive string:",endpoint.isLive)
 
 	if (req.body.systemCode) endpoint.isHealthcheckFor = {system: [{'dataItemID':req.body.systemCode}]};
+	console.log("cmdb.putItem", 'endpoint', req.params.endpointid, endpoint)
 	cmdb.putItem(res.locals, 'endpoint', req.params.endpointid, endpoint).then(function (result) {
 		result.saved = {
 			locals: JSON.stringify(res.locals),
