@@ -8,6 +8,11 @@
 			</div>
 		</div>
 	</div>
+	<div class='warning-row'>
+	    <div class='o-header-services__container'>
+            <h3><a href="https://dewey.in.ft.com/search/home?aggs=code%2Ctype&basicSearch=type%3Aendpoint" style="color:red">This service is being retired at the end of January. Click here to search, edit, create, and delete endpoints on the new Dewey</a></h3>
+        </div>
+    </div>
 </header>
 
 <script>
